@@ -1,0 +1,24 @@
+
+### IntelliJ IDEA ###
+.idea/
+account-management/.idea/
+account-query/.idea/
+transaction-processor/.idea/
+
+### Account management ###
+account-management/target/
+account-management/!.mvn/wrapper/maven-wrapper.jar
+account-management/!**/src/main/**/target/
+account-management/!**/src/test/**/target/
+
+### Account query ###
+account-query/target/
+account-query/!.mvn/wrapper/maven-wrapper.jar
+account-query/!**/src/main/**/target/
+account-query/!**/src/test/**/target/
+
+### Transaction processor ###
+transaction-processor/target/
+transaction-processor/!.mvn/wrapper/maven-wrapper.jar
+transaction-processor/!**/src/main/**/target/
+transaction-processor/!**/src/test/**/target/
