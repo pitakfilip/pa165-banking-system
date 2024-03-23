@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cz.muni.pa165.banking</groupId>
-    <artifactId>transaction-processor</artifactId>
+    <artifactId>transactions.processor</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
