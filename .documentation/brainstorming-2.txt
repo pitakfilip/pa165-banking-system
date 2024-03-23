@@ -1,0 +1,42 @@
+1. Account Management
+- AccountAPI
+	- create - validation of some kind?
+	- management - scheduled payments, info about user, max spending limit, ...
+- System API 
+	- zamestnanec manage clients account -> validacia ze to zavolal zamestnanec ( spring security )
+	- scheduled payments ( private CRON/quartz job ) 
+- Authentification (Milestone3)
+	- login ->  validacia login credentials, JWT token (?)
+	- logout
+
+------------------------------------------------------------------------------------------------------------------
+
+2. ????? ( atomic-transactions, cross-account transactions, ...? )
+- atomic-transactions API
+	- create/run Process ( withdrawal / deposit )
+	- view state
+- cross-account API
+	- create/run Process 
+	- view state
+	- convert currency / get currency table
+
+------------------------------------------------------------------------------------------------------------------
+
+3. ????? ( realtime information about account balance, transactions, ...)
+- Balance API ( api pre spravu uctu prave jedneho pouzivatela)
+	- create ( pri vytvoreni noveho uctu ) 
+	- add 
+	- get status
+	- failover ( fix and manage chybne nodes - refunds )
+
+- Employee Dashboard
+	- view client ( zostavenie dat pre 1. klienta - pouzivaju sa filtre ako date range, amount, transaction type, ...)
+	- transaction report -  statistics for a date range
+
+------------------------------------------------------------------------------------------------------------------
+
+entities
+1. user, account, scheduled payments ( kto kedy kolko komu ), config 
+2. procesy, config
+3. balance structure, balance, nodes (payments alebo in general zmeny v balance), ulozeny config pre vyhladavanie na dashboard (?)
+

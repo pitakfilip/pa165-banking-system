@@ -1,0 +1,27 @@
+1. Account Management
+- login + auth s keycloak (opytat co ako oauth)
+- logout
+- create account
+- update account
+- scheduled payments
+- dashboards (volanie service#1 a service#2, zdruzit data a ??)
+
+2. ????
+- withdrawal
+- deposit
+- balance status
+- statistics/analysis
+
+3. ????
+- cross account transactions
+	(spracuje vsetko u seba, posle service#2 vysledok co ako ulozit)
+	- manazovat data locks
+- calculate between currencies
+- statistics/analysis
+
+
+Questions:
+- keycloak
+- konverzna tabulka (how, where)
+- dashboard -> FE? 
+- service calling service in M1?
