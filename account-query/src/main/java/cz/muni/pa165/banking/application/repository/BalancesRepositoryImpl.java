@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Martin Mojzis
@@ -21,8 +22,18 @@ public class BalancesRepositoryImpl implements BalancesRepository {
         );
     }
     @Transactional
-    public Balance getById(Integer id) {
+    @Override
+    public Optional<Balance> findById(Integer id) {
         //return allBalances.get(id);
-        return mockData.get(id);
+        if( mockData.containsKey(id)){
+            return Optional.of(mockData.get(id));
+        };
+        return Optional.empty();
+    }
+
+    @Transactional
+    @Override
+    public void addBalance(Integer id){
+        mockData.put(id, new Balance());
     }
 }

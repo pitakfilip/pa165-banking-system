@@ -1,0 +1,63 @@
+openapi: 3.0.1
+info:
+  title: Pa165 Project Banking Application Account Query
+  description: |
+    Hand-made OpenAPI document.
+  version: 1.0.0
+servers:
+  - url: "http://localhost:8080"
+tags:
+  - name: MyService
+    description: Tags are used for Java interface names
+components:
+  schemas:
+
+
+    Balance:
+      title: A balance
+      description: Balance object keeping balance of ones account as well as all transactions that led to it.
+      required:
+        - id
+      properties:
+        id: { type: integer, description: id of account with this balance, example: 4 }
+        transactions:
+          type: object
+          properties:
+            balance:
+              type: integer
+            transactions:
+              type: object
+              properties:
+                transactionlist:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: enum
+                      amount:
+                        type: integer
+                      date:
+                        type: date
+                      id:
+                        type: integer
+
+
+
+
+paths:
+  /balance/new:
+    post:
+      tags:
+        - MyService
+      summary: creates a balance
+      operationId: createBalance
+      parameters:
+        - { name: id, in: query, required: true, schema: { type: integer }, description: "id of account" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance'
