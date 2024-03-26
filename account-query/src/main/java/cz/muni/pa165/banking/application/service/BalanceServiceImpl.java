@@ -1,6 +1,6 @@
 package cz.muni.pa165.banking.application.service;
 
-import cz.muni.pa165.banking.domain.allbalances.repository.AllBalancesRepository;
+import cz.muni.pa165.banking.domain.balance.repository.BalancesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
  * @author Martin Mojzis
  */
 @Service
-public class BalanceService {
-    private AllBalancesRepository balanceRepository;
+public class BalanceServiceImpl {
+    private BalancesRepository balanceRepository;
 
     @Autowired
-    public BalanceService(AllBalancesRepository balanceRepository){
+    public BalanceServiceImpl(BalancesRepository balanceRepository){
         this.balanceRepository = balanceRepository;
     }
 }

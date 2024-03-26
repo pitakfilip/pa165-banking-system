@@ -1,6 +1,5 @@
 package cz.muni.pa165.banking.application.facade;
-import cz.muni.pa165.banking.application.service.BalanceService;
-import cz.muni.pa165.banking.domain.balance.Balance;
+import cz.muni.pa165.banking.application.service.BalanceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 /**
@@ -8,10 +7,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class BalanceFacade {
-    private final BalanceService balanceService;
+    private final BalanceServiceImpl balanceService;
     @Autowired
-    public BalanceFacade(BalanceService balanceService) {
+    public BalanceFacade(BalanceServiceImpl balanceService) {
         this.balanceService = balanceService;
     }
-
 }
