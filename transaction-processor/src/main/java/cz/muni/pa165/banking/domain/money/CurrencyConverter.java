@@ -1,6 +1,6 @@
-package cz.muni.pa165.banking.domain.conversion;
+package cz.muni.pa165.banking.domain.money;
 
-import cz.muni.pa165.banking.domain.conversion.service.ExchangeRateService;
+import cz.muni.pa165.banking.domain.money.service.ExchangeRateService;
 
 import java.math.BigDecimal;
 import java.util.Currency;

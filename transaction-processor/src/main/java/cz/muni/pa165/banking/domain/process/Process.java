@@ -1,15 +1,33 @@
 package cz.muni.pa165.banking.domain.process;
 
+import cz.muni.pa165.banking.domain.process.status.Status;
+import cz.muni.pa165.banking.domain.process.status.StatusInformation;
+
 import java.time.Instant;
+import java.util.UUID;
 
 // @Entity
 public class Process {
     
-    private Instant created;
+    private UUID uuid;
     
-    private int status; // representing current status (created / processing / pending / failed / finished ) -> create an ENUM
+    private StatusInformation currentStatus;
     
-    // some other info about what the process is about (transfer money account -> account, deposit, ..., source, target, etc.)
+    public Process() {
+        uuid = UUID.randomUUID();
+        currentStatus = new StatusInformation(Instant.now(), Status.CREATED, "Process created, waiting for processing.");
+    }
+
+    public String uuid() {
+        return uuid.toString();
+    }
     
+    public Status getStatus() {
+        return currentStatus.status();
+    }
+    
+    public String getStatusInformation() {
+        return currentStatus.information();
+    }
     
 }

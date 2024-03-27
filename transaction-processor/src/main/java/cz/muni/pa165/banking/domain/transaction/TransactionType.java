@@ -6,8 +6,8 @@ public enum TransactionType {
     
     DEPOSIT,
 
-    CREDIT,
+    CROSS_ACCOUNT,
     
-    CROSS_ACCOUNT_PAYMENT
+    SCHEDULED
     
 }

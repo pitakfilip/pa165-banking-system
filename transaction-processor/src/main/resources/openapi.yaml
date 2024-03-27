@@ -1,0 +1,99 @@
+openapi: 3.0.1
+info:
+  title: Transaction Processor API
+  description: Public API of Online Banking System - Transaction Processor
+  version: 1.0.0
+servers:
+  - url: "localhost:8081"
+tags:
+  - name: Transaction
+    description: API for transaction requests
+  - name: ProcessorApi
+    description: API for administration of transaction processes
+
+paths:
+  /transaction/v1/create:
+    put:
+      tags:
+        - Transaction
+      operationId: create-transaction-process
+      summary: Create a new request for a transaction
+      description: |
+        Method starts a new process for processing a transaction request defined by the input.
+        After a process is created successfully, it is being handled asynchronous. Method replies with a JSON object
+        containing a unique identifier of the created process, status and a message explaining the status.
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/TransactionDto'
+      responses: 
+        '201':
+          description: Process created, sent unique identifier assigned to new process.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessDto'
+
+components: 
+  schemas: 
+    TransactionTypeDto:
+      type: string
+      enum:
+        - WITHDRAW
+        - DEPOSIT
+        - CROSS_ACCOUNT
+        - SCHEDULED
+      description: Enumaration defining a type for a transaction. Each type may have different certain implementations and validations.
+      
+    AccountDto:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          description: Account number
+    
+    MoneyDto:
+      type: object
+      properties: 
+        amount: 
+          type: number
+        currency:
+          type: string
+          description: Currency code, short abbreviation of 3 characters such as 'EUR' or 'CZK'.
+    
+    TransactionDto:
+      type: object
+      properties:
+        source:
+          $ref: '#/components/schemas/AccountDto'
+        target:
+          $ref: '#/components/schemas/AccountDto'
+        amount:
+          $ref: '#/components/schemas/MoneyDto'
+        detail:
+          type: string
+          description: Message or detail for transaction, holding user specified information
+    
+    StatusDto:
+      type: string
+      enum:
+        - CREATED
+        - PENDING
+        - PROCESSED
+        - FAILED
+          
+    ProcessDto:
+      type: object
+      properties:
+        identifier:
+          type: string
+        status:
+          $ref: '#/components/schemas/StatusDto'
+        info:
+          type: string
+          description: Message detail regarding process status, e.g. reason of failure or result of process.
+    
+    
+        

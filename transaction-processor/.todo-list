@@ -1,0 +1,3 @@
+- externalize openapi contract into separate artifact
+- using rabbitmq is probably an overkill for our small project. Either @async or a pure java/spring mock implementation of messaging?
+- rethink messaging and the handler pattern

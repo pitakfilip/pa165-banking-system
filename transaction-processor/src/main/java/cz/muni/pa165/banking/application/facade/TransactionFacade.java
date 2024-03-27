@@ -1,16 +1,29 @@
 package cz.muni.pa165.banking.application.facade;
 
-import cz.muni.pa165.banking.domain.transaction.TransactionType;
-import cz.muni.pa165.banking.dto.DtoTransactionRequest;
+import cz.muni.pa165.banking.application.mapper.DtoMapper;
+import cz.muni.pa165.banking.application.service.TransactionService;
+import cz.muni.pa165.banking.domain.process.Process;
+import cz.muni.pa165.banking.domain.transaction.Transaction;
+import cz.muni.pa165.banking.transaction.processor.dto.ProcessDto;
+import cz.muni.pa165.banking.transaction.processor.dto.TransactionDto;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TransactionFacade {
+
+    private final TransactionService service;
     
-    public void createNewProcess(DtoTransactionRequest request) {
-        // Account source = Mapper.map(request.source);
-        // Account target = Mapper.map(request.target);
-        TransactionType type = TransactionType.valueOf(request.getType().name());
+    private final DtoMapper mapper;
+
+    public TransactionFacade(TransactionService service, DtoMapper mapper) {
+        this.service = service;
+        this.mapper = mapper;
+    }
+
+    public ProcessDto createTransactionProcess(TransactionDto transactionDto) {
+        Transaction transaction = mapper.map(transactionDto);
+        Process result = service.createProcessForTransaction(transaction);
+        return mapper.map(result);
         
         // call service to create process, validate stuff etc. etc.
         

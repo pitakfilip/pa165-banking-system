@@ -1,4 +1,4 @@
-package cz.muni.pa165.banking.domain.conversion.service;
+package cz.muni.pa165.banking.domain.money.service;
 
 import java.math.BigDecimal;
 import java.util.Currency;
