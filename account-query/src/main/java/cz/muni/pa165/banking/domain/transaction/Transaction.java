@@ -11,12 +11,14 @@ public class Transaction {
     private final BigDecimal amount;
     private final Date date;
     private int id;
+    private final String processId;
 
-    public Transaction(TransactionType type, BigDecimal amount, Date date, int id) {
+    public Transaction(TransactionType type, BigDecimal amount, Date date, int id, String processId) {
         this.type = type;
         this.amount = amount;
         this.date = date;
         this.id = id;
+        this.processId = processId;
     }
     public Date getDate() {
         return date;
@@ -36,5 +38,8 @@ public class Transaction {
 
     public TransactionType getType() {
         return type;
+    }
+    public String getProcessId() {
+        return processId;
     }
 }

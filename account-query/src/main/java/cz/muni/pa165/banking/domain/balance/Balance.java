@@ -28,17 +28,17 @@ public class Balance {
         this.transactionList = new ArrayList<>();
     }
 
-    public void AddTransaction(BigDecimal amount, TransactionType type, Date date) {
+    public void AddTransaction(BigDecimal amount, TransactionType type, Date date, String processId) {
         BigDecimal amountCopy = new BigDecimal(amount.byteValueExact());
-        transactionList.add(new Transaction(type, amountCopy, date, this.nextTransactionID));
+        transactionList.add(new Transaction(type, amountCopy, date, this.nextTransactionID, processId));
         this.nextTransactionID += 1;
         this.amount = this.amount.add(amountCopy);
     }
 
-    public void AddTransaction(BigDecimal amount, TransactionType type) {
+    public void AddTransaction(BigDecimal amount, TransactionType type, String processId) {
         BigDecimal amountCopy = new BigDecimal(amount.byteValueExact());
         transactionList.add(new Transaction(type, amountCopy,
-                Date.from(LocalDateTime.now().toInstant(ZoneOffset.of("+00:00"))), this.nextTransactionID));
+                Date.from(LocalDateTime.now().toInstant(ZoneOffset.of("+00:00"))), this.nextTransactionID, processId));
         this.nextTransactionID += 1;
         this.amount = this.amount.add(amountCopy);
     }
@@ -71,7 +71,7 @@ public class Balance {
         }
         Transaction toRefund = GetTransaction(id);
         Transaction newTransation = new Transaction(toRefund.getType(), toRefund.getAmount().negate(),
-                Date.from(Instant.now()), nextTransactionID);
+                Date.from(Instant.now()), nextTransactionID, toRefund.getProcessId());
         nextTransactionID += 1;
         transactionList.add(newTransation);
         this.amount = this.amount.add(toRefund.getAmount().negate());
