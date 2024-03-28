@@ -12,10 +12,11 @@ public class Transaction {
     private final Date date;
     private int id;
 
-    public Transaction(TransactionType type, BigDecimal amount, Date date) {
+    public Transaction(TransactionType type, BigDecimal amount, Date date, int id) {
         this.type = type;
         this.amount = amount;
         this.date = date;
+        this.id = id;
     }
     public Date getDate() {
         return date;

@@ -22,14 +22,13 @@ public class StatisticalReport {
     private Date dateBeginning;
     private Date dateEnd;
 
-    public StatisticalReport(TransactionList list, Date after, Date before){
+    public StatisticalReport(List<Transaction> list, Date after, Date before){
         this.dateBeginning = after;
         this.dateEnd = before;
-        var transactionList = list.getData(after, before);
         BigDecimal amount = new BigDecimal(0);
 
         //amountTotal - computed from abs vaues of transactions
-        for (Transaction transaction: transactionList) {
+        for (Transaction transaction: list) {
             amount = amount.add(transaction.getAmount().abs());
             if(transaction.getAmount().abs().compareTo(amountMin) < 0 ){
                 amountMin = transaction.getAmount().abs();
