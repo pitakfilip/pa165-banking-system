@@ -15,31 +15,34 @@ import java.util.*;
 public class BalancesRepositoryImpl implements BalancesRepository {
     //private final Map<Integer, Balance> allBalances = new HashMap<>();
     private final Map<String, Balance> mockData;
+
     public BalancesRepositoryImpl() {
         mockData = Map.of(
                 "id1", new Balance("id1"),
                 "id2", new Balance("id2")
         );
     }
+
     @Transactional
     @Override
     public Optional<Balance> findById(String id) {
         //return allBalances.get(id);
-        if( mockData.containsKey(id)){
+        if (mockData.containsKey(id)) {
             return Optional.of(mockData.get(id));
-        };
+        }
         return Optional.empty();
     }
 
     @Transactional
     @Override
-    public void addBalance(String id){
+    public void addBalance(String id) {
         mockData.put(id, new Balance(id));
     }
 
     //monitor all customers bank transactions - between specified dates
+    // TODO with filers like transaction type, amount - call different getData
     @Transactional
-    public List<Transaction> getAllTransactions(Date from, Date to){
+    public List<Transaction> getAllTransactions(Date from, Date to) {
         List<Transaction> toReturn = new ArrayList<>();
         mockData.forEach((i, balance) -> toReturn.addAll(balance.getData(from, to)));
         return toReturn;

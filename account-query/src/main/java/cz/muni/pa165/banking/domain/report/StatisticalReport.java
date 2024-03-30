@@ -20,6 +20,7 @@ public class StatisticalReport {
     private final TransactionStatistics crossAccountAmount = new TransactionStatistics(TransactionType.CROSS_ACCOUNT_PAYMENT);
     private final TransactionStatistics creditAmount = new TransactionStatistics(TransactionType.CREDIT);
 
+    //maybe not needed
     private BigDecimal amountMin = BigDecimal.valueOf(Double.MAX_VALUE);
     private BigDecimal amountMax = new BigDecimal(0);
 

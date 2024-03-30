@@ -11,7 +11,25 @@ tags:
     description: Tags are used for Java interface names
 components:
   schemas:
-
+    Transaction:
+      title: A transaction
+      description: A object representing one transaction
+      properties:
+        transactionType:
+          type: string
+          enum: [ WITHDRAW, DEPOSIT, CREDIT, CROSS_ACCOUNT_PAYMENT ]
+          description: type of transaction
+        amount:
+          type: number
+          description: amount of money in transaction
+          example: 10
+        date:
+          type: string
+          description: time when the transaction happened
+          format: date-time
+        processId:
+          type: string
+          description: id of transaction issued by transaction processor
 
     Balance:
       title: A balance
@@ -19,28 +37,58 @@ components:
       required:
         - id
       properties:
-        id: { type: integer, description: id of account with this balance, example: 4 }
+        id:
+          type: string
+          description: id of account with this balance
+          example: id1
+        amount:
+          type: number
+          description: balance of account right now
+          example: 10
         transactions:
-          type: object
-          properties:
-            balance:
-              type: integer
-            transactions:
-              type: object
-              properties:
-                transactionlist:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      type:
-                        type: enum
-                      amount:
-                        type: integer
-                      date:
-                        type: date
-                      id:
-                        type: integer
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+          description: all transactions of this account in list
+
+    TransactionStatistics:
+      title: statistics about one type of transaction
+      properties:
+        transactionType:
+          type: string
+          enum: [ WITHDRAW, DEPOSIT, CREDIT, CROSS_ACCOUNT_PAYMENT ]
+          description: type of transaction
+          nullable: true
+        amountIn:
+          type: number
+          description: amount of money got by this type of transactions
+          example: 1002
+        amountOut:
+          type: number
+          description: amount of money spent by this type of transactions
+          example: 1184
+        timesIn:
+          type: number
+          description: number of times this type of transaction was used to get money
+          example: 12
+        timesOut:
+          type: number
+          description: number of times this type of transaction was used to spend money
+          example: 13
+
+    TransactionsReport:
+      title: statistical report about one account
+      properties:
+        totalAmount:
+          $ref: '#/components/schemas/Transaction'
+        depositAmount:
+          $ref: '#/components/schemas/Transaction'
+        withdrawalAmount:
+          $ref: '#/components/schemas/Transaction'
+        crossAccountAmount:
+          $ref: '#/components/schemas/Transaction'
+        creditAmount:
+          $ref: '#/components/schemas/Transaction'
 
 paths:
   /balance/new:
@@ -51,6 +99,25 @@ paths:
       operationId: createBalance
       parameters:
         - { name: id, in: query, required: true, schema: { type: integer }, description: "id of account" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance'
+
+  /balance/add:
+    post:
+      tags:
+        - MyService
+      summary: adds transaction to existing balance
+      operationId: addTransactionToBalance
+      parameters:
+        - { name: id, in: query, required: true, schema: { type: string }, description: "id of account" }
+        - { name: amount, in: query, required: true, schema: { type: number }, description: "amount of money in transaction"}
+        - { name: processId, in: query, required: true, schema: { type: string }, description: "id of process which this transaction is part of" }
+        - { name: type, in: query, required: true, schema: { type: string, enum: [ WITHDRAW, DEPOSIT, CREDIT, CROSS_ACCOUNT_PAYMENT ] }, description: "type  of transaction"}
       responses:
         "200":
           description: OK

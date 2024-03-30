@@ -17,7 +17,7 @@ import java.util.Objects;
  * @author Martin Mojzis
  */
 public class Balance {
-    private final String userId;
+    private final String accountId;
     private BigDecimal amount;
     private final List<Transaction> transactionList;
 
@@ -27,7 +27,7 @@ public class Balance {
     public Balance(String userId) {
         this.amount = new BigDecimal(0);
         this.transactionList = new ArrayList<>();
-        this.userId = userId;
+        this.accountId = userId;
     }
 
     public void AddTransaction(BigDecimal amount, TransactionType type, String processId) {
@@ -104,7 +104,7 @@ public class Balance {
                 .filter(a -> a.getAmount().compareTo(amountMax) < 0 && a.getAmount().compareTo(amountMin) > 0)
                 .toList();
     }
-    public String getUserId() {
-        return userId;
+    public String getAccountId() {
+        return accountId;
     }
 }
