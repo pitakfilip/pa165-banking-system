@@ -14,7 +14,7 @@ public class BalanceFacade {
         this.balanceService = balanceService;
     }
 
-    public void createNewBalance(int id) {
+    public void createNewBalance(String id) {
         if(! balanceService.addNewBalance(id)){
             throw new RuntimeException("Balance for person with id:" + id + " already exists.");
         };

@@ -42,9 +42,6 @@ components:
                       id:
                         type: integer
 
-
-
-
 paths:
   /balance/new:
     post:

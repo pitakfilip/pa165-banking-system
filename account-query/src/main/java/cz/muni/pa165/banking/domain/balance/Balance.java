@@ -11,28 +11,23 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Martin Mojzis
  */
 public class Balance {
-
+    private final String userId;
     private BigDecimal amount;
     private final List<Transaction> transactionList;
 
     //TODO do we want ids per user or global - now set per user - problem with refunds?
     private int nextTransactionID = 0;
 
-    public Balance() {
+    public Balance(String userId) {
         this.amount = new BigDecimal(0);
         this.transactionList = new ArrayList<>();
-    }
-
-    public void AddTransaction(BigDecimal amount, TransactionType type, Date date, String processId) {
-        BigDecimal amountCopy = new BigDecimal(amount.byteValueExact());
-        transactionList.add(new Transaction(type, amountCopy, date, this.nextTransactionID, processId));
-        this.nextTransactionID += 1;
-        this.amount = this.amount.add(amountCopy);
+        this.userId = userId;
     }
 
     public void AddTransaction(BigDecimal amount, TransactionType type, String processId) {
@@ -65,6 +60,7 @@ public class Balance {
         return !result.isEmpty();
     }
 
+    //TODO remake to uuid? - based on calls from other service
     public boolean RefundTransaction(int id) {
         if(!TransactionExists(id)){
             return false;
@@ -78,8 +74,17 @@ public class Balance {
         return true;
     }
 
+    public Transaction GetTransaction(String processId)throws RuntimeException {
+        List<Transaction> result = transactionList.stream().filter(a -> Objects.equals(a.getProcessId(), processId)).toList();
+        //TODO custom exception
+        if (result.isEmpty()) {
+            throw new RuntimeException("list has no tranaction with this id");
+        }
+        return result.get(0);
+    }
+
     public StatisticalReport getReport(Date after, Date before) {
-        return new StatisticalReport(transactionList, after, before);
+        return new StatisticalReport(this.getData(after, before));
     }
 
     public List<Transaction> getData(Date after, Date before) {
@@ -98,5 +103,8 @@ public class Balance {
         return result.stream()
                 .filter(a -> a.getAmount().compareTo(amountMax) < 0 && a.getAmount().compareTo(amountMin) > 0)
                 .toList();
+    }
+    public String getUserId() {
+        return userId;
     }
 }

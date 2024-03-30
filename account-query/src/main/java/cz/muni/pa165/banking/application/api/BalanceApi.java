@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/balance")
 public class BalanceApi {
-    //TODO generate from openapi
+    //TODO generate from openapi, other methods - add to balance, refund, statistics, view account
     private final BalanceFacade balanceFacade;
 
     @Autowired
@@ -25,7 +25,7 @@ public class BalanceApi {
     }
 
     @PutMapping("/new")
-    public ResponseEntity createNew(@RequestBody int customerId) {
+    public ResponseEntity createNew(@RequestBody String customerId) {
         try {
             balanceFacade.createNewBalance(customerId);
         }

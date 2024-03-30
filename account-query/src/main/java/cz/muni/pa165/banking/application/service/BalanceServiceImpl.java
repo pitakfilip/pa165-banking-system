@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 /**
  * @author Martin Mojzis
  */
@@ -22,7 +20,7 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
-    public boolean addNewBalance(int id) {
+    public boolean addNewBalance(String id) {
         try{
             this.findById(id);
         }
@@ -33,7 +31,7 @@ public class BalanceServiceImpl implements BalanceService {
         return false;
     }
     @Transactional(readOnly = true)
-    public Balance findById(Integer id) {
+    public Balance findById(String id) {
         return balanceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Balance  of person with id: " + id + " was not found."));
     }

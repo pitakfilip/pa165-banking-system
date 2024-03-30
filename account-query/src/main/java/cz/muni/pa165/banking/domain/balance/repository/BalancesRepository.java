@@ -9,6 +9,6 @@ import java.util.Optional;
  */
 public interface BalancesRepository {
 
-    Optional<Balance> findById(Integer id);
-    void addBalance(Integer id);
+    Optional<Balance> findById(String id);
+    void addBalance(String id);
 }
