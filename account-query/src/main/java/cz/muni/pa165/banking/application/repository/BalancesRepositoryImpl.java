@@ -40,7 +40,7 @@ public class BalancesRepositoryImpl implements BalancesRepository {
     }
 
     //monitor all customers bank transactions - between specified dates
-    // TODO with filers like transaction type, amount - call different getData
+    // TODO with filers like transaction type, amount - call different getData with specified max, min value, type
     @Transactional
     public List<Transaction> getAllTransactions(Date from, Date to) {
         List<Transaction> toReturn = new ArrayList<>();

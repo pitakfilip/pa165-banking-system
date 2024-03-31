@@ -80,15 +80,15 @@ components:
       title: statistical report about one account
       properties:
         totalAmount:
-          $ref: '#/components/schemas/Transaction'
+          $ref: '#/components/schemas/TransactionStatistics'
         depositAmount:
-          $ref: '#/components/schemas/Transaction'
+          $ref: '#/components/schemas/TransactionStatistics'
         withdrawalAmount:
-          $ref: '#/components/schemas/Transaction'
+          $ref: '#/components/schemas/TransactionStatistics'
         crossAccountAmount:
-          $ref: '#/components/schemas/Transaction'
+          $ref: '#/components/schemas/TransactionStatistics'
         creditAmount:
-          $ref: '#/components/schemas/Transaction'
+          $ref: '#/components/schemas/TransactionStatistics'
 
 paths:
   /balance/new:
@@ -100,7 +100,7 @@ paths:
       parameters:
         - { name: id, in: query, required: true, schema: { type: integer }, description: "id of account" }
       responses:
-        "200":
+        "201":
           description: OK
           content:
             application/json:
@@ -115,9 +115,9 @@ paths:
       operationId: addTransactionToBalance
       parameters:
         - { name: id, in: query, required: true, schema: { type: string }, description: "id of account" }
-        - { name: amount, in: query, required: true, schema: { type: number }, description: "amount of money in transaction"}
+        - { name: amount, in: query, required: true, schema: { type: number }, description: "amount of money in transaction" }
         - { name: processId, in: query, required: true, schema: { type: string }, description: "id of process which this transaction is part of" }
-        - { name: type, in: query, required: true, schema: { type: string, enum: [ WITHDRAW, DEPOSIT, CREDIT, CROSS_ACCOUNT_PAYMENT ] }, description: "type  of transaction"}
+        - { name: type, in: query, required: true, schema: { type: string, enum: [ WITHDRAW, DEPOSIT, CREDIT, CROSS_ACCOUNT_PAYMENT ] }, description: "type  of transaction" }
       responses:
         "200":
           description: OK
@@ -125,3 +125,118 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Balance'
+        "400":
+          description: NOK
+          content:
+            application/json:
+              schema:
+                type: string
+                description: reason of failure
+
+  /balance/status:
+    get:
+      tags:
+        - MyService
+      summary: returns account balance status
+      operationId: getBalance
+      parameters:
+        - { name: id, in: query, required: true, schema: { type: integer }, description: "id of account" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: number
+                description: accounts balance
+        "400":
+          description: NOK
+          content:
+            application/json:
+              schema:
+                type: string
+                description: reason of failure
+
+  /balance/transactions:
+    get:
+      tags:
+        - MyService
+      summary: returns transactions of specific account for specific time interval
+      operationId: getTransactions
+      parameters:
+        - { name: id, in: query, required: true, schema: { type: integer }, description: "id of account" }
+        - { name: beginning, in: query, required: true, schema: { type: string, format: date }, description: "date from which onwards the transactions happened" }
+        - { name: end, in: query, required: true, schema: { type: string, format: date }, description: "date before which wanted transactions happened" }
+        - { name: minAmount, in: query, required: false, schema: { type: number }, description: "minimal amount of money included in transaction to be reported" }
+        - { name: maxAmount, in: query, required: false, schema: { type: number }, description: "maximal amount of money included in transaction to be reported" }
+        - { name: type, in: query, required: false, schema: { type: string, enum: [ WITHDRAW, DEPOSIT, CREDIT, CROSS_ACCOUNT_PAYMENT ] }, description: "type of transactiops to be included in returned ones" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transaction"
+        "400":
+          description: NOK
+          content:
+            application/json:
+              schema:
+                type: string
+                description: reason of failure
+
+  /balance/alltransactions:
+    get:
+      tags:
+        - MyService
+      summary: returns all transactions for specific time interval
+      operationId: getTransactions
+      parameters:
+        - { name: beginning, in: query, required: true, schema: { type: string, format: date }, description: "date from which onwards the transactions happened" }
+        - { name: end, in: query, required: true, schema: { type: string, format: date }, description: "date before which wanted transactions happened" }
+        - { name: minAmount, in: query, required: false, schema: { type: number }, description: "minimal amount of money included in transaction to be reported" }
+        - { name: maxAmount, in: query, required: false, schema: { type: number }, description: "maximal amount of money included in transaction to be reported" }
+        - { name: type, in: query, required: false, schema: { type: string, enum: [ WITHDRAW, DEPOSIT, CREDIT, CROSS_ACCOUNT_PAYMENT ] }, description: "type of transactiops to be included in returned ones" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transaction"
+        "400":
+          description: NOK
+          content:
+            application/json:
+              schema:
+                type: string
+                description: reason of failure
+
+  /account/report:
+    get:
+      tags:
+        - MyService
+      summary: creates a report of spending statistics for one user
+      operationId: createBalance
+      parameters:
+        - { name: id, in: query, required: true, schema: { type: integer }, description: "id of account" }
+        - { name: beginning, in: query, required: true, schema: { type: string, format: date }, description: "date from which onwards the transactions wanted in report happened" }
+        - { name: end, in: query, required: true, schema: { type: string, format: date }, description: "date before which wanted transactions wanted in report happened" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionsReport'
+        "400":
+          description: NOK
+          content:
+            application/json:
+              schema:
+                type: string
+                description: reason of failure
