@@ -19,6 +19,7 @@ public class StatisticalReport {
     private final TransactionStatistics withdrawalAmount = new TransactionStatistics(TransactionType.WITHDRAW);
     private final TransactionStatistics crossAccountAmount = new TransactionStatistics(TransactionType.CROSS_ACCOUNT_PAYMENT);
     private final TransactionStatistics creditAmount = new TransactionStatistics(TransactionType.CREDIT);
+    private final TransactionStatistics refundAmount = new TransactionStatistics(TransactionType.REFUND);
 
     //maybe not needed
     private BigDecimal amountMin = BigDecimal.valueOf(Double.MAX_VALUE);
@@ -38,17 +39,12 @@ public class StatisticalReport {
 
     private void addToAmountStatistics(Transaction transaction) {
         totalAmount.AddAmount(transaction.getAmount());
-        if(transaction.getType() == TransactionType.CREDIT){
-            creditAmount.AddAmount(transaction.getAmount());
-        }
-        if(transaction.getType() == TransactionType.DEPOSIT){
-            depositAmount.AddAmount(transaction.getAmount());
-        }
-        if(transaction.getType() == TransactionType.WITHDRAW){
-            withdrawalAmount.AddAmount(transaction.getAmount());
-        }
-        if(transaction.getType() == TransactionType.CROSS_ACCOUNT_PAYMENT){
-            crossAccountAmount.AddAmount(transaction.getAmount());
+        switch (transaction.getType()){
+            case CREDIT -> creditAmount.AddAmount(transaction.getAmount());
+            case REFUND -> refundAmount.AddAmount(transaction.getAmount());
+            case DEPOSIT -> depositAmount.AddAmount(transaction.getAmount());
+            case WITHDRAW -> withdrawalAmount.AddAmount(transaction.getAmount());
+            case CROSS_ACCOUNT_PAYMENT -> crossAccountAmount.AddAmount(transaction.getAmount());
         }
     }
 
@@ -78,5 +74,9 @@ public class StatisticalReport {
 
     public TransactionStatistics getTotalAmount() {
         return totalAmount;
+    }
+
+    public TransactionStatistics getRefundAmount() {
+        return refundAmount;
     }
 }

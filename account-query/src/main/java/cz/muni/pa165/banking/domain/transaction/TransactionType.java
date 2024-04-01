@@ -11,6 +11,8 @@ public enum TransactionType {
 
     CREDIT,
 
-    CROSS_ACCOUNT_PAYMENT
+    CROSS_ACCOUNT_PAYMENT,
+
+    REFUND
 
 }

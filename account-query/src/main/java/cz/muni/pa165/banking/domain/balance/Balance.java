@@ -21,9 +21,6 @@ public class Balance {
     private BigDecimal amount;
     private final List<Transaction> transactionList;
 
-    //TODO do we want ids per user or global - now set per user - problem with refunds?
-    private int nextTransactionID = 0;
-
     public Balance(String userId) {
         this.amount = new BigDecimal(0);
         this.transactionList = new ArrayList<>();
@@ -33,8 +30,7 @@ public class Balance {
     public void AddTransaction(BigDecimal amount, TransactionType type, String processId) {
         BigDecimal amountCopy = new BigDecimal(amount.byteValueExact());
         transactionList.add(new Transaction(type, amountCopy,
-                Date.from(LocalDateTime.now().toInstant(ZoneOffset.of("+00:00"))), this.nextTransactionID, processId));
-        this.nextTransactionID += 1;
+                Date.from(LocalDateTime.now().toInstant(ZoneOffset.of("+00:00"))), processId));
         this.amount = this.amount.add(amountCopy);
     }
 
@@ -46,41 +42,17 @@ public class Balance {
         return transactionList;
     }
 
-    public Transaction GetTransaction(int id) throws RuntimeException {
-        List<Transaction> result = transactionList.stream().filter(a -> a.getId() == id).toList();
-        //TODO custom exception
+    public Transaction GetTransaction(String pid) throws RuntimeException {
+        List<Transaction> result = transactionList.stream().filter(a -> Objects.equals(a.getProcessId(), pid)).toList();
         if (result.isEmpty()) {
             throw new RuntimeException("list has no tranaction with this id");
         }
         return result.get(0);
     }
 
-    public boolean TransactionExists(int id) {
-        List<Transaction> result = transactionList.stream().filter(a -> a.getId() == id).toList();
+    public boolean TransactionExists(String pid) {
+        List<Transaction> result = transactionList.stream().filter(a -> Objects.equals(a.getProcessId(), pid)).toList();
         return !result.isEmpty();
-    }
-
-    //TODO remake to uuid? - based on calls from other service
-    public boolean RefundTransaction(int id) {
-        if(!TransactionExists(id)){
-            return false;
-        }
-        Transaction toRefund = GetTransaction(id);
-        Transaction newTransation = new Transaction(toRefund.getType(), toRefund.getAmount().negate(),
-                Date.from(Instant.now()), nextTransactionID, toRefund.getProcessId());
-        nextTransactionID += 1;
-        transactionList.add(newTransation);
-        this.amount = this.amount.add(toRefund.getAmount().negate());
-        return true;
-    }
-
-    public Transaction GetTransaction(String processId)throws RuntimeException {
-        List<Transaction> result = transactionList.stream().filter(a -> Objects.equals(a.getProcessId(), processId)).toList();
-        //TODO custom exception
-        if (result.isEmpty()) {
-            throw new RuntimeException("list has no tranaction with this id");
-        }
-        return result.get(0);
     }
 
     public StatisticalReport getReport(Date after, Date before) {
