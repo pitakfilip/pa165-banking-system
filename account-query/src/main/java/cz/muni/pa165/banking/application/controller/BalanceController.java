@@ -35,12 +35,14 @@ public class BalanceController implements CustomerServiceApi, SystemServiceApi {
 
     @Override
     public ResponseEntity<List<Transaction>> getTransactions(String id, LocalDate beginning, LocalDate end, BigDecimal minAmount, BigDecimal maxAmount, String type) {
-        return null;
+        List<Transaction> toReturn = balanceFacade.getTransactions(id, beginning, end, minAmount, maxAmount, type);
+        return ResponseEntity.ok(toReturn);
     }
 
     @Override
     public ResponseEntity<Void> addTransactionToBalance(String id, BigDecimal amount, String processId, String type) {
-        return null;
+        balanceFacade.addToBalance(id, processId, amount, Transaction.TransactionTypeEnum.valueOf(type));
+        return ResponseEntity.ok().build();
     }
 
     @Override
@@ -48,8 +50,6 @@ public class BalanceController implements CustomerServiceApi, SystemServiceApi {
         balanceFacade.createNewBalance(id);
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
-
-    //TODO generate from openapi, other methods - add to balance, refund, statistics, view account
 
 //
 //    @PutMapping("/new")

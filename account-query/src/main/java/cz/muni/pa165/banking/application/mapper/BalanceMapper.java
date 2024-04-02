@@ -9,6 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 
 /**
@@ -17,12 +18,30 @@ import java.util.Date;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface BalanceMapper {
     //TODO other types according to openapi
-    TransactionType typeInToTypeOut(Transaction.TransactionTypeEnum type);
+    TransactionType mapTypeOut(Transaction.TransactionTypeEnum type);
 
+    Transaction.TransactionTypeEnum mapTypeIn(TransactionType type);
 
-    Transaction.TransactionTypeEnum typeOutToTypeIn(TransactionType type);
-    default java.util.Date mapDateIn(java.time.@jakarta.validation.Valid OffsetDateTime value){
+    default java.util.Date mapDateIn(java.time.@jakarta.validation.Valid OffsetDateTime value) {
         return new Date(value.toInstant().toEpochMilli());
     }
 
+    default java.time.OffsetDateTime mapDate(java.util.Date date) {
+        return date.toInstant().atOffset(ZoneOffset.UTC);
+    }
+
+    default cz.muni.pa165.banking.domain.transaction.Transaction mapTransactionOut(Transaction transaction) {
+        return new
+                cz.muni.pa165.banking.domain.transaction.Transaction(mapTypeOut(transaction.getTransactionType()),
+                transaction.getAmount(), transaction.getDate(), transaction.getProcessId());
+    }
+
+    default Transaction mapTransactionIn(cz.muni.pa165.banking.domain.transaction.Transaction transaction){
+        Transaction result = new Transaction();
+        result.setAmount(transaction.getAmount());
+        result.setDate(transaction.getDate());
+        result.setProcessId(transaction.getProcessId());
+        result.setTransactionType(mapTypeIn(transaction.getType()));
+        return result;
+    }
 }

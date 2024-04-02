@@ -5,9 +5,7 @@ import cz.muni.pa165.banking.domain.transaction.Transaction;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +28,7 @@ public class Balance {
     public void AddTransaction(BigDecimal amount, TransactionType type, String processId) {
         BigDecimal amountCopy = new BigDecimal(amount.byteValueExact());
         transactionList.add(new Transaction(type, amountCopy,
-                Date.from(LocalDateTime.now().toInstant(ZoneOffset.of("+00:00"))), processId));
+                OffsetDateTime.now(), processId));
         this.amount = this.amount.add(amountCopy);
     }
 
@@ -55,22 +53,22 @@ public class Balance {
         return !result.isEmpty();
     }
 
-    public StatisticalReport getReport(Date after, Date before) {
+    public StatisticalReport getReport(OffsetDateTime after, OffsetDateTime before) {
         return new StatisticalReport(this.getData(after, before));
     }
 
-    public List<Transaction> getData(Date after, Date before) {
-        return transactionList.stream().filter(a -> a.getDate().after(after) && a.getDate().before(before)).toList();
+    public List<Transaction> getData(OffsetDateTime after, OffsetDateTime before) {
+        return transactionList.stream().filter(a -> a.getDate().isAfter(after) && a.getDate().isBefore(before)).toList();
     }
 
-    public List<Transaction> getData(Date after, Date before, BigDecimal amountMin, BigDecimal amountMax, TransactionType type) {
+    public List<Transaction> getData(OffsetDateTime after, OffsetDateTime before, BigDecimal amountMin, BigDecimal amountMax, TransactionType type) {
         List<Transaction> result = this.getData(after, before);
         return result.stream()
                 .filter(a -> a.getAmount().compareTo(amountMax) < 0 && a.getAmount().compareTo(amountMin) > 0 && a.getType() == type)
                 .toList();
     }
 
-    public List<Transaction> getData(Date after, Date before, BigDecimal amountMin, BigDecimal amountMax) {
+    public List<Transaction> getData(OffsetDateTime after, OffsetDateTime before, BigDecimal amountMin, BigDecimal amountMax) {
         List<Transaction> result = this.getData(after, before);
         return result.stream()
                 .filter(a -> a.getAmount().compareTo(amountMax) < 0 && a.getAmount().compareTo(amountMin) > 0)

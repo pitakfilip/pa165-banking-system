@@ -1,13 +1,15 @@
 package cz.muni.pa165.banking.application.facade;
-import cz.muni.pa165.banking.account.query.dto.Balance;
+import cz.muni.pa165.banking.account.query.dto.Transaction;
 import cz.muni.pa165.banking.application.mapper.BalanceMapper;
-import cz.muni.pa165.banking.application.service.BalanceServiceImpl;
-import cz.muni.pa165.banking.application.service.NotFoundAccountException;
+import cz.muni.pa165.banking.application.exception.NotFoundAccountException;
 import cz.muni.pa165.banking.domain.balance.service.BalanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.util.List;
 
 /**
  * @author Martin Mojzis
@@ -26,11 +28,17 @@ public class BalanceFacade {
         balanceService.addNewBalance(id);
     }
 
-    public void addToBalance(String id, BigDecimal value){
-
+    public void addToBalance(String id, String processId, BigDecimal value, Transaction.TransactionTypeEnum type){
+        balanceService.addToBalance(id, value, processId, balanceMapper.mapTypeOut(type));
     }
 
     public BigDecimal getBalance(String id) throws NotFoundAccountException {
         return balanceService.getBalance(id);
+    }
+
+    public List<Transaction> getTransactions(String id, LocalDate beginning, LocalDate end, BigDecimal minAmount, BigDecimal maxAmount, String type){
+        List<cz.muni.pa165.banking.domain.transaction.Transaction> toReturn = balanceService.getTransactions(id, OffsetDateTime.from(beginning),
+                OffsetDateTime.from(end), minAmount, maxAmount, balanceMapper.mapTypeOut(Transaction.TransactionTypeEnum.valueOf(type)));
+        return toReturn.stream().map(balanceMapper::mapTransactionIn).toList();
     }
 }

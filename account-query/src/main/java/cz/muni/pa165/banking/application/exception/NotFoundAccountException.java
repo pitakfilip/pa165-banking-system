@@ -1,9 +1,9 @@
-package cz.muni.pa165.banking.application.service;
+package cz.muni.pa165.banking.application.exception;
 
 /**
  * @author Martin Mojzis
  */
-public class NotFoundAccountException extends Exception{
+public class NotFoundAccountException extends RuntimeException{
     public NotFoundAccountException(String message) {
         super(message);
     }
