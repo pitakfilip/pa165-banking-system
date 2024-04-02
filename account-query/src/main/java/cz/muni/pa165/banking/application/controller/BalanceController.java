@@ -34,6 +34,10 @@ public class BalanceController implements CustomerServiceApi, SystemServiceApi {
 
     @Override
     public ResponseEntity<List<Transaction>> getTransactions(String id, LocalDate beginning, LocalDate end, BigDecimal minAmount, BigDecimal maxAmount, String type) {
+        if(type == null){
+            List<Transaction> toReturn = balanceFacade.getTransactions(id, beginning, end, minAmount, maxAmount);
+            return ResponseEntity.ok(toReturn);
+        }
         List<Transaction> toReturn = balanceFacade.getTransactions(id, beginning, end, minAmount, maxAmount, type);
         return ResponseEntity.ok(toReturn);
     }

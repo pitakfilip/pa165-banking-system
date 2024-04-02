@@ -25,6 +25,8 @@
     </properties>
 
     <build>
+        <finalName>server_generated</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.openapitools</groupId>
@@ -78,6 +80,18 @@
                         <arg>-Amapstruct.verbose=true</arg>
                     </compilerArgs>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <executable>true</executable>
+                </configuration>
+            </plugin>
+            <!-- run integration tests in "mvn verify" phase -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

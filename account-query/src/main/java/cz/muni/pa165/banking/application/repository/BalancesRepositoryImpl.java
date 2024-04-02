@@ -19,16 +19,15 @@ import java.util.*;
 @Repository
 public class BalancesRepositoryImpl implements BalancesRepository {
     //private final Map<Integer, Balance> allBalances = new HashMap<>();
-    private final Map<String, Balance> mockData;
+    private Map<String, Balance> mockData = new HashMap<>();
 
     public BalancesRepositoryImpl() {
-        mockData = Map.of(
-                "id1", new Balance("id1"),
-                "id2", new Balance("id2")
-        );
+        mockData.put("id1", new Balance("id1"));
+        mockData.put("id2", new Balance("id2"));
+
     }
 
-    @Transactional
+    //@Transactional
     @Override
     public Optional<Balance> findById(String id) {
         //return allBalances.get(id);
@@ -77,19 +76,9 @@ public class BalancesRepositoryImpl implements BalancesRepository {
         return mockData.get(id).getReport(beginning, end);
     }
 
-    @Transactional
+    //@Transactional
     @Override
     public void addBalance(String id) {
         mockData.put(id, new Balance(id));
     }
-
-    //monitor all customers bank transactions - between specified dates
-    // TODO with filers like transaction type, amount - call different getData with specified max, min value, type
-    @Transactional
-    public List<Transaction> getAllTransactions(OffsetDateTime from, OffsetDateTime to) {
-        List<Transaction> toReturn = new ArrayList<>();
-        mockData.forEach((i, balance) -> toReturn.addAll(balance.getData(from, to)));
-        return toReturn;
-    }
-
 }

@@ -26,14 +26,13 @@ public class Balance {
     }
 
     public void AddTransaction(BigDecimal amount, TransactionType type, String processId) {
-        BigDecimal amountCopy = new BigDecimal(amount.byteValueExact());
-        transactionList.add(new Transaction(type, amountCopy,
+        transactionList.add(new Transaction(type, amount,
                 OffsetDateTime.now(), processId));
-        this.amount = this.amount.add(amountCopy);
+        this.amount = this.amount.add(amount);
     }
 
     public BigDecimal getAmount() {
-        return new BigDecimal(amount.byteValueExact());
+        return amount;
     }
 
     public List<Transaction> getTransactions() {

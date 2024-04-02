@@ -18,9 +18,12 @@ public interface BalanceService {
     void addNewBalance(String id) throws NotFoundAccountException;
     BigDecimal getBalance(String id) throws NotFoundAccountException;
     List<Transaction> getTransactions(String id, OffsetDateTime from, OffsetDateTime to, BigDecimal minAmount, BigDecimal maxAmount, TransactionType type) throws NotFoundAccountException;
+    List<Transaction> getTransactions(String id, OffsetDateTime from, OffsetDateTime to, BigDecimal minAmount, BigDecimal maxAmount) throws NotFoundAccountException;
+
     void addToBalance(String id, BigDecimal amount, String processID, TransactionType type) throws NotFoundAccountException;
 
     StatisticalReport getReport(String id,  OffsetDateTime beginning,  OffsetDateTime end);
 
     List<Transaction> getAllTransactions(OffsetDateTime from, OffsetDateTime from1, BigDecimal minAmount, BigDecimal maxAmount, TransactionType transactionType);
+    List<Transaction> getAllTransactions(OffsetDateTime from, OffsetDateTime from1, BigDecimal minAmount, BigDecimal maxAmount);
 }
