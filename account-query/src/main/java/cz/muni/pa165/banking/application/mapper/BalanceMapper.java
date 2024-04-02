@@ -55,8 +55,18 @@ public interface BalanceMapper {
         result.setTimesOut(BigDecimal.valueOf(statistics.getTimesOut()));
         result.setAmountIn(statistics.getAmountIn());
         result.setTimesIn(BigDecimal.valueOf(statistics.getTimesIn()));
-        result.setAvgOut(statistics.getAmountOut().divide(new BigDecimal(statistics.getTimesOut())));
-        result.setAvgIn(statistics.getAmountIn().divide(new BigDecimal(statistics.getTimesIn())));
+        if(statistics.getTimesOut() != 0) {
+            result.setAvgOut(statistics.getAmountOut().divide(new BigDecimal(statistics.getTimesOut())));
+        }
+        else{
+            result.setAvgOut(BigDecimal.ZERO);
+        }
+        if(statistics.getTimesIn() != 0) {
+            result.setAvgIn(statistics.getAmountIn().divide(new BigDecimal(statistics.getTimesIn())));
+        }
+        else{
+            result.setAvgIn(BigDecimal.ZERO);
+        }
         return result;
     }
     default TransactionsReport mapReportOut(StatisticalReport report){

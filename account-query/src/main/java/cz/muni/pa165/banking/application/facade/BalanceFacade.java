@@ -44,13 +44,13 @@ public class BalanceFacade {
 
     public List<Transaction> getTransactions(String id, LocalDate beginning, LocalDate end, BigDecimal minAmount, BigDecimal maxAmount, String type) {
         List<cz.muni.pa165.banking.domain.transaction.Transaction> toReturn = balanceService.getTransactions(id, OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC),
-                OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC), minAmount, maxAmount, balanceMapper.mapTypeOut(Transaction.TransactionTypeEnum.valueOf(type)));
+                OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC), minAmount, maxAmount, balanceMapper.mapTypeOut(Transaction.TransactionTypeEnum.valueOf(type)));
         return toReturn.stream().map(balanceMapper::mapTransactionIn).toList();
     }
 
     public List<Transaction> getTransactions(String id, LocalDate beginning, LocalDate end, BigDecimal minAmount, BigDecimal maxAmount) {
         List<cz.muni.pa165.banking.domain.transaction.Transaction> toReturn = balanceService.getTransactions(id, OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC),
-                OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC), minAmount, maxAmount);
+                OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC), minAmount, maxAmount);
         return toReturn.stream().map(balanceMapper::mapTransactionIn).toList();
     }
 
