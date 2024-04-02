@@ -5,6 +5,9 @@ import cz.muni.pa165.banking.application.service.BalanceServiceImpl;
 import cz.muni.pa165.banking.domain.balance.service.BalanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+
 /**
  * @author Martin Mojzis
  */
@@ -18,10 +21,17 @@ public class BalanceFacade {
         this.balanceMapper = balanceMapper;
     }
 
-    public boolean createNewBalance(String id) {
+    public void createNewBalance(String id) {
         if(! balanceService.addNewBalance(id)){
             throw new RuntimeException("Balance for person with id:" + id + " already exists.");
         };
-        return balanceService.addNewBalance(id);
+    }
+
+    public void addToBalance(String id, BigDecimal value){
+
+    }
+
+    public BigDecimal getBalance(String id){
+        return balanceService.getBalance(id);
     }
 }

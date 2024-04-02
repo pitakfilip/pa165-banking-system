@@ -8,6 +8,7 @@ import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
+import java.time.OffsetDateTime;
 import java.util.Date;
 
 /**
@@ -15,10 +16,13 @@ import java.util.Date;
  */
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface BalanceMapper {
+    //TODO other types according to openapi
     TransactionType typeInToTypeOut(Transaction.TransactionTypeEnum type);
 
+    
     Transaction.TransactionTypeEnum typeOutToTypeIn(TransactionType type);
-    default java.util.Date map(java.time.@jakarta.validation.Valid OffsetDateTime value){
+    default java.util.Date mapDateIn(java.time.@jakarta.validation.Valid OffsetDateTime value){
         return new Date(value.toInstant().toEpochMilli());
     }
+
 }
