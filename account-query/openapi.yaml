@@ -7,8 +7,12 @@ info:
 servers:
   - url: "http://localhost:8080"
 tags:
-  - name: MyService
-    description: Tags are used for Java interface names
+  - name: CustomerService
+    description: Service to be used by customer of bank
+  - name: SystemService
+    description: Service to be used by other services of bank
+  - name: EmployeeService
+    description: Service to be used by employees of bank
 components:
   schemas:
     Transaction:
@@ -94,7 +98,7 @@ paths:
   /balance/new:
     post:
       tags:
-        - MyService
+        - SystemService
       summary: creates a balance
       operationId: createBalance
       parameters:
@@ -110,7 +114,7 @@ paths:
   /balance/add:
     post:
       tags:
-        - MyService
+        - SystemService
       summary: adds transaction to existing balance
       operationId: addTransactionToBalance
       parameters:
@@ -136,7 +140,8 @@ paths:
   /balance/status:
     get:
       tags:
-        - MyService
+        - CustomerService
+        - SystemService
       summary: returns account balance status
       operationId: getBalance
       parameters:
@@ -160,7 +165,8 @@ paths:
   /balance/transactions:
     get:
       tags:
-        - MyService
+        - CustomerService
+        - SystemService
       summary: returns transactions of specific account for specific time interval
       operationId: getTransactions
       parameters:
@@ -190,7 +196,7 @@ paths:
   /balance/alltransactions:
     get:
       tags:
-        - MyService
+        - EmployeeService
       summary: returns all transactions for specific time interval
       operationId: getTransactions
       parameters:
@@ -216,10 +222,10 @@ paths:
                 type: string
                 description: reason of failure
 
-  /account/report:
+  /balance/account/report:
     get:
       tags:
-        - MyService
+        - EmployeeService
       summary: creates a report of spending statistics for one user
       operationId: createBalance
       parameters:
