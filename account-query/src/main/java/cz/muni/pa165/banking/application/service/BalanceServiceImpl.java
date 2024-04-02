@@ -26,39 +26,32 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
-    public boolean addNewBalance(String id) {
-        try{
-            this.findById(id);
-        }
-        catch (RuntimeException e){
-            balanceRepository.addNewBalance(id);
-            return true;
-        }
-        return false;
+    public void addNewBalance(String id) throws NotFoundAccountException {
+        this.findById(id);
+        balanceRepository.addNewBalance(id);
     }
 
     @Override
-    public BigDecimal getBalance(String id) {
+    public BigDecimal getBalance(String id) throws NotFoundAccountException {
         this.findById(id);
         return balanceRepository.getBalance(id);
     }
 
     @Override
-    public List<Transaction> getTransactions(String id, Date from, Date to) {
+    public List<Transaction> getTransactions(String id, Date from, Date to) throws NotFoundAccountException {
         this.findById(id);
         return balanceRepository.getTransactions(id, from, to);
     }
 
     @Override
-    public boolean addToBalance(String id, BigDecimal amount, String processID, TransactionType type) {
+    public void addToBalance(String id, BigDecimal amount, String processID, TransactionType type) throws NotFoundAccountException {
         this.findById(id);
         balanceRepository.addToBalance(id, amount, processID, type);
-        return true;
     }
 
     @Transactional(readOnly = true)
-    public Balance findById(String id) {
+    public Balance findById(String id) throws NotFoundAccountException {
         return balanceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Balance  of person with id: " + id + " was not found."));
+                .orElseThrow(() -> new NotFoundAccountException("Balance  of person with id: " + id + " was not found."));
     }
 }

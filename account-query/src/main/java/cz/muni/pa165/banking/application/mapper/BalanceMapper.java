@@ -19,7 +19,7 @@ public interface BalanceMapper {
     //TODO other types according to openapi
     TransactionType typeInToTypeOut(Transaction.TransactionTypeEnum type);
 
-    
+
     Transaction.TransactionTypeEnum typeOutToTypeIn(TransactionType type);
     default java.util.Date mapDateIn(java.time.@jakarta.validation.Valid OffsetDateTime value){
         return new Date(value.toInstant().toEpochMilli());

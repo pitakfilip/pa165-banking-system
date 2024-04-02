@@ -1,5 +1,6 @@
 package cz.muni.pa165.banking.domain.balance.service;
 
+import cz.muni.pa165.banking.application.service.NotFoundAccountException;
 import cz.muni.pa165.banking.domain.balance.Balance;
 import cz.muni.pa165.banking.domain.transaction.Transaction;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
@@ -12,8 +13,8 @@ import java.util.List;
  * @author Martin Mojzis
  */
 public interface BalanceService {
-    boolean addNewBalance(String id);
-    BigDecimal getBalance(String id);
-    List<Transaction> getTransactions(String id, Date from, Date to);
-    boolean addToBalance(String id, BigDecimal amount, String processID, TransactionType type);
+    void addNewBalance(String id) throws NotFoundAccountException;
+    BigDecimal getBalance(String id) throws NotFoundAccountException;
+    List<Transaction> getTransactions(String id, Date from, Date to) throws NotFoundAccountException;
+    void addToBalance(String id, BigDecimal amount, String processID, TransactionType type) throws NotFoundAccountException;
 }

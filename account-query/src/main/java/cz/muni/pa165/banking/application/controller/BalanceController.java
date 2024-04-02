@@ -29,14 +29,8 @@ public class BalanceController implements CustomerServiceApi, SystemServiceApi {
 
     @Override
     public ResponseEntity<BigDecimal> getBalance(String id) {
-        try{
-            BigDecimal result = balanceFacade.getBalance(id);
-            return ResponseEntity.ok(result);
-        }
-        catch (RuntimeException e){
-            return new ResponseEntity<String>(e.toString(), HttpStatus.BAD_REQUEST);
-        }
-
+        BigDecimal result = balanceFacade.getBalance(id);
+        return ResponseEntity.ok(result);
     }
 
     @Override
