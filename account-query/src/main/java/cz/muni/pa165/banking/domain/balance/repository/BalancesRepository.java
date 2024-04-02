@@ -1,10 +1,12 @@
 package cz.muni.pa165.banking.domain.balance.repository;
 
 import cz.muni.pa165.banking.domain.balance.Balance;
+import cz.muni.pa165.banking.domain.report.StatisticalReport;
 import cz.muni.pa165.banking.domain.transaction.Transaction;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;
@@ -21,7 +23,10 @@ public interface BalancesRepository {
     boolean addNewBalance(String id);
 
     BigDecimal getBalance(String id);
+    List<String> getAllIds();
     List<Transaction> getTransactions(String id, OffsetDateTime from, OffsetDateTime to, BigDecimal zero, BigDecimal maxAmount);
     List<Transaction> getTransactions(String id, OffsetDateTime from, OffsetDateTime to, BigDecimal minAmount, BigDecimal maxAmount, TransactionType type);
     void addToBalance(String id, BigDecimal amount, String processID, TransactionType type);
+
+    StatisticalReport getReport(String id,  OffsetDateTime beginning,  OffsetDateTime end);
 }

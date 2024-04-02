@@ -2,12 +2,14 @@ package cz.muni.pa165.banking.application.repository;
 
 import cz.muni.pa165.banking.domain.balance.Balance;
 import cz.muni.pa165.banking.domain.balance.repository.BalancesRepository;
+import cz.muni.pa165.banking.domain.report.StatisticalReport;
 import cz.muni.pa165.banking.domain.transaction.Transaction;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.*;
 
@@ -16,7 +18,6 @@ import java.util.*;
  */
 @Repository
 public class BalancesRepositoryImpl implements BalancesRepository {
-    //TODO methods
     //private final Map<Integer, Balance> allBalances = new HashMap<>();
     private final Map<String, Balance> mockData;
 
@@ -39,27 +40,41 @@ public class BalancesRepositoryImpl implements BalancesRepository {
 
     @Override
     public boolean addNewBalance(String id) {
-        return false;
+        if(mockData.containsKey(id)){
+            return false;
+        }
+        mockData.put(id, new Balance(id));
+        return true;
     }
 
     @Override
     public BigDecimal getBalance(String id) {
-        return null;
+        return mockData.get(id).getAmount();
     }
 
     @Override
-    public List<Transaction> getTransactions(String id, OffsetDateTime from, OffsetDateTime to, BigDecimal zero, BigDecimal maxAmount) {
-        return null;
+    public List<String> getAllIds() {
+        return mockData.keySet().stream().toList();
+    }
+
+    @Override
+    public List<Transaction> getTransactions(String id, OffsetDateTime from, OffsetDateTime to, BigDecimal minAmount, BigDecimal maxAmount) {
+        return mockData.get(id).getData(from, to, minAmount, maxAmount);
     }
 
     @Override
     public List<Transaction> getTransactions(String id, OffsetDateTime from, OffsetDateTime to, BigDecimal minAmount, BigDecimal maxAmount, TransactionType type) {
-        return null;
+        return mockData.get(id).getData(from, to, minAmount, maxAmount, type);
     }
 
     @Override
     public void addToBalance(String id, BigDecimal amount, String processID, TransactionType type) {
-        //TODO
+        mockData.get(id).AddTransaction(amount, type, processID);
+    }
+
+    @Override
+    public StatisticalReport getReport(String id,  OffsetDateTime beginning,  OffsetDateTime end) {
+        return mockData.get(id).getReport(beginning, end);
     }
 
     @Transactional

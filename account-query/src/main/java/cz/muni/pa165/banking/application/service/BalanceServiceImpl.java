@@ -4,6 +4,7 @@ import cz.muni.pa165.banking.application.exception.NotFoundAccountException;
 import cz.muni.pa165.banking.domain.balance.Balance;
 import cz.muni.pa165.banking.domain.balance.repository.BalancesRepository;
 import cz.muni.pa165.banking.domain.balance.service.BalanceService;
+import cz.muni.pa165.banking.domain.report.StatisticalReport;
 import cz.muni.pa165.banking.domain.transaction.Transaction;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -56,6 +59,21 @@ public class BalanceServiceImpl implements BalanceService {
     public void addToBalance(String id, BigDecimal amount, String processID, TransactionType type) throws NotFoundAccountException {
         this.findById(id);
         balanceRepository.addToBalance(id, amount, processID, type);
+    }
+
+    @Override
+    public StatisticalReport getReport(String id,  OffsetDateTime beginning,  OffsetDateTime end) {
+        this.findById(id);
+        return balanceRepository.getReport(id, beginning, end);
+    }
+
+    @Override
+    public List<Transaction> getAllTransactions(OffsetDateTime from, OffsetDateTime to, BigDecimal minAmount, BigDecimal maxAmount, TransactionType transactionType) {
+        List<Transaction> result = new LinkedList<>();
+        for (String id: balanceRepository.getAllIds()) {
+            result.addAll(getTransactions(id, from,  to, minAmount, maxAmount, transactionType));
+        }
+        return result;
     }
 
     @Transactional(readOnly = true)

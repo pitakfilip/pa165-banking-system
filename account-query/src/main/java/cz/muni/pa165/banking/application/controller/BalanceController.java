@@ -19,11 +19,10 @@ import java.util.List;
  * @author Martin Mojzis
  */
 @RestController
-@RequestMapping("/balance")
 public class BalanceController implements CustomerServiceApi, SystemServiceApi {
     private BalanceFacade balanceFacade;
     @Autowired
-    public void BalanceApi(BalanceFacade balanceFacade) {
+    public BalanceController(BalanceFacade balanceFacade) {
         this.balanceFacade = balanceFacade;
     }
 

@@ -79,6 +79,14 @@ components:
           type: number
           description: number of times this type of transaction was used to spend money
           example: 13
+        avgIn:
+          type: number
+          description: average amount of money regarding charging account
+          example: 120
+        avgOut:
+          type: number
+          description: average amount of money regarding spending money
+          example: 14
 
     TransactionsReport:
       title: statistical report about one account
