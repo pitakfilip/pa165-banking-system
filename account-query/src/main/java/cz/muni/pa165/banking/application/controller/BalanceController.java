@@ -38,7 +38,7 @@ public class BalanceController implements CustomerServiceApi, SystemServiceApi {
     }
 
     @Override
-    public ResponseEntity<Balance> addTransactionToBalance(String id, BigDecimal amount, String processId, String type) {
+    public ResponseEntity<Void> addTransactionToBalance(String id, BigDecimal amount, String processId, String type) {
         return null;
     }
 
