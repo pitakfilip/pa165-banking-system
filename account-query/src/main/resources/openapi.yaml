@@ -102,14 +102,10 @@ paths:
       summary: creates a balance
       operationId: createBalance
       parameters:
-        - { name: id, in: query, required: true, schema: { type: integer }, description: "id of account" }
+        - { name: id, in: query, required: true, schema: { type: string }, description: "id of account" }
       responses:
         "201":
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Balance'
 
   /balance/add:
     post:
@@ -145,7 +141,7 @@ paths:
       summary: returns account balance status
       operationId: getBalance
       parameters:
-        - { name: id, in: query, required: true, schema: { type: integer }, description: "id of account" }
+        - { name: id, in: query, required: true, schema: { type: string }, description: "id of account" }
       responses:
         "200":
           description: OK
@@ -170,7 +166,7 @@ paths:
       summary: returns transactions of specific account for specific time interval
       operationId: getTransactions
       parameters:
-        - { name: id, in: query, required: true, schema: { type: integer }, description: "id of account" }
+        - { name: id, in: query, required: true, schema: { type: string }, description: "id of account" }
         - { name: beginning, in: query, required: true, schema: { type: string, format: date }, description: "date from which onwards the transactions happened" }
         - { name: end, in: query, required: true, schema: { type: string, format: date }, description: "date before which wanted transactions happened" }
         - { name: minAmount, in: query, required: false, schema: { type: number }, description: "minimal amount of money included in transaction to be reported" }
@@ -198,7 +194,7 @@ paths:
       tags:
         - EmployeeService
       summary: returns all transactions for specific time interval
-      operationId: getTransactions
+      operationId: getAllTransactions
       parameters:
         - { name: beginning, in: query, required: true, schema: { type: string, format: date }, description: "date from which onwards the transactions happened" }
         - { name: end, in: query, required: true, schema: { type: string, format: date }, description: "date before which wanted transactions happened" }
@@ -227,9 +223,9 @@ paths:
       tags:
         - EmployeeService
       summary: creates a report of spending statistics for one user
-      operationId: createBalance
+      operationId: createReport
       parameters:
-        - { name: id, in: query, required: true, schema: { type: integer }, description: "id of account" }
+        - { name: id, in: query, required: true, schema: { type: string }, description: "id of account" }
         - { name: beginning, in: query, required: true, schema: { type: string, format: date }, description: "date from which onwards the transactions wanted in report happened" }
         - { name: end, in: query, required: true, schema: { type: string, format: date }, description: "date before which wanted transactions wanted in report happened" }
       responses:
