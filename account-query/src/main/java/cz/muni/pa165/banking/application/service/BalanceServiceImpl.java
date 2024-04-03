@@ -17,6 +17,7 @@ import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Martin Mojzis
@@ -31,48 +32,48 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
-    public void addNewBalance(String id) throws NotFoundAccountException {
-        balanceRepository.addNewBalance(id);
+    public void addNewBalance(String id) {
+        balanceRepository.addBalance(id);
     }
 
     @Override
     public BigDecimal getBalance(String id) throws NotFoundAccountException {
-        this.findById(id);
-        return balanceRepository.getBalance(id);
+        Balance balance = this.findById(id);
+        return balance.getAmount();
     }
 
     @Override
     public List<Transaction> getTransactions(String id, OffsetDateTime from, OffsetDateTime to, BigDecimal minAmount,
                                              BigDecimal maxAmount, TransactionType type)
             throws NotFoundAccountException {
-        this.findById(id);
+        Balance balance = this.findById(id);
         if (minAmount == null && maxAmount == null && type == null)
-            return balanceRepository.getTransactions(id, from, to, BigDecimal.valueOf(Integer.MIN_VALUE),
+            return balance.getData(from, to, BigDecimal.valueOf(Integer.MIN_VALUE),
                     BigDecimal.valueOf(Integer.MAX_VALUE));
         if (minAmount == null && maxAmount == null)
-            return balanceRepository.getTransactions(id, from, to, BigDecimal.valueOf(Integer.MIN_VALUE),
+            return balance.getData(from, to, BigDecimal.valueOf(Integer.MIN_VALUE),
                     BigDecimal.valueOf(Integer.MAX_VALUE), type);
         if (maxAmount == null && type == null)
-            return balanceRepository.getTransactions(id, from, to, minAmount, BigDecimal.valueOf(Integer.MAX_VALUE));
+            return balance.getData(from, to, minAmount, BigDecimal.valueOf(Integer.MAX_VALUE));
         if (minAmount == null && type == null)
-            return balanceRepository.getTransactions(id, from, to, BigDecimal.valueOf(Integer.MIN_VALUE), maxAmount);
+            return balance.getData(from, to, BigDecimal.valueOf(Integer.MIN_VALUE), maxAmount);
         if (maxAmount == null)
-            return balanceRepository.getTransactions(id, from, to, minAmount, BigDecimal.valueOf(Integer.MAX_VALUE), type);
-        if (minAmount == null) return balanceRepository.getTransactions(id, from, to, BigDecimal.ZERO, maxAmount, type);
-        return balanceRepository.getTransactions(id, from, to, minAmount, maxAmount, type);
+            return balance.getData(from, to, minAmount, BigDecimal.valueOf(Integer.MAX_VALUE), type);
+        if (minAmount == null) return balance.getData(from, to, BigDecimal.ZERO, maxAmount, type);
+        return balance.getData(from, to, minAmount, maxAmount, type);
     }
 
     @Override
     public void addToBalance(String id, BigDecimal amount, String processID, TransactionType type)
             throws NotFoundAccountException {
-        this.findById(id);
-        balanceRepository.addToBalance(id, amount, processID, type);
+        Balance balance = this.findById(id);
+        balance.addTransaction(amount, type, processID);
     }
 
     @Override
     public StatisticalReport getReport(String id,  OffsetDateTime beginning,  OffsetDateTime end) {
-        this.findById(id);
-        return balanceRepository.getReport(id, beginning, end);
+        Balance balance = this.findById(id);
+        return balance.getReport(beginning, end);
     }
 
     @Override

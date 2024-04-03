@@ -6,10 +6,8 @@ import cz.muni.pa165.banking.domain.report.StatisticalReport;
 import cz.muni.pa165.banking.domain.transaction.Transaction;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.*;
 
@@ -24,13 +22,11 @@ public class BalancesRepositoryImpl implements BalancesRepository {
     public BalancesRepositoryImpl() {
         mockData.put("id1", new Balance("id1"));
         mockData.put("id2", new Balance("id2"));
-
     }
 
     //@Transactional
     @Override
     public Optional<Balance> findById(String id) {
-        //return allBalances.get(id);
         if (mockData.containsKey(id)) {
             return Optional.of(mockData.get(id));
         }
@@ -38,43 +34,10 @@ public class BalancesRepositoryImpl implements BalancesRepository {
     }
 
     @Override
-    public boolean addNewBalance(String id) {
-        if(mockData.containsKey(id)){
-            return false;
-        }
-        mockData.put(id, new Balance(id));
-        return true;
-    }
-
-    @Override
-    public BigDecimal getBalance(String id) {
-        return mockData.get(id).getAmount();
-    }
-
-    @Override
     public List<String> getAllIds() {
         return mockData.keySet().stream().toList();
     }
 
-    @Override
-    public List<Transaction> getTransactions(String id, OffsetDateTime from, OffsetDateTime to, BigDecimal minAmount, BigDecimal maxAmount) {
-        return mockData.get(id).getData(from, to, minAmount, maxAmount);
-    }
-
-    @Override
-    public List<Transaction> getTransactions(String id, OffsetDateTime from, OffsetDateTime to, BigDecimal minAmount, BigDecimal maxAmount, TransactionType type) {
-        return mockData.get(id).getData(from, to, minAmount, maxAmount, type);
-    }
-
-    @Override
-    public void addToBalance(String id, BigDecimal amount, String processID, TransactionType type) {
-        mockData.get(id).AddTransaction(amount, type, processID);
-    }
-
-    @Override
-    public StatisticalReport getReport(String id,  OffsetDateTime beginning,  OffsetDateTime end) {
-        return mockData.get(id).getReport(beginning, end);
-    }
 
     //@Transactional
     @Override

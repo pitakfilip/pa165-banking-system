@@ -7,7 +7,6 @@ import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import java.math.BigDecimal;
 import java.time.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,7 +24,7 @@ public class Balance {
         this.accountId = userId;
     }
 
-    public void AddTransaction(BigDecimal amount, TransactionType type, String processId) {
+    public void addTransaction(BigDecimal amount, TransactionType type, String processId) {
         transactionList.add(new Transaction(type, amount,
                 OffsetDateTime.now(), processId));
         this.amount = this.amount.add(amount);

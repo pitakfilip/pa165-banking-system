@@ -20,13 +20,5 @@ public interface BalancesRepository {
     Optional<Balance> findById(String id);
     void addBalance(String id);
 
-    boolean addNewBalance(String id);
-
-    BigDecimal getBalance(String id);
     List<String> getAllIds();
-    List<Transaction> getTransactions(String id, OffsetDateTime from, OffsetDateTime to, BigDecimal zero, BigDecimal maxAmount);
-    List<Transaction> getTransactions(String id, OffsetDateTime from, OffsetDateTime to, BigDecimal minAmount, BigDecimal maxAmount, TransactionType type);
-    void addToBalance(String id, BigDecimal amount, String processID, TransactionType type);
-
-    StatisticalReport getReport(String id,  OffsetDateTime beginning,  OffsetDateTime end);
 }
