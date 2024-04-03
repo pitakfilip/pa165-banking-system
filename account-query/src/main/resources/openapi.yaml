@@ -35,6 +35,7 @@ components:
           format: date-time
         processId:
           type: string
+          format: uuid
           description: id of transaction issued by transaction processor
 
     Balance:
@@ -123,7 +124,7 @@ paths:
       parameters:
         - { name: id, in: query, required: true, schema: { type: string }, description: "id of account" }
         - { name: amount, in: query, required: true, schema: { type: number }, description: "amount of money in transaction" }
-        - { name: processId, in: query, required: true, schema: { type: string }, description: "id of process which this transaction is part of" }
+        - { name: processId, in: query, required: true, schema: { type: string, format: uuid }, description: "id of process which this transaction is part of" }
         - { name: type, in: query, required: true, schema: { $ref: "#/components/schemas/TransactionType" }, description: "type  of transaction" }
       responses:
         "200":

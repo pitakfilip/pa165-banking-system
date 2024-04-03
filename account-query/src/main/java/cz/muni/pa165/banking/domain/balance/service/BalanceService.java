@@ -6,15 +6,15 @@ import cz.muni.pa165.banking.domain.transaction.Transaction;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Martin Mojzis
  */
 public interface BalanceService {
+
     void addNewBalance(String id) throws NotFoundAccountException;
 
     BigDecimal getBalance(String id) throws NotFoundAccountException;
@@ -22,7 +22,7 @@ public interface BalanceService {
     List<Transaction> getTransactions(String id, OffsetDateTime from, OffsetDateTime to, BigDecimal minAmount,
                                       BigDecimal maxAmount, TransactionType type) throws NotFoundAccountException;
 
-    void addToBalance(String id, BigDecimal amount, String processID, TransactionType type) throws NotFoundAccountException;
+    void addToBalance(String id, BigDecimal amount, UUID processID, TransactionType type) throws NotFoundAccountException;
 
     StatisticalReport getReport(String id, OffsetDateTime beginning, OffsetDateTime end);
 

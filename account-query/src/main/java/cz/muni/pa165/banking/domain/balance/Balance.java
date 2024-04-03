@@ -5,17 +5,21 @@ import cz.muni.pa165.banking.domain.transaction.Transaction;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
 
 import java.math.BigDecimal;
-import java.time.*;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * @author Martin Mojzis
  */
 public class Balance {
+
     private final String accountId;
+
     private BigDecimal amount;
+
     private final List<Transaction> transactionList;
 
     public Balance(String userId) {
@@ -24,7 +28,7 @@ public class Balance {
         this.accountId = userId;
     }
 
-    public void addTransaction(BigDecimal amount, TransactionType type, String processId) {
+    public void addTransaction(BigDecimal amount, TransactionType type, UUID processId) {
         transactionList.add(new Transaction(type, amount,
                 OffsetDateTime.now(), processId));
         this.amount = this.amount.add(amount);
@@ -38,7 +42,7 @@ public class Balance {
         return transactionList;
     }
 
-    public Transaction getTransaction(String pid) throws RuntimeException {
+    public Transaction getTransaction(UUID pid) throws RuntimeException {
         List<Transaction> result = transactionList.stream().filter(a -> Objects.equals(a.getProcessId(), pid)).toList();
         if (result.isEmpty()) {
             throw new RuntimeException("list has no tranaction with this id");
@@ -46,7 +50,7 @@ public class Balance {
         return result.get(0);
     }
 
-    public boolean transactionExists(String pid) {
+    public boolean transactionExists(UUID pid) {
         List<Transaction> result = transactionList.stream().filter(a -> Objects.equals(a.getProcessId(), pid)).toList();
         return !result.isEmpty();
     }

@@ -7,27 +7,24 @@ import cz.muni.pa165.banking.domain.balance.service.BalanceService;
 import cz.muni.pa165.banking.domain.report.StatisticalReport;
 import cz.muni.pa165.banking.domain.transaction.Transaction;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * @author Martin Mojzis
  */
 @Service
 public class BalanceServiceImpl implements BalanceService {
+
     private final BalancesRepository balanceRepository;
 
-    @Autowired
-    public BalanceServiceImpl(BalancesRepository balanceRepository){
+    public BalanceServiceImpl(BalancesRepository balanceRepository) {
         this.balanceRepository = balanceRepository;
     }
 
@@ -38,7 +35,7 @@ public class BalanceServiceImpl implements BalanceService {
 
     @Override
     public BigDecimal getBalance(String id) throws NotFoundAccountException {
-        Balance balance = this.findById(id);
+        Balance balance = findById(id);
         return balance.getAmount();
     }
 
@@ -46,7 +43,7 @@ public class BalanceServiceImpl implements BalanceService {
     public List<Transaction> getTransactions(String id, OffsetDateTime from, OffsetDateTime to, BigDecimal minAmount,
                                              BigDecimal maxAmount, TransactionType type)
             throws NotFoundAccountException {
-        Balance balance = this.findById(id);
+        Balance balance = findById(id);
         if (minAmount == null && maxAmount == null && type == null)
             return balance.getData(from, to, BigDecimal.valueOf(Integer.MIN_VALUE),
                     BigDecimal.valueOf(Integer.MAX_VALUE));
@@ -59,20 +56,20 @@ public class BalanceServiceImpl implements BalanceService {
             return balance.getData(from, to, BigDecimal.valueOf(Integer.MIN_VALUE), maxAmount);
         if (maxAmount == null)
             return balance.getData(from, to, minAmount, BigDecimal.valueOf(Integer.MAX_VALUE), type);
-        if (minAmount == null) return balance.getData(from, to, BigDecimal.ZERO, maxAmount, type);
-        return balance.getData(from, to, minAmount, maxAmount, type);
+
+        return balance.getData(from, to, Objects.requireNonNullElse(minAmount, BigDecimal.ZERO), maxAmount, type);
     }
 
     @Override
-    public void addToBalance(String id, BigDecimal amount, String processID, TransactionType type)
+    public void addToBalance(String id, BigDecimal amount, UUID processID, TransactionType type)
             throws NotFoundAccountException {
-        Balance balance = this.findById(id);
+        Balance balance = findById(id);
         balance.addTransaction(amount, type, processID);
     }
 
     @Override
-    public StatisticalReport getReport(String id,  OffsetDateTime beginning,  OffsetDateTime end) {
-        Balance balance = this.findById(id);
+    public StatisticalReport getReport(String id, OffsetDateTime beginning, OffsetDateTime end) {
+        Balance balance = findById(id);
         return balance.getReport(beginning, end);
     }
 
@@ -80,13 +77,12 @@ public class BalanceServiceImpl implements BalanceService {
     public List<Transaction> getAllTransactions(OffsetDateTime from, OffsetDateTime to, BigDecimal minAmount,
                                                 BigDecimal maxAmount, TransactionType transactionType) {
         List<Transaction> result = new LinkedList<>();
-        for (String id: balanceRepository.getAllIds()) {
-            result.addAll(getTransactions(id, from,  to, minAmount, maxAmount, transactionType));
+        for (String id : balanceRepository.getAllIds()) {
+            result.addAll(getTransactions(id, from, to, minAmount, maxAmount, transactionType));
         }
         return result;
     }
 
-    @Transactional(readOnly = true)
     public Balance findById(String id) throws NotFoundAccountException {
         return balanceRepository.findById(id)
                 .orElseThrow(() -> new NotFoundAccountException("Balance  of person with id: " + id + " was not found."));

@@ -2,22 +2,20 @@ package cz.muni.pa165.banking.application.repository;
 
 import cz.muni.pa165.banking.domain.balance.Balance;
 import cz.muni.pa165.banking.domain.balance.repository.BalancesRepository;
-import cz.muni.pa165.banking.domain.report.StatisticalReport;
-import cz.muni.pa165.banking.domain.transaction.Transaction;
-import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Martin Mojzis
  */
 @Repository
 public class BalancesRepositoryImpl implements BalancesRepository {
-    //private final Map<Integer, Balance> allBalances = new HashMap<>();
-    private Map<String, Balance> mockData = new HashMap<>();
+
+    private final Map<String, Balance> mockData = new HashMap<>();
 
     public BalancesRepositoryImpl() {
         mockData.put("id1", new Balance("id1"));

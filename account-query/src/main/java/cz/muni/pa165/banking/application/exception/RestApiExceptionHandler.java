@@ -1,6 +1,5 @@
 package cz.muni.pa165.banking.application.exception;
 
-import cz.muni.pa165.banking.application.exception.NotFoundAccountException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

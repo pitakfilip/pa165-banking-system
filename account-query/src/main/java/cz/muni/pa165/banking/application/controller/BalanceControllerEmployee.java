@@ -5,7 +5,6 @@ import cz.muni.pa165.banking.account.query.dto.Transaction;
 import cz.muni.pa165.banking.account.query.dto.TransactionType;
 import cz.muni.pa165.banking.account.query.dto.TransactionsReport;
 import cz.muni.pa165.banking.application.facade.BalanceFacade;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,11 +17,13 @@ import java.util.List;
  */
 @RestController
 public class BalanceControllerEmployee implements EmployeeServiceApi {
+
     private final BalanceFacade balanceFacade;
-    @Autowired
+
     public BalanceControllerEmployee(BalanceFacade balanceFacade) {
         this.balanceFacade = balanceFacade;
     }
+
     @Override
     public ResponseEntity<TransactionsReport> createReport(String id, LocalDate beginning, LocalDate end) {
         TransactionsReport result = balanceFacade.getReport(id, beginning, end);
