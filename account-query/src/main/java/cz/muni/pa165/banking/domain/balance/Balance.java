@@ -39,7 +39,7 @@ public class Balance {
         return transactionList;
     }
 
-    public Transaction GetTransaction(String pid) throws RuntimeException {
+    public Transaction getTransaction(String pid) throws RuntimeException {
         List<Transaction> result = transactionList.stream().filter(a -> Objects.equals(a.getProcessId(), pid)).toList();
         if (result.isEmpty()) {
             throw new RuntimeException("list has no tranaction with this id");
@@ -47,7 +47,7 @@ public class Balance {
         return result.get(0);
     }
 
-    public boolean TransactionExists(String pid) {
+    public boolean transactionExists(String pid) {
         List<Transaction> result = transactionList.stream().filter(a -> Objects.equals(a.getProcessId(), pid)).toList();
         return !result.isEmpty();
     }

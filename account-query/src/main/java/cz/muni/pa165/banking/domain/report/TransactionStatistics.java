@@ -49,13 +49,4 @@ public class TransactionStatistics {
     public TransactionType getType() {
         return type;
     }
-    public BigDecimal getAverageIn(){
-        return amountIn.divide(BigDecimal.valueOf(timesIn), RoundingMode.UP);
-    }
-    public BigDecimal getAverageOut(){
-        return amountOut.divide(BigDecimal.valueOf(timesOut), RoundingMode.UP);
-    }
-    public BigDecimal getTotalAmount(){
-        return amountIn.add(amountOut);
-    }
 }
