@@ -1,6 +1,7 @@
 package cz.muni.pa165.banking.application.facade;
 
 import cz.muni.pa165.banking.account.query.dto.Transaction;
+import cz.muni.pa165.banking.account.query.dto.TransactionType;
 import cz.muni.pa165.banking.account.query.dto.TransactionsReport;
 import cz.muni.pa165.banking.application.mapper.BalanceMapper;
 import cz.muni.pa165.banking.application.exception.NotFoundAccountException;
@@ -34,7 +35,7 @@ public class BalanceFacade {
         balanceService.addNewBalance(id);
     }
 
-    public void addToBalance(String id, String processId, BigDecimal value, Transaction.TransactionTypeEnum type) {
+    public void addToBalance(String id, String processId, BigDecimal value, TransactionType type) {
         balanceService.addToBalance(id, value, processId, balanceMapper.mapTypeOut(type));
     }
 
@@ -43,7 +44,7 @@ public class BalanceFacade {
     }
 
     public List<Transaction> getTransactions(String id, LocalDate beginning, LocalDate end, BigDecimal minAmount,
-                                             BigDecimal maxAmount, String type) {
+                                             BigDecimal maxAmount, TransactionType type) {
         List<cz.muni.pa165.banking.domain.transaction.Transaction> toReturn;
         if(type == null){
             toReturn = balanceService.getTransactions(id, OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC),
@@ -51,8 +52,8 @@ public class BalanceFacade {
         }
         else {
             toReturn = balanceService.getTransactions(id, OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC),
-                            OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC), minAmount, maxAmount,
-                            balanceMapper.mapTypeOut(Transaction.TransactionTypeEnum.valueOf(type)));
+                            OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC),
+                    minAmount, maxAmount, balanceMapper.mapTypeOut(type));
         }
         return toReturn.stream().map(balanceMapper::mapTransactionIn).toList();
     }
@@ -64,7 +65,7 @@ public class BalanceFacade {
     }
 
     public List<Transaction> getAllTransactions(LocalDate beginning, LocalDate end, BigDecimal minAmount,
-                                                BigDecimal maxAmount, String type) {
+                                                BigDecimal maxAmount, TransactionType type) {
         if(type == null){
             List<cz.muni.pa165.banking.domain.transaction.Transaction> toReturn =
                     balanceService.getAllTransactions(OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC),
@@ -74,7 +75,7 @@ public class BalanceFacade {
         List<cz.muni.pa165.banking.domain.transaction.Transaction> toReturn =
                 balanceService.getAllTransactions(OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC),
                 OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC), minAmount, maxAmount,
-                        balanceMapper.mapTypeOut(Transaction.TransactionTypeEnum.valueOf(type)));
+                        balanceMapper.mapTypeOut(type));
         return toReturn.stream().map(balanceMapper::mapTransactionIn).toList();
     }
 

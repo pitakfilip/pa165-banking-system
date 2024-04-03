@@ -3,8 +3,6 @@ package cz.muni.pa165.banking.application.mapper;
 import cz.muni.pa165.banking.account.query.dto.Transaction;
 import cz.muni.pa165.banking.account.query.dto.TransactionStatistics;
 import cz.muni.pa165.banking.account.query.dto.TransactionsReport;
-import cz.muni.pa165.banking.domain.balance.Balance;
-import cz.muni.pa165.banking.domain.balance.service.BalanceService;
 import cz.muni.pa165.banking.domain.report.StatisticalReport;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import org.mapstruct.InjectionStrategy;
@@ -23,11 +21,8 @@ import java.util.Date;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, injectionStrategy = InjectionStrategy.CONSTRUCTOR,
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface BalanceMapper {
-    TransactionType mapTypeOut(Transaction.TransactionTypeEnum type);
-
-    Transaction.TransactionTypeEnum mapTypeIn(TransactionType type);
-    TransactionStatistics.TransactionTypeEnum mapTypeStatIn(TransactionType type);
-
+    TransactionType mapTypeOut(cz.muni.pa165.banking.account.query.dto.TransactionType type);
+    cz.muni.pa165.banking.account.query.dto.TransactionType mapTypeIn(TransactionType type);
     default java.util.Date mapDateIn(java.time.@jakarta.validation.Valid OffsetDateTime value) {
         return new Date(value.toInstant().toEpochMilli());
     }
@@ -51,7 +46,7 @@ public interface BalanceMapper {
     }
     default TransactionStatistics mapStatisticsOut(cz.muni.pa165.banking.domain.report.TransactionStatistics statistics){
         TransactionStatistics result = new TransactionStatistics();
-        result.setTransactionType(mapTypeStatIn(statistics.getType()));
+        result.setTransactionType(mapTypeIn(statistics.getType()));
         result.setAmountOut(statistics.getAmountOut());
         result.setTimesOut(BigDecimal.valueOf(statistics.getTimesOut()));
         result.setAmountIn(statistics.getAmountIn());

@@ -3,6 +3,7 @@ package cz.muni.pa165.banking.application.controller;
 import cz.muni.pa165.banking.account.query.CustomerServiceApi;
 import cz.muni.pa165.banking.account.query.SystemServiceApi;
 import cz.muni.pa165.banking.account.query.dto.Transaction;
+import cz.muni.pa165.banking.account.query.dto.TransactionType;
 import cz.muni.pa165.banking.application.facade.BalanceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,14 +33,14 @@ public class BalanceController implements CustomerServiceApi, SystemServiceApi {
 
     @Override
     public ResponseEntity<List<Transaction>> getTransactions(String id, LocalDate beginning, LocalDate end,
-                                                             BigDecimal minAmount, BigDecimal maxAmount, String type) {
+                                                             BigDecimal minAmount, BigDecimal maxAmount, TransactionType type) {
         List<Transaction> toReturn = balanceFacade.getTransactions(id, beginning, end, minAmount, maxAmount, type);
         return ResponseEntity.ok(toReturn);
     }
 
     @Override
-    public ResponseEntity<Void> addTransactionToBalance(String id, BigDecimal amount, String processId, String type) {
-        balanceFacade.addToBalance(id, processId, amount, Transaction.TransactionTypeEnum.valueOf(type));
+    public ResponseEntity<Void> addTransactionToBalance(String id, BigDecimal amount, String processId, TransactionType type) {
+        balanceFacade.addToBalance(id, processId, amount, type);
         return ResponseEntity.ok().build();
     }
 

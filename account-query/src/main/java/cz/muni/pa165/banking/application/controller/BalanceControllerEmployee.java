@@ -2,6 +2,7 @@ package cz.muni.pa165.banking.application.controller;
 
 import cz.muni.pa165.banking.account.query.EmployeeServiceApi;
 import cz.muni.pa165.banking.account.query.dto.Transaction;
+import cz.muni.pa165.banking.account.query.dto.TransactionType;
 import cz.muni.pa165.banking.account.query.dto.TransactionsReport;
 import cz.muni.pa165.banking.application.facade.BalanceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class BalanceControllerEmployee implements EmployeeServiceApi {
 
     @Override
     public ResponseEntity<List<Transaction>> getAllTransactions(LocalDate beginning, LocalDate end,
-                                                                BigDecimal minAmount, BigDecimal maxAmount, String type) {
+                                                                BigDecimal minAmount, BigDecimal maxAmount, TransactionType type) {
         List<Transaction> result = balanceFacade.getAllTransactions(beginning, end, minAmount, maxAmount, type);
         return ResponseEntity.ok(result);
     }

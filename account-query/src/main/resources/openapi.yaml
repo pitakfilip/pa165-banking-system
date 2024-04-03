@@ -15,14 +15,16 @@ tags:
     description: Service to be used by employees of bank
 components:
   schemas:
+    TransactionType:
+      type: string
+      enum: [ WITHDRAW, DEPOSIT, CREDIT, CROSS_ACCOUNT_PAYMENT, REFUND ]
+      description: type of transaction
     Transaction:
       title: A transaction
       description: A object representing one transaction
       properties:
         transactionType:
-          type: string
-          enum: [ WITHDRAW, DEPOSIT, CREDIT, CROSS_ACCOUNT_PAYMENT, REFUND ]
-          description: type of transaction
+          $ref: "#/components/schemas/TransactionType"
         amount:
           type: number
           description: amount of money in transaction
@@ -59,10 +61,7 @@ components:
       title: statistics about one type of transaction
       properties:
         transactionType:
-          type: string
-          enum: [ WITHDRAW, DEPOSIT, CREDIT, CROSS_ACCOUNT_PAYMENT, REFUND ]
-          description: type of transaction
-          nullable: true
+          $ref: "#/components/schemas/TransactionType"
         amountIn:
           type: number
           description: amount of money got by this type of transactions
@@ -125,7 +124,7 @@ paths:
         - { name: id, in: query, required: true, schema: { type: string }, description: "id of account" }
         - { name: amount, in: query, required: true, schema: { type: number }, description: "amount of money in transaction" }
         - { name: processId, in: query, required: true, schema: { type: string }, description: "id of process which this transaction is part of" }
-        - { name: type, in: query, required: true, schema: { type: string, enum: [ WITHDRAW, DEPOSIT, CREDIT, CROSS_ACCOUNT_PAYMENT, REFUND ] }, description: "type  of transaction" }
+        - { name: type, in: query, required: true, schema: { $ref: "#/components/schemas/TransactionType" }, description: "type  of transaction" }
       responses:
         "200":
           description: OK
@@ -175,7 +174,7 @@ paths:
         - { name: end, in: query, required: true, schema: { type: string, format: date }, description: "date before which wanted transactions happened" }
         - { name: minAmount, in: query, required: false, schema: { type: number }, description: "minimal amount of money included in transaction to be reported" }
         - { name: maxAmount, in: query, required: false, schema: { type: number }, description: "maximal amount of money included in transaction to be reported" }
-        - { name: type, in: query, required: false, schema: { type: string, enum: [ WITHDRAW, DEPOSIT, CREDIT, CROSS_ACCOUNT_PAYMENT, REFUND ] }, description: "type of transactiops to be included in returned ones" }
+        - { name: type, in: query, required: false, schema: { $ref: "#/components/schemas/TransactionType" }, description: "type of transactiops to be included in returned ones" }
       responses:
         "200":
           description: OK
@@ -204,7 +203,7 @@ paths:
         - { name: end, in: query, required: true, schema: { type: string, format: date }, description: "date before which wanted transactions happened" }
         - { name: minAmount, in: query, required: false, schema: { type: number }, description: "minimal amount of money included in transaction to be reported" }
         - { name: maxAmount, in: query, required: false, schema: { type: number }, description: "maximal amount of money included in transaction to be reported" }
-        - { name: type, in: query, required: false, schema: { type: string, enum: [ WITHDRAW, DEPOSIT, CREDIT, CROSS_ACCOUNT_PAYMENT, REFUND ] }, description: "type of transactiops to be included in returned ones" }
+        - { name: type, in: query, required: false, schema: { $ref: "#/components/schemas/TransactionType" }, description: "type of transactiops to be included in returned ones" }
       responses:
         "200":
           description: OK
