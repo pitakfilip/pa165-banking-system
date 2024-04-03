@@ -9,13 +9,16 @@ public class Transaction {
     
     private final Account target;
     
+    private final TransactionType type;
+    
     private final Money amount;
     
     private final String detail;
 
-    public Transaction(Account source, Account target, Money amount, String detail) {
+    public Transaction(Account source, Account target, TransactionType type, Money amount, String detail) {
         this.source = source;
         this.target = target;
+        this.type = type;
         this.amount = amount;
         this.detail = detail;
     }
@@ -26,6 +29,10 @@ public class Transaction {
 
     public Account getTarget() {
         return target;
+    }
+    
+    public TransactionType getType() {
+        return type;
     }
 
     public Money getAmount() {

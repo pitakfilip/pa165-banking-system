@@ -1,14 +1,15 @@
 package cz.muni.pa165.banking.domain.money;
 
 import java.math.BigDecimal;
+import java.util.Currency;
 
 public class Money {
 
     private final BigDecimal amount;
 
-    private final String currency;
+    private final Currency currency;
 
-    public Money(BigDecimal amount, String currency) {
+    public Money(BigDecimal amount, Currency currency) {
         this.amount = amount;
         this.currency = currency;
     }
@@ -17,7 +18,10 @@ public class Money {
         return amount;
     }
 
-    public String getCurrency() {
+    public Currency getCurrency() {
         return currency;
     }
+    
+    
+    
 }

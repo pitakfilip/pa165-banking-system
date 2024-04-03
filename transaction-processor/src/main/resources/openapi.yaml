@@ -12,12 +12,12 @@ tags:
     description: API for administration of transaction processes
 
 paths:
-  /transaction/v1/create:
+  /transaction/v1/process:
     put:
       tags:
         - Transaction
       operationId: create-transaction-process
-      summary: Create a new request for a transaction
+      summary: Create a new request for a transaction to be processed
       description: |
         Method starts a new process for processing a transaction request defined by the input.
         After a process is created successfully, it is being handled asynchronous. Method replies with a JSON object
@@ -35,6 +35,56 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProcessDto'
+
+  /transaction/v1/status:
+    get:
+      tags:
+        - Transaction
+      operationId: process-status
+      summary: Get information about a existing transaction process
+      description: |
+        Method finds an existing process for a transaction request, returning all information about it's state
+        and further information regarding errors.
+      parameters:
+        - in: header
+          name: x-process-uuid
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses: 
+        '200':
+          description: xx
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessDetailDto'
+        '404':
+          description: Resource or process by UUID not found
+
+  /transaction/v1/revert:
+    post:
+      tags:
+        - Transaction
+      operationId: revert-transaction-process
+      summary: Revert a transaction
+      description: |
+        Method finds an existing process for a transaction request, which has been executed successfully, and reverts
+        the changes done
+      parameters:
+        - in: header
+          name: x-process-uuid
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        '200':
+          description: Process found and reverted changes in account(s)
+        '400':
+          description: Process found by UUID but not in expected state (PROCESSED)
+        '404':
+          description: Resource or process by UUID not found
 
 components: 
   schemas: 
@@ -70,6 +120,8 @@ components:
           $ref: '#/components/schemas/AccountDto'
         target:
           $ref: '#/components/schemas/AccountDto'
+        type:
+          $ref: '#/components/schemas/TransactionTypeDto'
         amount:
           $ref: '#/components/schemas/MoneyDto'
         detail:
@@ -89,11 +141,15 @@ components:
       properties:
         identifier:
           type: string
+          format: uuid
         status:
           $ref: '#/components/schemas/StatusDto'
         info:
           type: string
           description: Message detail regarding process status, e.g. reason of failure or result of process.
     
-    
+    ProcessDetailDto:
+      allOf:
+        - $ref: '#/components/schemas/ProcessDto'
+        - $ref: '#/components/schemas/TransactionDto'
         

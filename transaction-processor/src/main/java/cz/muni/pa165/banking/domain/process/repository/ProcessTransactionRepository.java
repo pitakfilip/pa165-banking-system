@@ -1,11 +1,12 @@
 package cz.muni.pa165.banking.domain.process.repository;
 
 import cz.muni.pa165.banking.domain.process.ProcessTransaction;
-import cz.muni.pa165.banking.domain.transaction.Transaction;
 
-public interface TransactionRepository {
+import java.util.UUID;
+
+public interface ProcessTransactionRepository {
     
-    Transaction findTransactionByProcessId(String uuid);
+    ProcessTransaction findTransactionByProcessId(UUID processUuid);
     
     void save(ProcessTransaction transaction);
     

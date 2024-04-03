@@ -1,38 +1,42 @@
 package cz.muni.pa165.banking.domain.process;
 
+import cz.muni.pa165.banking.domain.messaging.MessageProducer;
+import cz.muni.pa165.banking.domain.messaging.ProcessRequest;
 import cz.muni.pa165.banking.domain.process.repository.ProcessRepository;
 import cz.muni.pa165.banking.domain.transaction.Transaction;
-import cz.muni.pa165.banking.domain.process.repository.TransactionRepository;
+import cz.muni.pa165.banking.domain.process.repository.ProcessTransactionRepository;
 
 public class ProcessFactory {
     
-    private final TransactionRepository transactionRepository;
+    private final ProcessTransactionRepository processTransactionRepository;
     
     private final ProcessRepository processRepository;
 
-    public ProcessFactory(TransactionRepository transactionRepository,
+    public ProcessFactory(ProcessTransactionRepository processTransactionRepository,
                           ProcessRepository processRepository) {
-        this.transactionRepository = transactionRepository;
+        this.processTransactionRepository = processTransactionRepository;
         this.processRepository = processRepository;
     }
 
 
-    public Process create(Transaction transaction) {
+    public Process create(Transaction transaction, MessageProducer messageProducer) throws Exception {
         Process newProcess = new Process();
         processRepository.save(newProcess);
 
         ProcessTransaction assignedTransaction = new ProcessTransaction(
                 transaction.getSource(),
                 transaction.getTarget(),
+                transaction.getType(),
                 transaction.getAmount(),
                 transaction.getDetail(),
                 newProcess.uuid()
         );
-        transactionRepository.save(assignedTransaction);
+        processTransactionRepository.save(assignedTransaction);
         
-        // TODO create a message and publish it to RabbitMq -> asynchronous processing of request
+        messageProducer.send(new ProcessRequest(newProcess.uuid(), transaction.getType()));
         
         return newProcess;
     }
+
     
 }

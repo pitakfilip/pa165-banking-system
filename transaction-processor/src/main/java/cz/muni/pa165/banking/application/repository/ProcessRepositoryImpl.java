@@ -14,13 +14,18 @@ public class ProcessRepositoryImpl implements ProcessRepository {
     private final Map<String, Process> inmemoryDb = new HashMap<>();
 
     @Override
+    public boolean idExists(String uuid) {
+        return inmemoryDb.containsKey(uuid);
+    }
+
+    @Override
     public Process findById(String uuid) {
         return inmemoryDb.get(uuid);
     }
 
     @Override
     public void save(Process process) {
-        inmemoryDb.put(process.uuid(), process);
+        inmemoryDb.put(process.uuid().toString(), process);
     }
 
 }
