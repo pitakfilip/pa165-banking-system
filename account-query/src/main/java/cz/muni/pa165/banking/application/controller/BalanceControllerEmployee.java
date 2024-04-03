@@ -17,7 +17,7 @@ import java.util.List;
  */
 @RestController
 public class BalanceControllerEmployee implements EmployeeServiceApi {
-    private BalanceFacade balanceFacade;
+    private final BalanceFacade balanceFacade;
     @Autowired
     public BalanceControllerEmployee(BalanceFacade balanceFacade) {
         this.balanceFacade = balanceFacade;
@@ -29,11 +29,8 @@ public class BalanceControllerEmployee implements EmployeeServiceApi {
     }
 
     @Override
-    public ResponseEntity<List<Transaction>> getAllTransactions(LocalDate beginning, LocalDate end, BigDecimal minAmount, BigDecimal maxAmount, String type) {
-        if(type == null){
-            List<Transaction> result = balanceFacade.getAllTransactions(beginning, end, minAmount, maxAmount);
-            return ResponseEntity.ok(result);
-        }
+    public ResponseEntity<List<Transaction>> getAllTransactions(LocalDate beginning, LocalDate end,
+                                                                BigDecimal minAmount, BigDecimal maxAmount, String type) {
         List<Transaction> result = balanceFacade.getAllTransactions(beginning, end, minAmount, maxAmount, type);
         return ResponseEntity.ok(result);
     }

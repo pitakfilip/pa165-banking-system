@@ -10,6 +10,7 @@ import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -19,9 +20,9 @@ import java.util.Date;
 /**
  * @author Martin Mojzis
  */
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING, injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface BalanceMapper {
-    //TODO other types according to openapi
     TransactionType mapTypeOut(Transaction.TransactionTypeEnum type);
 
     Transaction.TransactionTypeEnum mapTypeIn(TransactionType type);

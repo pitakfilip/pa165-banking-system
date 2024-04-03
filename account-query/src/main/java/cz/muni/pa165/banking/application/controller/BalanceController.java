@@ -2,13 +2,11 @@ package cz.muni.pa165.banking.application.controller;
 
 import cz.muni.pa165.banking.account.query.CustomerServiceApi;
 import cz.muni.pa165.banking.account.query.SystemServiceApi;
-import cz.muni.pa165.banking.account.query.dto.Balance;
 import cz.muni.pa165.banking.account.query.dto.Transaction;
 import cz.muni.pa165.banking.application.facade.BalanceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
@@ -20,7 +18,7 @@ import java.util.List;
  */
 @RestController
 public class BalanceController implements CustomerServiceApi, SystemServiceApi {
-    private BalanceFacade balanceFacade;
+    private final BalanceFacade balanceFacade;
     @Autowired
     public BalanceController(BalanceFacade balanceFacade) {
         this.balanceFacade = balanceFacade;
@@ -33,11 +31,8 @@ public class BalanceController implements CustomerServiceApi, SystemServiceApi {
     }
 
     @Override
-    public ResponseEntity<List<Transaction>> getTransactions(String id, LocalDate beginning, LocalDate end, BigDecimal minAmount, BigDecimal maxAmount, String type) {
-        if(type == null){
-            List<Transaction> toReturn = balanceFacade.getTransactions(id, beginning, end, minAmount, maxAmount);
-            return ResponseEntity.ok(toReturn);
-        }
+    public ResponseEntity<List<Transaction>> getTransactions(String id, LocalDate beginning, LocalDate end,
+                                                             BigDecimal minAmount, BigDecimal maxAmount, String type) {
         List<Transaction> toReturn = balanceFacade.getTransactions(id, beginning, end, minAmount, maxAmount, type);
         return ResponseEntity.ok(toReturn);
     }
@@ -53,16 +48,4 @@ public class BalanceController implements CustomerServiceApi, SystemServiceApi {
         balanceFacade.createNewBalance(id);
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
-
-//
-//    @PutMapping("/new")
-//    public ResponseEntity createNew(@RequestBody String customerId) {
-//        try {
-//            balanceFacade.createNewBalance(customerId);
-//        }
-//        catch(RuntimeException e){
-//            return new ResponseEntity(HttpStatusCode.valueOf(400));
-//        }
-//        return new ResponseEntity(HttpStatusCode.valueOf(200));
-//    }
 }

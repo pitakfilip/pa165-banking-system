@@ -69,7 +69,6 @@ public class Balance {
 
     public List<Transaction> getData(OffsetDateTime after, OffsetDateTime before, BigDecimal amountMin, BigDecimal amountMax) {
         List<Transaction> result = this.getData(after, before);
-        System.out.println(result);
         return result.stream()
                 .filter(a -> a.getAmount().compareTo(amountMax) < 0 && a.getAmount().compareTo(amountMin) > 0)
                 .toList();

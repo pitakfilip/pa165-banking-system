@@ -42,30 +42,40 @@ public class BalanceFacade {
         return balanceService.getBalance(id);
     }
 
-    public List<Transaction> getTransactions(String id, LocalDate beginning, LocalDate end, BigDecimal minAmount, BigDecimal maxAmount, String type) {
-        List<cz.muni.pa165.banking.domain.transaction.Transaction> toReturn = balanceService.getTransactions(id, OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC),
-                OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC), minAmount, maxAmount, balanceMapper.mapTypeOut(Transaction.TransactionTypeEnum.valueOf(type)));
-        return toReturn.stream().map(balanceMapper::mapTransactionIn).toList();
-    }
-
-    public List<Transaction> getTransactions(String id, LocalDate beginning, LocalDate end, BigDecimal minAmount, BigDecimal maxAmount) {
-        List<cz.muni.pa165.banking.domain.transaction.Transaction> toReturn = balanceService.getTransactions(id, OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC),
-                OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC), minAmount, maxAmount);
+    public List<Transaction> getTransactions(String id, LocalDate beginning, LocalDate end, BigDecimal minAmount,
+                                             BigDecimal maxAmount, String type) {
+        List<cz.muni.pa165.banking.domain.transaction.Transaction> toReturn;
+        if(type == null){
+            toReturn = balanceService.getTransactions(id, OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC),
+                            OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC), minAmount, maxAmount, null);
+        }
+        else {
+            toReturn = balanceService.getTransactions(id, OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC),
+                            OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC), minAmount, maxAmount,
+                            balanceMapper.mapTypeOut(Transaction.TransactionTypeEnum.valueOf(type)));
+        }
         return toReturn.stream().map(balanceMapper::mapTransactionIn).toList();
     }
 
     public TransactionsReport getReport(String id, LocalDate beginning, LocalDate end) {
-        return balanceMapper.mapReportOut(balanceService.getReport(id, OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC), OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC)));
+        return balanceMapper.mapReportOut(balanceService.getReport(id,
+                OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC),
+                OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC)));
     }
 
-    public List<Transaction> getAllTransactions(LocalDate beginning, LocalDate end, BigDecimal minAmount, BigDecimal maxAmount, String type) {
-        List<cz.muni.pa165.banking.domain.transaction.Transaction> toReturn = balanceService.getAllTransactions(OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC),
-                OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC), minAmount, maxAmount, balanceMapper.mapTypeOut(Transaction.TransactionTypeEnum.valueOf(type)));
+    public List<Transaction> getAllTransactions(LocalDate beginning, LocalDate end, BigDecimal minAmount,
+                                                BigDecimal maxAmount, String type) {
+        if(type == null){
+            List<cz.muni.pa165.banking.domain.transaction.Transaction> toReturn =
+                    balanceService.getAllTransactions(OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC),
+                            OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC), minAmount, maxAmount, null);
+            return toReturn.stream().map(balanceMapper::mapTransactionIn).toList();
+        }
+        List<cz.muni.pa165.banking.domain.transaction.Transaction> toReturn =
+                balanceService.getAllTransactions(OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC),
+                OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC), minAmount, maxAmount,
+                        balanceMapper.mapTypeOut(Transaction.TransactionTypeEnum.valueOf(type)));
         return toReturn.stream().map(balanceMapper::mapTransactionIn).toList();
     }
-    public List<Transaction> getAllTransactions(LocalDate beginning, LocalDate end, BigDecimal minAmount, BigDecimal maxAmount) {
-        List<cz.muni.pa165.banking.domain.transaction.Transaction> toReturn = balanceService.getAllTransactions(OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC),
-                OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC), minAmount, maxAmount);
-        return toReturn.stream().map(balanceMapper::mapTransactionIn).toList();
-    }
+
 }
