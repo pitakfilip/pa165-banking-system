@@ -6,6 +6,7 @@ import cz.muni.pa165.banking.account.query.dto.TransactionsReport;
 import cz.muni.pa165.banking.application.exception.NotFoundAccountException;
 import cz.muni.pa165.banking.application.mapper.BalanceMapper;
 import cz.muni.pa165.banking.domain.balance.service.BalanceService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
