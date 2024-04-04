@@ -1,29 +1,38 @@
 package cz.muni.pa165.banking.application.api;
 
+import cz.muni.pa165.banking.account.management.AccountApi;
+import cz.muni.pa165.banking.account.management.dto.*;
 import cz.muni.pa165.banking.application.facade.AccountFacade;
-import cz.muni.pa165.banking.domain.account.Account;
-import cz.muni.pa165.banking.domain.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class AccountApi {
+public class AccountController implements AccountApi {
     private final AccountFacade accountFacade;
 
     @Autowired
-    public AccountApi(AccountFacade accountFacade){
+    public AccountController(AccountFacade accountFacade){
         this.accountFacade = accountFacade;
     }
-    public Account createAccount(User user){
-        return accountFacade.createAccount(user);
+
+    @Override
+    public ResponseEntity<Account> createAccount(CreateAccountRequest createAccountRequest) {
+        return ResponseEntity.ok(accountFacade.createAccount(createAccountRequest));
     }
-    public Account getAccount(String id){
-        return accountFacade.getAccount(id);
+
+    @Override
+    public ResponseEntity<Account> getAccount(GetAccountRequest getAccountRequest) {
+        return ResponseEntity.ok(accountFacade.getAccount(getAccountRequest));
     }
-    public boolean payment(String senderAccountId, String receiverAccountId, Integer amount){
-        return accountFacade.payment(senderAccountId, receiverAccountId, amount);
+
+    @Override
+    public ResponseEntity<Boolean> payment(PaymentRequest paymentRequest) {
+        return ResponseEntity.ok(accountFacade.payment(paymentRequest));
     }
-    public void schedulePayment(String senderAccountId, String receiverAccountId, Integer amount, Integer delay){
-        accountFacade.schedulePayment(senderAccountId, receiverAccountId, amount, delay);
+
+    @Override
+    public ResponseEntity<ScheduledPayment> schedulePayment(SchedulePaymentRequest schedulePaymentRequest) {
+        return ResponseEntity.ok(accountFacade.schedulePayment(schedulePaymentRequest));
     }
 }

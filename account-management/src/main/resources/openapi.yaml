@@ -1,0 +1,251 @@
+openapi: 3.0.1
+info:
+  title: Pa165 Project Banking Application Account Query
+  description: |
+    Hand-made OpenAPI document.
+  version: 1.0.0
+servers:
+  - url: "http://localhost:8080"
+tags:
+  - name: User
+    description: Service to be used by employee of the bank
+  - name: Account
+    description: Service to be used by customer of bank
+components:
+  schemas:
+
+    UserType:
+      type: string
+      enum: [ REGULAR, EMPLOYEE ]
+
+    User:
+      title: Bank user
+      description: A object representing a bank user
+      required:
+        - id
+        - email
+        - password
+        - firstName
+        - lastName
+        - userType
+      properties:
+        id:
+          type: string
+          description: unique user id
+        email:
+          type: string
+          description: unused user email
+        password:
+          type: string
+          description: password used to log in user
+        firstName:
+          type: string
+          description: user's first name
+        lastName:
+          type: string
+          description: user's last name
+        userType:
+          $ref: '#/components/schemas/UserType'
+        accounts:
+          type: array
+          items:
+            type: string
+          description: id of every account owned by the user
+
+    Account:
+      title: An account
+      description: Bank account of registered bank user
+      required:
+        - id
+        - owner
+      properties:
+        id:
+          type: string
+          description: unique id of the account
+        owner:
+          $ref: '#/components/schemas/User'
+        maxSpendingLimit:
+          type: integer
+          description: max limit of one transaction from this account
+        scheduledPayments:
+            type: array
+            items:
+              type: string
+            description: id of every scheduled payment of this account
+
+    ScheduledPayment:
+      title: Scheduled payment
+      description: Scheduled payment
+      required:
+        - id
+        - senderId
+        - receiverId
+        - amount
+      properties:
+        id:
+          type: string
+          description: unique id of this scheduled payment
+        senderId:
+          type: string
+          description: unique id of the sender account
+        receiverId:
+          type: string
+          description: unique id of the receiver account
+        amount:
+          type: integer
+          description: amount of money to send
+
+paths:
+  /user/new:
+    post:
+      tags:
+        - User
+      summary: creates a user
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                type:
+                  $ref: '#/components/schemas/UserType'
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /user/get:
+    post:
+      tags:
+        - User
+      summary: finds a user
+      operationId: getUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /account/new:
+    post:
+      tags:
+        - Account
+      summary: create new user account
+      operationId: createAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  $ref: '#/components/schemas/User'
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+
+  /account/get:
+    post:
+      tags:
+        - Account
+      summary: get an account with given id
+      operationId: getAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accountId:
+                  type: string
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+
+  /account/pay:
+    post:
+      tags:
+        - Account
+      summary: create payment demand
+      operationId: payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                senderAccountId:
+                  type: string
+                receiverAccountId:
+                  type: string
+                amount:
+                  type: integer
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: boolean
+
+  /account/schedulePayment:
+    post:
+      tags:
+        - Account
+      summary: create scheduled payment
+      operationId: schedulePayment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                senderAccount:
+                  $ref: '#/components/schemas/Account'
+                receiverAccountId:
+                  type: string
+                amount:
+                  type: integer
+      responses:
+        "201":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledPayment'

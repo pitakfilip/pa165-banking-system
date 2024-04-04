@@ -1,6 +1,6 @@
 package cz.muni.pa165.banking.domain.account.repository;
 
-import cz.muni.pa165.banking.domain.account.Account;
+import cz.muni.pa165.banking.account.management.dto.Account;
 
 public interface AccountRepository {
     /**

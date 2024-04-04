@@ -1,9 +1,10 @@
 package cz.muni.pa165.banking.application.facade;
 
+import cz.muni.pa165.banking.account.management.dto.CreateUserRequest;
+import cz.muni.pa165.banking.account.management.dto.GetUserRequest;
+import cz.muni.pa165.banking.account.management.dto.UserType;
 import cz.muni.pa165.banking.application.service.UserService;
-import cz.muni.pa165.banking.domain.account.Account;
-import cz.muni.pa165.banking.domain.user.User;
-import cz.muni.pa165.banking.dto.DtoUserType;
+import cz.muni.pa165.banking.account.management.dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +17,10 @@ public class UserFacade {
     public UserFacade(UserService userService){
         this.userService = userService;
     }
-    public User createUser(String username, String password, String email, String firstName, String lastName, DtoUserType type){
-        return userService.createUser(username, password, email, firstName, lastName, type);
+    public User createUser(CreateUserRequest createUserRequest){
+        return userService.createUser(createUserRequest);
     }
-    public User getUser(String userId){
-        return userService.getUser(userId);
+    public User getUser(GetUserRequest getUserRequest){
+        return userService.getUser(getUserRequest);
     }
 }

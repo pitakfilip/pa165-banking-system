@@ -1,9 +1,10 @@
 package cz.muni.pa165.banking.domain.scheduled.payments.repository;
 
-import cz.muni.pa165.banking.account.management.dto.Account;
 import cz.muni.pa165.banking.account.management.dto.ScheduledPayment;
 
-public interface ScheduledPaymentsRepository {
+import java.util.Map;
+
+public interface ScheduledPaymentRepository {
     /**
      * Adds a new account to the repository.
      *
@@ -19,4 +20,11 @@ public interface ScheduledPaymentsRepository {
      * @return the scheduled payment with the specified ID, or null if no such scheduled payment exists
      */
     ScheduledPayment getById(String id);
+
+    /**
+     * Retrieves the map of all the scheduled payments.
+     *
+     * @return the map of all the scheduled payments
+     */
+    Map<String, ScheduledPayment> getAllPayments();
 }

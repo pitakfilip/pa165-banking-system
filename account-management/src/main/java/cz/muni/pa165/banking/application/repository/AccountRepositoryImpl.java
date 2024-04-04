@@ -1,6 +1,6 @@
 package cz.muni.pa165.banking.application.repository;
 
-import cz.muni.pa165.banking.domain.account.Account;
+import cz.muni.pa165.banking.account.management.dto.Account;
 import cz.muni.pa165.banking.domain.account.repository.AccountRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
