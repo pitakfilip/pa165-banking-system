@@ -33,9 +33,10 @@ public class AccountService {
     }
     public ScheduledPayment schedulePayment (SchedulePaymentRequest schedulePaymentRequest){
         Account senderAccount = schedulePaymentRequest.getSenderAccount();
+        if (senderAccount == null) { return null; }
+
         String receiverAccountId = schedulePaymentRequest.getReceiverAccountId();
         Integer amount = schedulePaymentRequest.getAmount();
-
         ScheduledPayment newScheduledPayment = new ScheduledPayment(UUID.randomUUID().toString(), senderAccount.getId(), receiverAccountId, amount);
         while (!scheduledPaymentsRepository.addScheduledPayment(newScheduledPayment)) {
             newScheduledPayment = new ScheduledPayment(UUID.randomUUID().toString(), senderAccount.getId(), receiverAccountId, amount);
