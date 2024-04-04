@@ -28,6 +28,11 @@ public class BalanceServiceImpl implements BalanceService {
         this.balanceRepository = balanceRepository;
     }
 
+    public Balance findById(String id) throws NotFoundAccountException {
+        return balanceRepository.findById(id)
+                .orElseThrow(() -> new NotFoundAccountException("Balance  of person with id: " + id + " was not found."));
+    }
+
     @Override
     public void addNewBalance(String id) {
         balanceRepository.addBalance(id);
@@ -45,19 +50,14 @@ public class BalanceServiceImpl implements BalanceService {
             throws NotFoundAccountException {
         Balance balance = findById(id);
         if (minAmount == null && maxAmount == null && type == null)
-            return balance.getData(from, to, BigDecimal.valueOf(Integer.MIN_VALUE),
-                    BigDecimal.valueOf(Integer.MAX_VALUE));
+            return balance.getData(from, to);
         if (minAmount == null && maxAmount == null)
-            return balance.getData(from, to, BigDecimal.valueOf(Integer.MIN_VALUE),
-                    BigDecimal.valueOf(Integer.MAX_VALUE), type);
-        if (maxAmount == null && type == null)
-            return balance.getData(from, to, minAmount, BigDecimal.valueOf(Integer.MAX_VALUE));
-        if (minAmount == null && type == null)
-            return balance.getData(from, to, BigDecimal.valueOf(Integer.MIN_VALUE), maxAmount);
-        if (maxAmount == null)
-            return balance.getData(from, to, minAmount, BigDecimal.valueOf(Integer.MAX_VALUE), type);
-
-        return balance.getData(from, to, Objects.requireNonNullElse(minAmount, BigDecimal.ZERO), maxAmount, type);
+            return balance.getData(from, to, type);
+        BigDecimal amountMax = Objects.requireNonNullElse(maxAmount, BigDecimal.valueOf(Integer.MAX_VALUE));
+        BigDecimal amountMin = Objects.requireNonNullElse(minAmount, BigDecimal.valueOf(Integer.MIN_VALUE));
+        if (type == null)
+            return balance.getData(from, to, amountMin, amountMax);
+        return balance.getData(from, to, amountMin, amountMax, type);
     }
 
     @Override
@@ -81,10 +81,5 @@ public class BalanceServiceImpl implements BalanceService {
             result.addAll(getTransactions(id, from, to, minAmount, maxAmount, transactionType));
         }
         return result;
-    }
-
-    public Balance findById(String id) throws NotFoundAccountException {
-        return balanceRepository.findById(id)
-                .orElseThrow(() -> new NotFoundAccountException("Balance  of person with id: " + id + " was not found."));
     }
 }

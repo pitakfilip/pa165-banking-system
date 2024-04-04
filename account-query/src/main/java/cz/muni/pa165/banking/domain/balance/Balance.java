@@ -79,4 +79,11 @@ public class Balance {
     public String getAccountId() {
         return accountId;
     }
+
+    public List<Transaction> getData(OffsetDateTime from, OffsetDateTime to, TransactionType type) {
+        List<Transaction> result = this.getData(from, to);
+        return result.stream()
+                .filter(a -> a.getType() == type)
+                .toList();
+    }
 }
