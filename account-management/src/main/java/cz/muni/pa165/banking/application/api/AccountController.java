@@ -27,11 +27,6 @@ public class AccountController implements AccountApi {
     }
 
     @Override
-    public ResponseEntity<Boolean> payment(PaymentRequest paymentRequest) {
-        return ResponseEntity.ok(accountFacade.payment(paymentRequest));
-    }
-
-    @Override
     public ResponseEntity<ScheduledPayment> schedulePayment(SchedulePaymentRequest schedulePaymentRequest) {
         return ResponseEntity.ok(accountFacade.schedulePayment(schedulePaymentRequest));
     }

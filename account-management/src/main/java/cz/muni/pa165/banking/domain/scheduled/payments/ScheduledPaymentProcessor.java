@@ -21,8 +21,8 @@ public class ScheduledPaymentProcessor {
     public void executeScheduledPayments() {
         Map<String, ScheduledPayment> scheduledPayments = scheduledPaymentRepository.getAllPayments();
         for (ScheduledPayment scheduledPayment : scheduledPayments.values()) {
-            String senderAccountId = scheduledPayment.getSenderId();
-            String receiverAccountId = scheduledPayment.getReceiverId();
+            String senderAccountId = scheduledPayment.getSenderAccountId();
+            String receiverAccountId = scheduledPayment.getReceiverAccountId();
             Integer amount = scheduledPayment.getAmount();
 
             // call transaction processor

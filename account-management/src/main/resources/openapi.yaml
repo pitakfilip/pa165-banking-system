@@ -78,17 +78,17 @@ components:
       description: Scheduled payment
       required:
         - id
-        - senderId
-        - receiverId
+        - senderAccountId
+        - receiverAccountId
         - amount
       properties:
         id:
           type: string
           description: unique id of this scheduled payment
-        senderId:
+        senderAccountId:
           type: string
           description: unique id of the sender account
-        receiverId:
+        receiverAccountId:
           type: string
           description: unique id of the receiver account
         amount:
@@ -126,12 +126,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        "400":
+          description: NOK
 
   /user/get:
     post:
       tags:
         - User
-      summary: finds a user
+      summary: find a user with given id
       operationId: getUser
       requestBody:
         required: true
@@ -149,6 +151,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        "400":
+          description: NOK
 
   /account/new:
     post:
@@ -172,6 +176,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Account'
+        "400":
+          description: NOK
 
   /account/get:
     post:
@@ -195,33 +201,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Account'
-
-  /account/pay:
-    post:
-      tags:
-        - Account
-      summary: create payment demand
-      operationId: payment
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                senderAccountId:
-                  type: string
-                receiverAccountId:
-                  type: string
-                amount:
-                  type: integer
-      responses:
-        "201":
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: boolean
+        "400":
+          description: NOK
 
   /account/schedulePayment:
     post:
@@ -249,3 +230,5 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ScheduledPayment'
+        "400":
+          description: NOK

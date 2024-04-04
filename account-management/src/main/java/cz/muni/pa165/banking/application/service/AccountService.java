@@ -31,11 +31,6 @@ public class AccountService {
         String id = getAccountRequest.getAccountId();
         return accountRepository.getById(id);
     }
-    @Transactional
-    public boolean payment(PaymentRequest paymentRequest){
-        // call transaction service
-        return true;
-    }
     public ScheduledPayment schedulePayment (SchedulePaymentRequest schedulePaymentRequest){
         Account senderAccount = schedulePaymentRequest.getSenderAccount();
         String receiverAccountId = schedulePaymentRequest.getReceiverAccountId();

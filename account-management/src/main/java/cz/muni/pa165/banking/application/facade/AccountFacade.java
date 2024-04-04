@@ -18,9 +18,6 @@ public class AccountFacade {
     public Account getAccount(GetAccountRequest getAccountRequest){
         return accountService.getAccount(getAccountRequest);
     }
-    public boolean payment(PaymentRequest paymentRequest){
-        return accountService.payment(paymentRequest);
-    }
     public ScheduledPayment schedulePayment(SchedulePaymentRequest schedulePaymentRequest){
         return accountService.schedulePayment(schedulePaymentRequest);
     }
