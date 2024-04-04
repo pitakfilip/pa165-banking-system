@@ -11,14 +11,46 @@ tags:
     description: Service to be used by employee of the bank
   - name: Account
     description: Service to be used by customer of bank
+
 components:
   schemas:
-
-    UserType:
+    UserTypeDto:
       type: string
       enum: [ REGULAR, EMPLOYEE ]
 
-    User:
+    NewUserDto:
+      title: New bank user
+      description: A object representing a new bank user for creation
+      required:
+        - email
+        - password
+        - firstName
+        - lastName
+        - userType
+      properties:
+        email:
+          type: string
+          format: email
+          description: unused user email
+        password:
+          type: string
+          format: password
+          description: password used to log in user
+        firstName:
+          type: string
+          description: user's first name
+        lastName:
+          type: string
+          description: user's last name
+        userType:
+          $ref: '#/components/schemas/UserTypeDto'
+        accounts:
+          type: array
+          items:
+            type: string
+          description: id of every account owned by the user
+        
+    UserDto:
       title: Bank user
       description: A object representing a bank user
       required:
@@ -30,13 +62,16 @@ components:
         - userType
       properties:
         id:
-          type: string
+          type: integer
+          format: int64
           description: unique user id
         email:
           type: string
+          format: email
           description: unused user email
         password:
           type: string
+          format: password
           description: password used to log in user
         firstName:
           type: string
@@ -45,25 +80,42 @@ components:
           type: string
           description: user's last name
         userType:
-          $ref: '#/components/schemas/UserType'
+          $ref: '#/components/schemas/UserTypeDto'
         accounts:
           type: array
           items:
             type: string
           description: id of every account owned by the user
 
-    Account:
+    
+    AccountTypeDto:
+      type: string
+      enum: [ SPENDING, SAVING, CREDIT ]
+    
+    NewAccountDto:
       title: An account
       description: Bank account of registered bank user
-      required:
-        - id
-        - owner
+      properties:
+        userId:
+          type: integer
+          format: int64
+        type:
+          $ref: '#/components/schemas/AccountTypeDto'
+        maxSpendingLimit:
+          type: integer
+          description: max limit of one transaction from this account
+          
+    AccountDto:
+      title: An account
+      description: Bank account of registered bank user
       properties:
         id:
           type: string
-          description: unique id of the account
-        owner:
-          $ref: '#/components/schemas/User'
+        userId:
+          type: integer
+          format: int64
+        type:
+          $ref: '#/components/schemas/AccountTypeDto'
         maxSpendingLimit:
           type: integer
           description: max limit of one transaction from this account
@@ -73,7 +125,7 @@ components:
               type: string
             description: id of every scheduled payment of this account
 
-    ScheduledPayment:
+    ScheduledPaymentDto:
       title: Scheduled payment
       description: Scheduled payment
       required:
@@ -95,8 +147,40 @@ components:
           type: integer
           description: amount of money to send
 
+    ScheduledPaymentsDto:
+      title: List of Scheduled payments
+      description: List of Scheduled payments
+      properties: 
+        scheduledPayments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScheduledPaymentDto'
+
 paths:
-  /user/new:
+
+  /user:
+    get:
+      tags:
+        - User
+      summary: find a user with given id
+      operationId: getUser
+      parameters:
+        - name: userId
+          in: query
+          required: true
+          schema: 
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        "400":
+          description: NOK
+          
     post:
       tags:
         - User
@@ -107,54 +191,39 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                password:
-                  type: string
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-                type:
-                  $ref: '#/components/schemas/UserType'
+              $ref: '#/components/schemas/NewUserDto'
       responses:
         "201":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserDto'
         "400":
           description: NOK
-
-  /user/get:
-    post:
+          
+  
+  /account:
+    get:
       tags:
-        - User
-      summary: find a user with given id
-      operationId: getUser
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                userId:
-                  type: string
+        - Account
+      summary: get an account with given id
+      operationId: getAccount
+      parameters:
+        - name: accountNumber
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
-        "201":
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/AccountDto'
         "400":
           description: NOK
-
-  /account/new:
     post:
       tags:
         - Account
@@ -165,46 +234,38 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                user:
-                  $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/NewAccountDto'
       responses:
         "201":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Account'
+                $ref: '#/components/schemas/AccountDto'
         "400":
           description: NOK
 
-  /account/get:
-    post:
+  /account/scheduled:
+    get:
       tags:
         - Account
-      summary: get an account with given id
-      operationId: getAccount
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                accountId:
-                  type: string
+      summary: get scheduled payments of an account
+      operationId: getScheduledPayments
+      parameters:
+        - name: accountNumber
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
-        "201":
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Account'
+                $ref: '#/components/schemas/ScheduledPaymentsDto'
         "400":
           description: NOK
-
-  /account/schedulePayment:
     post:
       tags:
         - Account
@@ -215,20 +276,13 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                senderAccount:
-                  $ref: '#/components/schemas/Account'
-                receiverAccountId:
-                  type: string
-                amount:
-                  type: integer
+              $ref: '#/components/schemas/ScheduledPaymentDto'
       responses:
         "201":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ScheduledPayment'
+                $ref: '#/components/schemas/ScheduledPaymentDto'
         "400":
           description: NOK

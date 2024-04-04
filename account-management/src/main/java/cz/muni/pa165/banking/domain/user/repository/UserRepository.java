@@ -1,8 +1,7 @@
 package cz.muni.pa165.banking.domain.user.repository;
 
-import cz.muni.pa165.banking.account.management.dto.User;
-
 public interface UserRepository {
+    
     /**
      * Adds a new user to the repository.
      *
@@ -18,4 +17,5 @@ public interface UserRepository {
      * @return the user with the specified ID, or null if no such user exists
      */
     User getById(String id);
+    
 }

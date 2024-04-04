@@ -3,31 +3,37 @@ package cz.muni.pa165.banking.application.api;
 import cz.muni.pa165.banking.account.management.AccountApi;
 import cz.muni.pa165.banking.account.management.dto.*;
 import cz.muni.pa165.banking.application.facade.AccountFacade;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AccountController implements AccountApi {
+    
     private final AccountFacade accountFacade;
 
-    @Autowired
     public AccountController(AccountFacade accountFacade){
         this.accountFacade = accountFacade;
     }
 
     @Override
-    public ResponseEntity<Account> createAccount(CreateAccountRequest createAccountRequest) {
-        return ResponseEntity.ok(accountFacade.createAccount(createAccountRequest));
+    public ResponseEntity<AccountDto> createAccount(NewAccountDto newAccountDto) {
+        return new ResponseEntity<>(accountFacade.createAccount(newAccountDto), HttpStatus.CREATED);
     }
 
     @Override
-    public ResponseEntity<Account> getAccount(GetAccountRequest getAccountRequest) {
-        return ResponseEntity.ok(accountFacade.getAccount(getAccountRequest));
+    public ResponseEntity<AccountDto> getAccount(String accountNumber) {
+        return ResponseEntity.ok(accountFacade.getAccount(accountNumber));
     }
 
     @Override
-    public ResponseEntity<ScheduledPayment> schedulePayment(SchedulePaymentRequest schedulePaymentRequest) {
-        return ResponseEntity.ok(accountFacade.schedulePayment(schedulePaymentRequest));
+    public ResponseEntity<ScheduledPaymentsDto> getScheduledPayments(String accountNumber) {
+        return ResponseEntity.ok(accountFacade.getScheduledPaymentsOfAccount(accountNumber));
     }
+
+    @Override
+    public ResponseEntity<ScheduledPaymentDto> schedulePayment(ScheduledPaymentDto scheduledPaymentDto) {
+        return new ResponseEntity<>(accountFacade.schedulePayment(scheduledPaymentDto), HttpStatus.CREATED);
+    }
+
 }
