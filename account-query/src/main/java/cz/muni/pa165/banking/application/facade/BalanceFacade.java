@@ -46,12 +46,8 @@ public class BalanceFacade {
     public List<Transaction> getTransactions(String id, LocalDate beginning, LocalDate end, BigDecimal minAmount,
                                              BigDecimal maxAmount, TransactionType type) {
         List<cz.muni.pa165.banking.domain.transaction.Transaction> toReturn;
-        if (type == null) {
-            toReturn = balanceService.getTransactions(id, OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC), OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC), minAmount, maxAmount, null);
-        } else {
-            toReturn = balanceService.getTransactions(id, OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC), OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC),
-                    minAmount, maxAmount, balanceMapper.mapTypeOut(type));
-        }
+        toReturn = balanceService.getTransactions(id, OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC), OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC),
+                minAmount, maxAmount, balanceMapper.mapTypeOut(type));
         return toReturn.stream().map(balanceMapper::mapTransactionIn).toList();
     }
 
@@ -63,12 +59,6 @@ public class BalanceFacade {
 
     public List<Transaction> getAllTransactions(LocalDate beginning, LocalDate end, BigDecimal minAmount,
                                                 BigDecimal maxAmount, TransactionType type) {
-        if (type == null) {
-            List<cz.muni.pa165.banking.domain.transaction.Transaction> toReturn =
-                    balanceService.getAllTransactions(OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC),
-                            OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC), minAmount, maxAmount, null);
-            return toReturn.stream().map(balanceMapper::mapTransactionIn).toList();
-        }
         List<cz.muni.pa165.banking.domain.transaction.Transaction> toReturn =
                 balanceService.getAllTransactions(OffsetDateTime.of(beginning, LocalTime.MIDNIGHT, ZoneOffset.UTC), OffsetDateTime.of(end, LocalTime.MIDNIGHT, ZoneOffset.UTC), minAmount, maxAmount,
                         balanceMapper.mapTypeOut(type));
