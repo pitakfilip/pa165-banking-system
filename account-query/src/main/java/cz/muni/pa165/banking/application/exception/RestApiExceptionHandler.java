@@ -14,6 +14,6 @@ import org.springframework.web.context.request.WebRequest;
 public class RestApiExceptionHandler {
     @ExceptionHandler(NotFoundAccountException.class)
     public ResponseEntity<Object> handleNotFoundAccount(Exception e, WebRequest request){
-        return new ResponseEntity<>(((MethodArgumentNotValidException) e).getBody(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

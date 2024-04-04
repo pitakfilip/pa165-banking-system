@@ -24,7 +24,7 @@ public interface BalanceService {
 
     void addToBalance(String id, BigDecimal amount, UUID processID, TransactionType type) throws NotFoundAccountException;
 
-    StatisticalReport getReport(String id, OffsetDateTime beginning, OffsetDateTime end);
+    StatisticalReport getReport(String id, OffsetDateTime beginning, OffsetDateTime end) throws NotFoundAccountException;
 
     List<Transaction> getAllTransactions(OffsetDateTime from, OffsetDateTime from1, BigDecimal minAmount,
                                          BigDecimal maxAmount, TransactionType transactionType);
