@@ -6,6 +6,7 @@ import cz.muni.pa165.banking.domain.process.repository.HandlerMBeanRepository;
 import cz.muni.pa165.banking.domain.process.repository.ProcessRepository;
 import cz.muni.pa165.banking.domain.process.status.Status;
 import cz.muni.pa165.banking.domain.process.status.StatusInformation;
+import cz.muni.pa165.banking.exception.UnexpectedValueException;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -39,10 +40,13 @@ abstract class ProcessHandler {
 
     private void validateProcess(Process process) {
         if (process.getStatus().equals(Status.FAILED)) {
-            throw new RuntimeException("Process already finalized, ended with failure: " + process.getStatusInformation());
+            throw new UnexpectedValueException(
+                    "Process already closed, ended with failure",
+                    "Failure information: " + process.getStatusInformation()
+            );
         }
         if (process.getStatus().equals(Status.PROCESSED)) {
-            throw new RuntimeException("Process already finalized");
+            throw new UnexpectedValueException("Process already finalized, ended successfully", process.getStatusInformation());
         }
     }
 

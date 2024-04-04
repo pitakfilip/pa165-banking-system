@@ -19,7 +19,7 @@ public class ProcessFactory {
     }
 
 
-    public Process create(Transaction transaction, MessageProducer messageProducer) throws Exception {
+    public Process create(Transaction transaction, MessageProducer messageProducer) {
         Process newProcess = new Process();
         processRepository.save(newProcess);
 

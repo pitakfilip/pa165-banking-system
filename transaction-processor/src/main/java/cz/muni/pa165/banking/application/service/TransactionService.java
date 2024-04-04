@@ -27,11 +27,7 @@ public class TransactionService {
     @Transactional(rollbackFor = Exception.class)
     public Process createProcessForTransaction(Transaction newTransaction) {
         ProcessFactory factory = new ProcessFactory(processTransactionRepository, processRepository);
-        try {
-            return factory.create(newTransaction, processProducer);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        return factory.create(newTransaction, processProducer);
     }
 
 }

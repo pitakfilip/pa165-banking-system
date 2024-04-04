@@ -6,6 +6,7 @@ import cz.muni.pa165.banking.domain.process.ProcessTransaction;
 import cz.muni.pa165.banking.domain.process.repository.HandlerMBeanRepository;
 import cz.muni.pa165.banking.domain.process.repository.ProcessRepository;
 import cz.muni.pa165.banking.domain.remote.AccountService;
+import cz.muni.pa165.banking.exception.EntityNotFoundException;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -23,7 +24,7 @@ class DepositHandler extends ProcessHandler {
         Account account = processTransaction.getSource();
         AccountService accountService = beans.accountService();
         if (!accountService.isValid(account)) {
-            throw new RuntimeException(
+            throw new EntityNotFoundException(
                     String.format("Account with number {%s} does not exist", account.getAccountNumber())
             );
         }

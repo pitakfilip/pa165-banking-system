@@ -1,6 +1,7 @@
 package cz.muni.pa165.banking.domain.money;
 
 import cz.muni.pa165.banking.domain.money.exchange.ExchangeRateService;
+import cz.muni.pa165.banking.exception.UnsupportedDataTypeException;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -21,7 +22,7 @@ public class CurrencyConverter {
      */
     public BigDecimal convertTo(Currency target, Money amount) {
         if (!Currency.getAvailableCurrencies().contains(target)) {
-            throw new RuntimeException("Unsupported target currency");
+            throw new UnsupportedDataTypeException("Unsupported target currency");
         }
         BigDecimal rate = BigDecimal.ONE;
         if (!amount.getCurrency().equals(target)) {

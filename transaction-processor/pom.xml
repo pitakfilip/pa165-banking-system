@@ -21,6 +21,11 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
+        <!--    External project artifact versions    -->
+        <banking-infrastructure.version>1.0-SNAPSHOT</banking-infrastructure.version>
+        <banking-openapi.version>1.0-SNAPSHOT</banking-openapi.version>
+        
+        
         <spring.version>3.2.4</spring.version>
         <openapi-generator.version>6.6.0</openapi-generator.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
@@ -28,6 +33,12 @@
     </properties>
     
     <dependencies>
+        <dependency>
+            <groupId>cz.muni.pa165.banking</groupId>
+            <artifactId>infrastructure</artifactId>
+            <version>${banking-infrastructure.version}</version>
+        </dependency>
+        
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

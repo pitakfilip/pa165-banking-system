@@ -7,6 +7,7 @@ import cz.muni.pa165.banking.domain.process.ProcessTransaction;
 import cz.muni.pa165.banking.domain.process.repository.HandlerMBeanRepository;
 import cz.muni.pa165.banking.domain.process.repository.ProcessRepository;
 import cz.muni.pa165.banking.domain.remote.AccountService;
+import cz.muni.pa165.banking.exception.EntityNotFoundException;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -24,14 +25,14 @@ public class WithdrawHandler extends ProcessHandler {
         Account account = processTransaction.getSource();
         AccountService accountService = beans.accountService();
         if (!accountService.isValid(account)) {
-            throw new RuntimeException(
+            throw new EntityNotFoundException(
                     String.format("Account with number {%s} does not exist", account.getAccountNumber())
             );
         }
 
         Money money = processTransaction.getAmount();
         if (!accountService.accountHasSufficientFunds(account, money.getAmount())) {
-            throw new RuntimeException(
+            throw new EntityNotFoundException(
                     String.format(
                             "Account with number {%s} does not have sufficient funds for withdrawal of %s %s",
                             account.getAccountNumber(),

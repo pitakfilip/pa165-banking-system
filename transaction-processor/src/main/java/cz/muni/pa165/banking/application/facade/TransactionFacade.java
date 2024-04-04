@@ -4,11 +4,15 @@ import cz.muni.pa165.banking.application.mapper.DtoMapper;
 import cz.muni.pa165.banking.application.service.TransactionService;
 import cz.muni.pa165.banking.domain.process.Process;
 import cz.muni.pa165.banking.domain.transaction.Transaction;
+import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import cz.muni.pa165.banking.transaction.processor.dto.ProcessDto;
 import cz.muni.pa165.banking.transaction.processor.dto.TransactionDto;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
+import java.util.List;
+
+@Component
 public class TransactionFacade {
 
     private final TransactionService service;
