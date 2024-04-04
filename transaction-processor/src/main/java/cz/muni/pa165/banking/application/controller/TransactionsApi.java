@@ -1,4 +1,4 @@
-package cz.muni.pa165.banking.application.api;
+package cz.muni.pa165.banking.application.controller;
 
 import cz.muni.pa165.banking.application.facade.TransactionFacade;
 import cz.muni.pa165.banking.dto.DtoTransactionRequest;
