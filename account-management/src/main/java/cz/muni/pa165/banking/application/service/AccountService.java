@@ -24,7 +24,7 @@ public class AccountService {
         while (!accountRepository.addAccount(newAccount)) {
             newAccount = new Account(UUID.randomUUID().toString(), user);
         }
-        user.addAccountsItem(newAccount.getId());
+        if (user != null) { user.addAccountsItem(newAccount.getId()); }
         return newAccount;
     }
     public Account getAccount(GetAccountRequest getAccountRequest){
