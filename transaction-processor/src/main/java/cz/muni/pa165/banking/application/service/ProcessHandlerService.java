@@ -29,8 +29,7 @@ public class ProcessHandlerService {
     }
 
     public void handle(ProcessRequest request) {
-        ProcessHandlerGateway gateway = new ProcessHandlerGateway();
-        gateway.handle(
+        ProcessHandlerGateway.handle(
                 request.uuid(),
                 request.type(),
                 processRepository,

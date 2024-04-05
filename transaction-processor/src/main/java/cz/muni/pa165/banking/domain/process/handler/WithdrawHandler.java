@@ -6,7 +6,6 @@ import cz.muni.pa165.banking.domain.money.Money;
 import cz.muni.pa165.banking.domain.process.ProcessTransaction;
 import cz.muni.pa165.banking.domain.remote.AccountService;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
-import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import cz.muni.pa165.banking.exception.UnexpectedValueException;
 
 import java.math.BigDecimal;
@@ -29,7 +28,7 @@ public class WithdrawHandler extends ProcessHandler {
             throw new UnexpectedValueException(String.format("Unable to withdraw of provided currency (%s) as the account's currency is '%s'", money.getCurrency(), accountCurrency));
         }
         if (!accountService.accountHasSufficientFunds(account, money.getAmount())) {
-            throw new EntityNotFoundException(
+            throw new UnexpectedValueException(
                     String.format(
                             "Account with number {%s} does not have sufficient funds for withdrawal of %s %s",
                             account.getAccountNumber(),
@@ -39,8 +38,7 @@ public class WithdrawHandler extends ProcessHandler {
             );
         }
 
-        BigDecimal convertedAmount = currencyConverter.convertTo(money.getCurrency(), accountCurrency, money.getAmount());
-        BigDecimal calculatedAmount = convertedAmount.multiply(BigDecimal.valueOf(-1L));
+        BigDecimal calculatedAmount = money.getAmount().multiply(BigDecimal.valueOf(-1L));
 
         accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.WITHDRAW, calculatedAmount, account, processTransaction.getDetail());
     }

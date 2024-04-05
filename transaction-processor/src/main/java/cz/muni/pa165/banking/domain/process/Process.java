@@ -13,7 +13,7 @@ public class Process {
     
     private StatusInformation currentStatus;
     
-    public Process() {
+    Process() {
         uuid = UUID.randomUUID();
         currentStatus = new StatusInformation(Instant.now(), Status.CREATED, "Process created, waiting for processing.");
     }
@@ -23,6 +23,10 @@ public class Process {
      */
     public UUID uuid() {
         return UUID.fromString(uuid.toString());
+    }
+    
+    public Instant getWhen() {
+        return currentStatus.when();
     }
     
     public Status getStatus() {
