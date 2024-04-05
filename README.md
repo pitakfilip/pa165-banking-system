@@ -14,9 +14,12 @@ which can report total and average (per account) transactions (deposits, withdra
 <img src="./useCaseDiagram.png" width="800">
 
 ## Service Structure
-- Account Management (Authentification, user accounts management)
-- Account Query (Real-time representation of current balance states of bank accounts)
-- Transaction Processor (Asynchronous processor for transaction requests)
+
+| Service	                    | Specification	                                                        |
+|-----------------------------|-----------------------------------------------------------------------|
+| 	 **Account Management**    | 	  Authentification, user accounts management                         |
+| 	  **Account Query**        | 	 Real-time representation of current balance states of bank accounts |
+| 	 **Transaction Processor** | 	 Asynchronous processor for transaction requests                     |
 
 
 ## Module Architecture
@@ -25,7 +28,9 @@ we used the principles of `Hexagonal architecture` and `DDD`, where the domain i
 with no technological dependencies. By using such separation, we nicely created an extra separated layer on top of the
 traditional `Controller, Facade, Service and Repository` layers. The main benefit of such separation is visible mainly when 
 extending new features, implementation of tests and usage of custom abstractions with ease.
-
+<br><br>
+For a better visual reference of the described structure, refer to [Transaction Processor](./transaction-processor) 
+where the [implementation](./transaction-processor/src/main/java/cz/muni/pa165/banking/) with the separation of domain logic creates a nicely visible hierarchy of responsibility.
 
 ## Technological dependencies
 - Maven
