@@ -1,5 +1,6 @@
 package cz.muni.pa165.banking.domain.process.handler;
 
+import cz.muni.pa165.banking.domain.account.Account;
 import cz.muni.pa165.banking.domain.money.CurrencyConverter;
 import cz.muni.pa165.banking.domain.process.Process;
 import cz.muni.pa165.banking.domain.process.ProcessOperations;
@@ -26,7 +27,7 @@ abstract class ProcessHandler {
                       AccountService accountService,
                       CurrencyConverter currencyConverter) {
         
-        Process process = processRepository.findById(processUuid.toString());
+        Process process = processRepository.findById(processUuid);
         validateProcess(process);
 
         ProcessTransaction processTransaction = processTransactionRepository.findTransactionByProcessId(processUuid);
@@ -65,4 +66,10 @@ abstract class ProcessHandler {
         }
     }
 
+    final void validateAccount(Account account, AccountService accountService) {
+        if (!accountService.isValid(account)) {
+            throw new EntityNotFoundException(String.format("Account with account number {%s} not found", account.getAccountNumber()));
+        }
+    }
+    
 }

@@ -12,7 +12,7 @@ import java.util.UUID;
 public class ProcessHandlerGateway {
 
     public void handle(UUID processUuid, TransactionType type, ProcessRepository processRepository, ProcessTransactionRepository processTransactionRepository, AccountService accountService, CurrencyConverter currencyConverter) {
-        if (!processRepository.idExists(processUuid.toString())) {
+        if (!processRepository.idExists(processUuid)) {
             throw new EntityNotFoundException(String.format("Process with uuid {%s} not found", processUuid));
         }
 

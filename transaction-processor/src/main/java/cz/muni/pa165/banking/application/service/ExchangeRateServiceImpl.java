@@ -9,6 +9,9 @@ import java.util.Currency;
 @Service
 public class ExchangeRateServiceImpl implements ExchangeRateService {
     
+    // TODO call external API containing current information about exchange rates -> Milestone2
+    //  either actual API containing real data, or custom 'mock' API containing static data
+
 //    private final ExchangeRatesApi proxy;
 
 //    public ExchangeRateServiceImpl(ExchangeRatesApi proxy) {
@@ -17,6 +20,6 @@ public class ExchangeRateServiceImpl implements ExchangeRateService {
 
     @Override
     public BigDecimal getRate(Currency base, Currency target) {
-        return null;
+        return BigDecimal.ONE;
     }
 }

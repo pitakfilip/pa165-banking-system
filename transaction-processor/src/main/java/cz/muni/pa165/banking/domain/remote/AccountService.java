@@ -1,6 +1,7 @@
 package cz.muni.pa165.banking.domain.remote;
 
 import cz.muni.pa165.banking.domain.account.Account;
+import cz.muni.pa165.banking.domain.transaction.TransactionType;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -29,6 +30,6 @@ public interface AccountService {
     /**
      *  Publish transaction results to update balance of account within processed transaction
      */
-    void publishAccountChange(UUID processUuid, Account account, BigDecimal amount);
+    void publishAccountChange(UUID processUuid, TransactionType transactionType, BigDecimal amount, Account account);
     
 }

@@ -15,21 +15,22 @@ public class CurrencyConverter {
     }
 
     /**
-     * Converts a given amount of money from the base currency type to a target type. 
-     * @param target java.util.Currency instance representing the target type to convert to.
-     * @param amount amount of money in a specific currency
-     * @return converted amount of money in the target currency
+     * Converts a given amount of money from the source currency type to a target type. 
      */
-    public BigDecimal convertTo(Currency target, Money amount) {
+    public BigDecimal convertTo(Currency source, Currency target, BigDecimal amount) {
+        if (!Currency.getAvailableCurrencies().contains(source)) {
+            throw new UnsupportedDataTypeException("Unsupported source currency");
+        }
         if (!Currency.getAvailableCurrencies().contains(target)) {
             throw new UnsupportedDataTypeException("Unsupported target currency");
         }
+        
         BigDecimal rate = BigDecimal.ONE;
-        if (!amount.getCurrency().equals(target)) {
-            rate = exchangeRateApi.getRate(amount.getCurrency(), target);
+        if (!source.equals(target)) {
+            rate = exchangeRateApi.getRate(source, target);
         }
         
-        return amount.getAmount().multiply(rate);        
+        return amount.multiply(rate);        
     }
     
 }

@@ -5,7 +5,7 @@ import cz.muni.pa165.banking.domain.money.CurrencyConverter;
 import cz.muni.pa165.banking.domain.money.Money;
 import cz.muni.pa165.banking.domain.process.ProcessTransaction;
 import cz.muni.pa165.banking.domain.remote.AccountService;
-import cz.muni.pa165.banking.exception.EntityNotFoundException;
+import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import cz.muni.pa165.banking.exception.UnexpectedValueException;
 
 import java.math.BigDecimal;
@@ -20,11 +20,7 @@ class DepositHandler extends ProcessHandler {
     @Override
     void evaluate(ProcessTransaction processTransaction, AccountService accountService, CurrencyConverter currencyConverter) {
         Account account = processTransaction.getSource();
-        if (!accountService.isValid(account)) {
-            throw new EntityNotFoundException(
-                    String.format("Account with number {%s} does not exist", account.getAccountNumber())
-            );
-        }
+        validateAccount(account, accountService);
 
         Currency accountCurrency = accountService.getAccountCurrency(account);
         Money money = processTransaction.getMoney();
@@ -32,9 +28,9 @@ class DepositHandler extends ProcessHandler {
             throw new UnexpectedValueException(String.format("Unable to deposit of provided currency (%s) as the account's currency is '%s'", money.getCurrency(), accountCurrency));    
         }
         
-        BigDecimal convertedAmount = currencyConverter.convertTo(accountCurrency, processTransaction.getMoney());
+        BigDecimal convertedAmount = currencyConverter.convertTo(money.getCurrency(), accountCurrency, money.getAmount());
         
-        accountService.publishAccountChange(processTransaction.getUuid(), account, convertedAmount);
+        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.DEPOSIT, convertedAmount, account);
     }
 
 }

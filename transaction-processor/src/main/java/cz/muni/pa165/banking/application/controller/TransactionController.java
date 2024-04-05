@@ -5,6 +5,7 @@ import cz.muni.pa165.banking.transaction.processor.TransactionApi;
 import cz.muni.pa165.banking.transaction.processor.dto.ProcessDetailDto;
 import cz.muni.pa165.banking.transaction.processor.dto.ProcessDto;
 import cz.muni.pa165.banking.transaction.processor.dto.TransactionDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,12 +28,15 @@ public class TransactionController implements TransactionApi {
     }
 
     @Override
-    public ResponseEntity<ProcessDetailDto> processStatus(UUID xProcessUuid) {
-        return null;
+    public ResponseEntity<ProcessDetailDto> status(UUID xProcessUuid) {
+        ProcessDetailDto result = facade.getStatus(xProcessUuid);
+        return ResponseEntity.ok(result);
     }
-
+    
     @Override
     public ResponseEntity<Void> revertTransactionProcess(UUID xProcessUuid) {
-        return null;
+        facade.revertProcess(xProcessUuid);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }

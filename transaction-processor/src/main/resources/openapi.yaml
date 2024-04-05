@@ -40,7 +40,7 @@ paths:
     get:
       tags:
         - Transaction
-      operationId: process-status
+      operationId: status
       summary: Get information about a existing transaction process
       description: |
         Method finds an existing process for a transaction request, returning all information about it's state

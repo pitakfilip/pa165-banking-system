@@ -27,6 +27,12 @@ public interface DtoMapper {
     // Output DTOs
     StatusDto map(Status source);
 
+    AccountDto map(Account source);
+    
+    TransactionTypeDto map(TransactionType source);
+
+    MoneyDto map(Money source);
+    
     default ProcessDto map(Process source) {
         ProcessDto dto = new ProcessDto();
         
@@ -37,4 +43,21 @@ public interface DtoMapper {
         return dto;
     }
     
+    default ProcessDetailDto map(Process process, Transaction transaction) {
+        ProcessDetailDto dto = new ProcessDetailDto();
+        dto.identifier(process.uuid());
+        dto.status(map(process.getStatus()));
+        dto.info(process.getStatusInformation());
+        dto.source(map(transaction.getSource()));
+        
+        if (transaction.getTarget() != null) {
+            dto.target(map(transaction.getTarget()));
+        }
+        
+        dto.type(map(transaction.getType()));
+        dto.amount(map(transaction.getMoney()));
+        dto.detail(transaction.getDetail());
+        
+        return dto;
+    }
 }

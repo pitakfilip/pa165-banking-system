@@ -5,6 +5,7 @@ import cz.muni.pa165.banking.domain.money.CurrencyConverter;
 import cz.muni.pa165.banking.domain.money.Money;
 import cz.muni.pa165.banking.domain.process.ProcessTransaction;
 import cz.muni.pa165.banking.domain.remote.AccountService;
+import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import cz.muni.pa165.banking.exception.UnexpectedValueException;
 
@@ -20,11 +21,7 @@ public class WithdrawHandler extends ProcessHandler {
     @Override
     void evaluate(ProcessTransaction processTransaction, AccountService accountService, CurrencyConverter currencyConverter) {
         Account account = processTransaction.getSource();
-        if (!accountService.isValid(account)) {
-            throw new EntityNotFoundException(
-                    String.format("Account with number {%s} does not exist", account.getAccountNumber())
-            );
-        }
+        validateAccount(account, accountService);
 
         Money money = processTransaction.getMoney();
         Currency accountCurrency = accountService.getAccountCurrency(account);
@@ -42,10 +39,10 @@ public class WithdrawHandler extends ProcessHandler {
             );
         }
 
-        BigDecimal convertedAmount = currencyConverter.convertTo(accountCurrency, money);
+        BigDecimal convertedAmount = currencyConverter.convertTo(money.getCurrency(), accountCurrency, money.getAmount());
         BigDecimal calculatedAmount = convertedAmount.multiply(BigDecimal.valueOf(-1L));
 
-        accountService.publishAccountChange(processTransaction.getUuid(), account, calculatedAmount);
+        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.WITHDRAW, calculatedAmount, account);
     }
 
 }
