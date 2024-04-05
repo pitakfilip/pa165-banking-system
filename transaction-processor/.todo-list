@@ -1,0 +1,10 @@
+- externalize openapi contract into separate artifact
+- handler for cross-account transaction
+- exchange rate API for currency conversion
+- custom exception classes
+- handler for exceptions -> Controller Advice
+- implementation for status and rollback/revert of transaction
+
+
+- TESTS TESTS TESTS
+- review within teammates projects / branches (bude toho dost asi zejo)
