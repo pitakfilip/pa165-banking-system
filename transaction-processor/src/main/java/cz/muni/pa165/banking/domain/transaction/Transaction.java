@@ -35,7 +35,7 @@ public class Transaction {
         return type;
     }
 
-    public Money getAmount() {
+    public Money getMoney() {
         return amount;
     }
 

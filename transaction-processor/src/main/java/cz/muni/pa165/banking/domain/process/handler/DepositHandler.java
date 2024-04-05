@@ -1,28 +1,25 @@
 package cz.muni.pa165.banking.domain.process.handler;
 
 import cz.muni.pa165.banking.domain.account.Account;
-import cz.muni.pa165.banking.domain.process.Process;
+import cz.muni.pa165.banking.domain.money.CurrencyConverter;
+import cz.muni.pa165.banking.domain.money.Money;
 import cz.muni.pa165.banking.domain.process.ProcessTransaction;
-import cz.muni.pa165.banking.domain.process.repository.HandlerMBeanRepository;
-import cz.muni.pa165.banking.domain.process.repository.ProcessRepository;
 import cz.muni.pa165.banking.domain.remote.AccountService;
 import cz.muni.pa165.banking.exception.EntityNotFoundException;
+import cz.muni.pa165.banking.exception.UnexpectedValueException;
 
 import java.math.BigDecimal;
 import java.util.Currency;
 
+/**
+ * Handler for transaction of type ${@link cz.muni.pa165.banking.domain.transaction.TransactionType#DEPOSIT}.
+ * Customer may deposit a specified amount of money of the same currency as the account is set to.
+ */
 class DepositHandler extends ProcessHandler {
     
-    DepositHandler(ProcessRepository processRepository) {
-        super(processRepository);
-    }
-
     @Override
-    void evaluate(Process process, HandlerMBeanRepository beans) {
-        ProcessTransaction processTransaction = beans.processTransactionRepository().findTransactionByProcessId(process.uuid());
-        
+    void evaluate(ProcessTransaction processTransaction, AccountService accountService, CurrencyConverter currencyConverter) {
         Account account = processTransaction.getSource();
-        AccountService accountService = beans.accountService();
         if (!accountService.isValid(account)) {
             throw new EntityNotFoundException(
                     String.format("Account with number {%s} does not exist", account.getAccountNumber())
@@ -30,7 +27,12 @@ class DepositHandler extends ProcessHandler {
         }
 
         Currency accountCurrency = accountService.getAccountCurrency(account);
-        BigDecimal convertedAmount = beans.currencyConverter().convertTo(accountCurrency, processTransaction.getAmount());
+        Money money = processTransaction.getMoney();
+        if (!accountCurrency.equals(money.getCurrency())) {
+            throw new UnexpectedValueException(String.format("Unable to deposit of provided currency (%s) as the account's currency is '%s'", money.getCurrency(), accountCurrency));    
+        }
+        
+        BigDecimal convertedAmount = currencyConverter.convertTo(accountCurrency, processTransaction.getMoney());
         
         accountService.publishAccountChange(processTransaction.getUuid(), account, convertedAmount);
     }

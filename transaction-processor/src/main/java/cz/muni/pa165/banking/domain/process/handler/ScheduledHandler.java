@@ -1,17 +1,17 @@
 package cz.muni.pa165.banking.domain.process.handler;
 
-import cz.muni.pa165.banking.domain.process.Process;
-import cz.muni.pa165.banking.domain.process.repository.HandlerMBeanRepository;
-import cz.muni.pa165.banking.domain.process.repository.ProcessRepository;
+import cz.muni.pa165.banking.domain.money.CurrencyConverter;
+import cz.muni.pa165.banking.domain.process.ProcessTransaction;
+import cz.muni.pa165.banking.domain.remote.AccountService;
 
+/**
+ * Scheduled payments vary
+ */
 public class ScheduledHandler extends ProcessHandler {
     
-    ScheduledHandler(ProcessRepository processRepository) {
-        super(processRepository);
+    @Override
+    void evaluate(ProcessTransaction processTransaction, AccountService accountService, CurrencyConverter currencyConverter) {
+        // TODO
     }
 
-    @Override
-    void evaluate(Process process, HandlerMBeanRepository beans) {
-        
-    }
 }

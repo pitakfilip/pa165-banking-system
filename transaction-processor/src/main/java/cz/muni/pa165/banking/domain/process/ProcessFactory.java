@@ -27,7 +27,7 @@ public class ProcessFactory {
                 transaction.getSource(),
                 transaction.getTarget(),
                 transaction.getType(),
-                transaction.getAmount(),
+                transaction.getMoney(),
                 transaction.getDetail(),
                 newProcess.uuid()
         );

@@ -1,11 +1,15 @@
 package cz.muni.pa165.banking.domain.process.handler;
 
+import cz.muni.pa165.banking.domain.money.CurrencyConverter;
 import cz.muni.pa165.banking.domain.process.Process;
 import cz.muni.pa165.banking.domain.process.ProcessOperations;
-import cz.muni.pa165.banking.domain.process.repository.HandlerMBeanRepository;
+import cz.muni.pa165.banking.domain.process.ProcessTransaction;
 import cz.muni.pa165.banking.domain.process.repository.ProcessRepository;
+import cz.muni.pa165.banking.domain.process.repository.ProcessTransactionRepository;
 import cz.muni.pa165.banking.domain.process.status.Status;
 import cz.muni.pa165.banking.domain.process.status.StatusInformation;
+import cz.muni.pa165.banking.domain.remote.AccountService;
+import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import cz.muni.pa165.banking.exception.UnexpectedValueException;
 
 import java.time.Instant;
@@ -13,30 +17,41 @@ import java.util.UUID;
 
 abstract class ProcessHandler {
 
-    protected final ProcessRepository processRepository;
+    abstract void evaluate(ProcessTransaction processTransaction, AccountService accountService, CurrencyConverter currencyConverter);
 
-    ProcessHandler(ProcessRepository processRepository) {
-        this.processRepository = processRepository;
-    }
 
-    final void handle(UUID processUuid, HandlerMBeanRepository beans) {
+    final void handle(UUID processUuid,
+                      ProcessRepository processRepository,
+                      ProcessTransactionRepository processTransactionRepository,
+                      AccountService accountService,
+                      CurrencyConverter currencyConverter) {
+        
         Process process = processRepository.findById(processUuid.toString());
         validateProcess(process);
-        
+
+        ProcessTransaction processTransaction = processTransactionRepository.findTransactionByProcessId(processUuid);
+        if (processTransaction == null) {
+            throw new EntityNotFoundException("Process is not linked to any transaction request");
+        }
+
         Status newStatus = Status.PROCESSED;
         String message = "Deposit finalized";
+        RuntimeException thrownException = null;
         try {
-            evaluate(process, beans);
-        } catch (Exception e) {
+            evaluate(processTransaction, accountService, currencyConverter);
+        } catch (RuntimeException e) {
             newStatus = Status.FAILED;
             message = e.getMessage();
+            thrownException = e;
         }
         
         ProcessOperations.changeState(process, new StatusInformation(Instant.now(), newStatus, message));
         processRepository.save(process);
-    }
 
-    abstract void evaluate(Process process, HandlerMBeanRepository beans);
+        if (thrownException != null) {
+            throw thrownException;
+        }
+    }
 
     private void validateProcess(Process process) {
         if (process.getStatus().equals(Status.FAILED)) {
