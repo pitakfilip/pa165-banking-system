@@ -1,4 +1,4 @@
-# PA165 Balance Service
+# Balance Service
 
 <p>The Balance Service, allows to view current balance of an account and 
 transaction history of an account from some date range. It also provides bank 
