@@ -1,32 +1,31 @@
 package cz.muni.pa165.banking.domain.transaction;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.OffsetDateTime;
+import java.util.UUID;
 
 /**
  * @author Martin Mojzis
  */
 public class Transaction {
+    
     private final TransactionType type;
+    
     private final BigDecimal amount;
-    private final Date date;
-    private int id;
+    
+    private final OffsetDateTime date;
+    
+    private final UUID processId;
 
-    public Transaction(TransactionType type, BigDecimal amount, Date date) {
+    public Transaction(TransactionType type, BigDecimal amount, OffsetDateTime date, UUID processId) {
         this.type = type;
         this.amount = amount;
         this.date = date;
+        this.processId = processId;
     }
-    public Date getDate() {
+    
+    public OffsetDateTime getDate() {
         return date;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public BigDecimal getAmount() {
@@ -35,5 +34,9 @@ public class Transaction {
 
     public TransactionType getType() {
         return type;
+    }
+    
+    public UUID getProcessId() {
+        return processId;
     }
 }

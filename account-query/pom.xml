@@ -21,7 +21,81 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <spring.version>3.2.4</spring.version>
+        <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
     </properties>
+
+    <build>
+        <finalName>server_generated</finalName>
+
+        <plugins>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.4.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <apiPackage>cz.muni.pa165.banking.account.query</apiPackage>
+                            <modelPackage>cz.muni.pa165.banking.account.query.dto</modelPackage>
+                            <library>spring-boot</library>
+                            <configOptions>
+                                <useTags>true</useTags>
+                                <interfaceOnly>true</interfaceOnly>
+                                <skipDefaultInterface>true</skipDefaultInterface>
+                                <openApiNullable>false</openApiNullable>
+                                <documentationProvider>none</documentationProvider>
+                                <useSpringBoot3>true</useSpringBoot3>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-maven-plugin</artifactId>
+                <version>1.4</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                    <showWarnings>true</showWarnings>
+                    <compilerArgs>
+                        <arg>-Amapstruct.unmappedTargetPolicy=ERROR</arg>
+                        <arg>-Amapstruct.unmappedSourcePolicy=ERROR</arg>
+                        <arg>-Amapstruct.verbose=true</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <executable>true</executable>
+                </configuration>
+            </plugin>
+            <!-- run integration tests in "mvn verify" phase -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -38,13 +112,27 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-quartz</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>org.quartz-scheduler</groupId>
-            <artifactId>quartz</artifactId>
-            <version>2.3.2</version>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>6.1.5</version>
+        </dependency>
     </dependencies>
 
 </project>

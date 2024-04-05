@@ -3,26 +3,43 @@ package cz.muni.pa165.banking.application.repository;
 import cz.muni.pa165.banking.domain.balance.Balance;
 import cz.muni.pa165.banking.domain.balance.repository.BalancesRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author Martin Mojzis
  */
 @Repository
 public class BalancesRepositoryImpl implements BalancesRepository {
-    //private final Map<Integer, Balance> allBalances = new HashMap<>();
-    private final Map<Integer, Balance> mockData;
+
+    private final Map<String, Balance> mockData = new HashMap<>();
+
     public BalancesRepositoryImpl() {
-        mockData = Map.of(
-                1, new Balance(),
-                2, new Balance()
-        );
+        mockData.put("id1", new Balance("id1"));
+        mockData.put("id2", new Balance("id2"));
     }
-    @Transactional
-    public Balance getById(Integer id) {
-        //return allBalances.get(id);
-        return mockData.get(id);
+
+    //@Transactional
+    @Override
+    public Optional<Balance> findById(String id) {
+        if (mockData.containsKey(id)) {
+            return Optional.of(mockData.get(id));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public List<String> getAllIds() {
+        return mockData.keySet().stream().toList();
+    }
+
+
+    //@Transactional
+    @Override
+    public void addBalance(String id) {
+        mockData.put(id, new Balance(id));
     }
 }
