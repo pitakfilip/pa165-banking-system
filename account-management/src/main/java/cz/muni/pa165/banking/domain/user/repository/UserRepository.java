@@ -8,9 +8,8 @@ public interface UserRepository {
      * Adds a new user to the repository.
      *
      * @param user the user to add
-     * @return true if the user was added successfully, false if a user with the same ID already exists
      */
-    boolean addUser(User user);
+    User addUser(User user);
 
     /**
      * Retrieves a user by their ID.

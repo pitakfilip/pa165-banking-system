@@ -10,18 +10,17 @@ import java.util.Map;
 @Repository
 public class UserRepositoryImpl implements UserRepository {
     
+    private Long sequencer = 1L;
     private Map<Long, User> users = new HashMap<>();
 
-    public boolean addUser(User user) {
-        if (users.get(user.getId()) != null){
-            return false;
-        }
-        users.put(user.getId(), user);
-        return true;
+    public User addUser(User user) {
+        user.setId(sequencer);
+        users.put(sequencer++, user);
+        return user;
     }
 
     @Override
     public User getById(Long id) {
-        return null;
+        return users.get(id);
     }
 }

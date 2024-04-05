@@ -110,7 +110,8 @@ components:
       description: Bank account of registered bank user
       properties:
         id:
-          type: string
+          type: integer
+          format: int64
         userId:
           type: integer
           format: int64
@@ -130,13 +131,16 @@ components:
         - amount
       properties:
         id:
-          type: string
+          type: integer
+          format: int64
           description: unique id of this scheduled payment
         senderAccountId:
-          type: string
+          type: integer
+          format: int64
           description: unique id of the sender account
         receiverAccountId:
-          type: string
+          type: integer
+          format: int64
           description: unique id of the receiver account
         amount:
           type: integer

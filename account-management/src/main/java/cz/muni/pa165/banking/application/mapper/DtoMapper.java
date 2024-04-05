@@ -4,16 +4,14 @@ import cz.muni.pa165.banking.account.management.dto.*;
 import cz.muni.pa165.banking.domain.account.Account;
 import cz.muni.pa165.banking.domain.account.AccountType;
 import cz.muni.pa165.banking.domain.user.User;
-import cz.muni.pa165.banking.domain.scheduled.payments.ScheduledPayment;
+import cz.muni.pa165.banking.domain.scheduled.ScheduledPayment;
 import cz.muni.pa165.banking.domain.user.UserType;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.UUID;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface DtoMapper {
@@ -36,6 +34,7 @@ public interface DtoMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "scheduledPayments", ignore = true)
+    @Mapping(target = "accountNumber", ignore = true)
     Account map(NewAccountDto newAccountDto);
 
     @Mapping(target = "id", ignore = true)
@@ -46,7 +45,7 @@ public interface DtoMapper {
         result.setScheduledPayments(scheduledPayments.stream()
                 .map(this::map).toList());
         return result;
-    };
+    }
 
     default Account map(AccountDto accountDto){
         Account account = new Account();
@@ -55,7 +54,7 @@ public interface DtoMapper {
         account.setMaxSpendingLimit(accountDto.getMaxSpendingLimit());
         account.setType(map(accountDto.getType()));
         return account;
-    };
+    }
 
     default AccountDto map(Account account){
         AccountDto accountDto = new AccountDto();
@@ -64,5 +63,5 @@ public interface DtoMapper {
         accountDto.setMaxSpendingLimit(account.getMaxSpendingLimit());
         accountDto.setType(map(account.getType()));
         return accountDto;
-    };
+    }
 }

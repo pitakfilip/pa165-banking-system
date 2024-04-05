@@ -1,45 +1,42 @@
 package cz.muni.pa165.banking.application.service;
 
-import cz.muni.pa165.banking.account.management.dto.AccountDto;
-import cz.muni.pa165.banking.application.mapper.DtoMapper;
-import cz.muni.pa165.banking.application.repository.AccountRepositoryImpl;
-import cz.muni.pa165.banking.application.repository.ScheduledPaymentRepositoryImpl;
 import cz.muni.pa165.banking.domain.account.Account;
-import cz.muni.pa165.banking.domain.scheduled.payments.ScheduledPayment;
-import cz.muni.pa165.banking.domain.scheduled.payments.ScheduledPayments;
-import cz.muni.pa165.banking.domain.user.User;
+import cz.muni.pa165.banking.domain.account.repository.AccountRepository;
+import cz.muni.pa165.banking.domain.scheduled.ScheduledPayment;
+import cz.muni.pa165.banking.domain.scheduled.repository.ScheduledPaymentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class AccountService {
     
-    private final AccountRepositoryImpl accountRepository;
+    private final AccountRepository accountRepository;
     
-    private final ScheduledPaymentRepositoryImpl scheduledPaymentsRepository;
+    private final ScheduledPaymentRepository scheduledPaymentsRepository;
     
-    public AccountService(AccountRepositoryImpl accountRepository, ScheduledPaymentRepositoryImpl scheduledPaymentsRepository){
+    public AccountService(AccountRepository accountRepository, ScheduledPaymentRepository scheduledPaymentsRepository){
         this.accountRepository = accountRepository;
         this.scheduledPaymentsRepository = scheduledPaymentsRepository;
     }
     
     public Account createAccount(Account newAccount){
-        accountRepository.addAccount(newAccount);
-        return newAccount;
+        return accountRepository.addAccount(newAccount);
     }
-    
-    public Account getAccount(String accountId){
+
+    public Account getAccount(Long accountId) {
         return accountRepository.getById(accountId);
     }
     
-    public ScheduledPayment schedulePayment (ScheduledPayment newScheduledPayment){
-        scheduledPaymentsRepository.addScheduledPayment(newScheduledPayment);
-        return newScheduledPayment;
+    public Account getAccountByNumber(String accountNumber) {
+        return accountRepository.getByAccountNumber(accountNumber);
     }
 
-    public List<ScheduledPayment> getScheduledPaymentsOfAccount(String accountId){
+    public ScheduledPayment schedulePayment(ScheduledPayment newScheduledPayment) {
+        return scheduledPaymentsRepository.addScheduledPayment(newScheduledPayment);
+    }
+
+    public List<ScheduledPayment> getScheduledPaymentsOfAccount(Long accountId) {
         Account senderAccount = accountRepository.getById(accountId);
         return senderAccount.getScheduledPayments();
     }
