@@ -1,0 +1,89 @@
+package cz.muni.pa165.banking.domain.balance;
+
+import cz.muni.pa165.banking.domain.report.StatisticalReport;
+import cz.muni.pa165.banking.domain.transaction.Transaction;
+import cz.muni.pa165.banking.domain.transaction.TransactionType;
+
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+
+/**
+ * @author Martin Mojzis
+ */
+public class Balance {
+
+    private final String accountId;
+
+    private BigDecimal amount;
+
+    private final List<Transaction> transactionList;
+
+    public Balance(String userId) {
+        this.amount = new BigDecimal(0);
+        this.transactionList = new ArrayList<>();
+        this.accountId = userId;
+    }
+
+    public void addTransaction(BigDecimal amount, TransactionType type, UUID processId) {
+        transactionList.add(new Transaction(type, amount,
+                OffsetDateTime.now(), processId));
+        this.amount = this.amount.add(amount);
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactionList;
+    }
+
+    public Transaction getTransaction(UUID pid) throws RuntimeException {
+        List<Transaction> result = transactionList.stream().filter(a -> Objects.equals(a.getProcessId(), pid)).toList();
+        if (result.isEmpty()) {
+            throw new RuntimeException("list has no tranaction with this id");
+        }
+        return result.get(0);
+    }
+
+    public boolean transactionExists(UUID pid) {
+        List<Transaction> result = transactionList.stream().filter(a -> Objects.equals(a.getProcessId(), pid)).toList();
+        return !result.isEmpty();
+    }
+
+    public StatisticalReport getReport(OffsetDateTime after, OffsetDateTime before) {
+        return new StatisticalReport(this.getData(after, before));
+    }
+
+    public List<Transaction> getData(OffsetDateTime after, OffsetDateTime before) {
+        return transactionList.stream().filter(a -> a.getDate().isAfter(after) && a.getDate().isBefore(before)).toList();
+    }
+
+    public List<Transaction> getData(OffsetDateTime after, OffsetDateTime before, BigDecimal amountMin, BigDecimal amountMax, TransactionType type) {
+        List<Transaction> result = this.getData(after, before);
+        return result.stream()
+                .filter(a -> a.getAmount().compareTo(amountMax) < 0 && a.getAmount().compareTo(amountMin) > 0 && a.getType() == type)
+                .toList();
+    }
+
+    public List<Transaction> getData(OffsetDateTime after, OffsetDateTime before, BigDecimal amountMin, BigDecimal amountMax) {
+        List<Transaction> result = this.getData(after, before);
+        return result.stream()
+                .filter(a -> a.getAmount().compareTo(amountMax) < 0 && a.getAmount().compareTo(amountMin) > 0)
+                .toList();
+    }
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public List<Transaction> getData(OffsetDateTime from, OffsetDateTime to, TransactionType type) {
+        List<Transaction> result = this.getData(from, to);
+        return result.stream()
+                .filter(a -> a.getType() == type)
+                .toList();
+    }
+}
