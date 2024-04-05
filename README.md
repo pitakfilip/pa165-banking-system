@@ -11,11 +11,7 @@ which can report total and average (per account) transactions (deposits, withdra
 </p>
 
 ## Use case diagram
-<div style="width: 100%; display: flex; justify-content: center;">
-    <img src="./useCaseDiagram.png" width="750">
-</div>
-
-<br>
+<img src="./useCaseDiagram.png" width="800">
 
 ## Module Architecture
 Each service is implemented as a separate maven artifact consisting of a Spring-boot application. Within each project
