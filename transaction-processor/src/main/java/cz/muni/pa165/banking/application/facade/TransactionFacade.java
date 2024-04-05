@@ -38,8 +38,8 @@ public class TransactionFacade {
         return mapper.map(process, processTransaction);
     }
     
-    public void revertProcess(UUID uuid) {
-        service.revertProcess(uuid);
+    public ProcessDto revertProcess(UUID uuid) {
+        return mapper.map(service.revertProcess(uuid));
     }
 
 }

@@ -30,6 +30,6 @@ public interface AccountService {
     /**
      *  Publish transaction results to update balance of account within processed transaction
      */
-    void publishAccountChange(UUID processUuid, TransactionType transactionType, BigDecimal amount, Account account);
+    void publishAccountChange(UUID processUuid, TransactionType transactionType, BigDecimal amount, Account account, String information);
     
 }

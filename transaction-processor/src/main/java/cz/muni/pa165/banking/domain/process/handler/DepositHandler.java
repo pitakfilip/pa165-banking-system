@@ -30,7 +30,7 @@ class DepositHandler extends ProcessHandler {
         
         BigDecimal convertedAmount = currencyConverter.convertTo(money.getCurrency(), accountCurrency, money.getAmount());
         
-        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.DEPOSIT, convertedAmount, account);
+        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.DEPOSIT, convertedAmount, account, processTransaction.getDetail());
     }
 
 }

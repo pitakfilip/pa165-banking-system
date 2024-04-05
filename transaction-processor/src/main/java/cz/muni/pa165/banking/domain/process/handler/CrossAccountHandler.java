@@ -50,8 +50,8 @@ public class CrossAccountHandler extends ProcessHandler {
             targetAmount = currencyConverter.convertTo(currency, targetAccountCurrency, targetAmount);
         }
         
-        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.CROSS_ACCOUNT, sourceAmount, source);
-        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.CROSS_ACCOUNT, targetAmount, target);
+        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.CROSS_ACCOUNT, sourceAmount, source, processTransaction.getDetail());
+        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.CROSS_ACCOUNT, targetAmount, target, processTransaction.getDetail());
     }
 
 }

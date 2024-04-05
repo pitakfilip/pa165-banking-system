@@ -54,7 +54,7 @@ paths:
           required: true
       responses: 
         '200':
-          description: xx
+          description: OK
           content:
             application/json:
               schema:
@@ -80,7 +80,11 @@ paths:
           required: true
       responses:
         '200':
-          description: Process found and reverted changes in account(s)
+          description: Process found and created new process reverting changes in accounts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessDto'
         '400':
           description: Process found by UUID but not in expected state (PROCESSED)
         '404':

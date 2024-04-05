@@ -31,7 +31,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void publishAccountChange(UUID processUuid, TransactionType transactionType, BigDecimal amount, Account account) {
+    public void publishAccountChange(UUID processUuid, TransactionType transactionType, BigDecimal amount, Account account, String information) {
 
     }
 }

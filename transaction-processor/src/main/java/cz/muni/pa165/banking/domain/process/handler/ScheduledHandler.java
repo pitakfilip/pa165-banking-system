@@ -46,8 +46,8 @@ public class ScheduledHandler extends ProcessHandler {
             targetAmount = currencyConverter.convertTo(currency, targetAccountCurrency, targetAmount);
         }
 
-        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.SCHEDULED, sourceAmount, source);
-        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.SCHEDULED, targetAmount, target);
+        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.SCHEDULED, sourceAmount, source, processTransaction.getDetail());
+        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.SCHEDULED, targetAmount, target, processTransaction.getDetail());
     }
 
 }
