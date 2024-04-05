@@ -13,6 +13,12 @@ which can report total and average (per account) transactions (deposits, withdra
 ## Use case diagram
 <img src="./useCaseDiagram.png" width="800">
 
+## Service Structure
+- Account Management (Authentification, user accounts management)
+- Account Query (Real-time representation of current balance states of bank accounts)
+- Transaction Processor (Asynchronous processor for transaction requests)
+
+
 ## Module Architecture
 Each service is implemented as a separate maven artifact consisting of a Spring-boot application. Within each project
 we used the principles of `Hexagonal architecture` and `DDD`, where the domain itself consists of only pure Java classes,
