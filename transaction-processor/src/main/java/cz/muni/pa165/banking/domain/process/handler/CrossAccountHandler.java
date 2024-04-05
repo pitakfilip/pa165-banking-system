@@ -42,6 +42,11 @@ public class CrossAccountHandler extends ProcessHandler {
         if (!currency.equals(sourceAccountCurrency)) {
             sourceAmount = currencyConverter.convertTo(currency, sourceAccountCurrency, sourceAmount);
         }
+        
+        if (!accountService.accountHasSufficientFunds(source, sourceAmount)) {
+            throw new UnexpectedValueException("Insufficient balance for transaction");
+        }
+        
         sourceAmount = sourceAmount.multiply(BigDecimal.valueOf(-1L));
         
         Currency targetAccountCurrency = accountService.getAccountCurrency(target);

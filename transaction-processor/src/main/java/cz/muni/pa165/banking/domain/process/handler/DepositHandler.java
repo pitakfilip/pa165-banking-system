@@ -8,7 +8,6 @@ import cz.muni.pa165.banking.domain.remote.AccountService;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import cz.muni.pa165.banking.exception.UnexpectedValueException;
 
-import java.math.BigDecimal;
 import java.util.Currency;
 
 /**
@@ -28,9 +27,7 @@ class DepositHandler extends ProcessHandler {
             throw new UnexpectedValueException(String.format("Unable to deposit of provided currency (%s) as the account's currency is '%s'", money.getCurrency(), accountCurrency));    
         }
         
-        BigDecimal convertedAmount = currencyConverter.convertTo(money.getCurrency(), accountCurrency, money.getAmount());
-        
-        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.DEPOSIT, convertedAmount, account, processTransaction.getDetail());
+        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.DEPOSIT, money.getAmount(), account, processTransaction.getDetail());
     }
 
 }

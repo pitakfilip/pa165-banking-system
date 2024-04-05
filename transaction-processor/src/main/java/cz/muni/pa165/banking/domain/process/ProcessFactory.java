@@ -6,6 +6,9 @@ import cz.muni.pa165.banking.domain.process.repository.ProcessRepository;
 import cz.muni.pa165.banking.domain.transaction.Transaction;
 import cz.muni.pa165.banking.domain.process.repository.ProcessTransactionRepository;
 
+/**
+ * Factory for Process, which creates a process and also sends it via messaging for further processing.
+ */
 public class ProcessFactory {
     
     private final ProcessTransactionRepository processTransactionRepository;
