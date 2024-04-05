@@ -1,9 +1,11 @@
 package cz.muni.pa165.banking.application.repository;
 
+import cz.muni.pa165.banking.domain.scheduled.payments.ScheduledPayment;
 import cz.muni.pa165.banking.domain.scheduled.payments.repository.ScheduledPaymentRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Repository
 public class ScheduledPaymentRepositoryImpl implements ScheduledPaymentRepository {

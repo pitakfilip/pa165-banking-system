@@ -1,6 +1,6 @@
 package cz.muni.pa165.banking.domain.scheduled.payments.repository;
 
-import cz.muni.pa165.banking.account.management.dto.ScheduledPayment;
+import cz.muni.pa165.banking.domain.scheduled.payments.ScheduledPayment;
 
 import java.util.Map;
 

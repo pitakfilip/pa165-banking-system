@@ -1,9 +1,16 @@
 package cz.muni.pa165.banking.application.service;
 
+import cz.muni.pa165.banking.account.management.dto.AccountDto;
+import cz.muni.pa165.banking.application.mapper.DtoMapper;
 import cz.muni.pa165.banking.application.repository.AccountRepositoryImpl;
 import cz.muni.pa165.banking.application.repository.ScheduledPaymentRepositoryImpl;
+import cz.muni.pa165.banking.domain.account.Account;
+import cz.muni.pa165.banking.domain.scheduled.payments.ScheduledPayment;
+import cz.muni.pa165.banking.domain.scheduled.payments.ScheduledPayments;
+import cz.muni.pa165.banking.domain.user.User;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -18,42 +25,22 @@ public class AccountService {
         this.scheduledPaymentsRepository = scheduledPaymentsRepository;
     }
     
-    public Account createAccount(CreateAccountRequest createAccountRequest){
-        User user = createAccountRequest.getUser();
-        Account newAccount = new Account(UUID.randomUUID().toString(), user);
-
-        while (!accountRepository.addAccount(newAccount)) {
-            newAccount = new Account(UUID.randomUUID().toString(), user);
-        }
-        
-        if (user != null) { 
-            user.addAccountsItem(newAccount.getId()); 
-        }
-        
+    public Account createAccount(Account newAccount){
+        accountRepository.addAccount(newAccount);
         return newAccount;
     }
     
-    public Account getAccount(GetAccountRequest getAccountRequest){
-        String id = getAccountRequest.getAccountId();
-        return accountRepository.getById(id);
+    public Account getAccount(String accountId){
+        return accountRepository.getById(accountId);
     }
     
-    public ScheduledPayment schedulePayment (SchedulePaymentRequest schedulePaymentRequest){
-        Account senderAccount = schedulePaymentRequest.getSenderAccount();
-        if (senderAccount == null) {
-            return null;
-        }
-
-        String receiverAccountId = schedulePaymentRequest.getReceiverAccountId();
-        Integer amount = schedulePaymentRequest.getAmount();
-        ScheduledPayment newScheduledPayment = new ScheduledPayment(UUID.randomUUID().toString(), senderAccount.getId(), receiverAccountId, amount);
-        
-        while (!scheduledPaymentsRepository.addScheduledPayment(newScheduledPayment)) {
-            newScheduledPayment = new ScheduledPayment(UUID.randomUUID().toString(), senderAccount.getId(), receiverAccountId, amount);
-        }
-        senderAccount.addScheduledPaymentsItem(newScheduledPayment.getId());
-        
+    public ScheduledPayment schedulePayment (ScheduledPayment newScheduledPayment){
+        scheduledPaymentsRepository.addScheduledPayment(newScheduledPayment);
         return newScheduledPayment;
     }
 
+    public List<ScheduledPayment> getScheduledPaymentsOfAccount(String accountId){
+        Account senderAccount = accountRepository.getById(accountId);
+        return senderAccount.getScheduledPayments();
+    }
 }

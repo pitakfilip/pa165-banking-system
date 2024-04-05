@@ -119,11 +119,6 @@ components:
         maxSpendingLimit:
           type: integer
           description: max limit of one transaction from this account
-        scheduledPayments:
-            type: array
-            items:
-              type: string
-            description: id of every scheduled payment of this account
 
     ScheduledPaymentDto:
       title: Scheduled payment

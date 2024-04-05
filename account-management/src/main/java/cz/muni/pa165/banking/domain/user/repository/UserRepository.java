@@ -1,5 +1,7 @@
 package cz.muni.pa165.banking.domain.user.repository;
 
+import cz.muni.pa165.banking.domain.user.User;
+
 public interface UserRepository {
     
     /**
@@ -16,6 +18,6 @@ public interface UserRepository {
      * @param id the ID of the user to retrieve
      * @return the user with the specified ID, or null if no such user exists
      */
-    User getById(String id);
+    User getById(Long id);
     
 }
