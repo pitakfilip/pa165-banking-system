@@ -23,8 +23,7 @@ public class AccountFacade {
         this.accountService = accountService;
         this.mapper = mapper;
     }
-
-    // TODO mapper pre convert DTO -> domain triedu, zavolat service co spracuje poziadavku, konvert domain trieda -> DTO, return DTO
+    
     public AccountDto createAccount(NewAccountDto newAccountDto){
         Account account = mapper.map(newAccountDto);
         return mapper.map(accountService.createAccount(account));
