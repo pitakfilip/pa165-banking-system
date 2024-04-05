@@ -13,13 +13,14 @@ which can report total and average (per account) transactions (deposits, withdra
 ## Use case diagram
 <img src="./useCaseDiagram.png" width="800">
 
-## Service Structure
+## Artefact Structure
 
-| Service	                    | Specification	                                                        |
-|-----------------------------|-----------------------------------------------------------------------|
-| 	 **Account Management**    | 	  Authentification, user accounts management                         |
-| 	  **Account Query**        | 	 Real-time representation of current balance states of bank accounts |
-| 	 **Transaction Processor** | 	 Asynchronous processor for transaction requests                     |
+| Service	                    | Specification	                                                                                                        |
+|-----------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| 	 **Infrastructure**        | 	Common implementations including exceptions, exception handling, loadbalancing, service registry, security and other |
+| 	 **Account Management**    | 	  Authentification, user accounts management                                                                         |
+| 	  **Account Query**        | 	 Real-time representation of current balance states of bank accounts                                                 |
+| 	 **Transaction Processor** | 	 Asynchronous processor for transaction requests                                                                     |
 
 
 ## Module Architecture
