@@ -1,7 +1,6 @@
 package cz.muni.pa165.banking.domain.account;
 
 import cz.muni.pa165.banking.domain.scheduled.ScheduledPayment;
-import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -12,7 +11,7 @@ public class Account {
     private Long userId;
     private Integer maxSpendingLimit;
     private AccountType type;
-    private @Valid List<ScheduledPayment> scheduledPayments;
+    private List<ScheduledPayment> scheduledPayments;
 
     public Account(){}
 
