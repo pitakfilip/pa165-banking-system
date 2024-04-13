@@ -1,7 +1,6 @@
 package cz.muni.pa165.banking.application.service;
 
 import cz.muni.pa165.banking.application.exception.NotFoundAccountException;
-import cz.muni.pa165.banking.application.repository.BalancesRepositoryImpl;
 import cz.muni.pa165.banking.domain.balance.Balance;
 import cz.muni.pa165.banking.domain.balance.repository.BalancesRepository;
 
@@ -31,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(MockitoExtension.class)
 class BalanceServiceImplTest {
     @Mock
-    private BalancesRepositoryImpl balanceRepository;
+    private BalancesRepository balanceRepository;
 
     @InjectMocks
     private BalanceServiceImpl balanceService;

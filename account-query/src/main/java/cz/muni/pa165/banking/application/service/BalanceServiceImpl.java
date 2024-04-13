@@ -8,6 +8,7 @@ import cz.muni.pa165.banking.domain.report.StatisticalReport;
 import cz.muni.pa165.banking.domain.transaction.Transaction;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -28,23 +29,27 @@ public class BalanceServiceImpl implements BalanceService {
         this.balanceRepository = balanceRepository;
     }
 
+    @Transactional
     public Balance findById(String id) throws NotFoundAccountException {
         return balanceRepository.findById(id)
                 .orElseThrow(() -> new NotFoundAccountException("Balance  of person with id: " + id + " was not found."));
     }
 
     @Override
+    @Transactional
     public void addNewBalance(String id) {
         balanceRepository.addBalance(id);
     }
 
     @Override
+    @Transactional
     public BigDecimal getBalance(String id) throws NotFoundAccountException {
         Balance balance = findById(id);
         return balance.getAmount();
     }
 
     @Override
+    @Transactional
     public List<Transaction> getTransactions(String id, OffsetDateTime from, OffsetDateTime to, BigDecimal minAmount,
                                              BigDecimal maxAmount, TransactionType type)
             throws NotFoundAccountException {
@@ -61,6 +66,7 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
+    @Transactional
     public void addToBalance(String id, BigDecimal amount, UUID processID, TransactionType type)
             throws NotFoundAccountException {
         Balance balance = findById(id);
@@ -68,12 +74,14 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
+    @Transactional
     public StatisticalReport getReport(String id, OffsetDateTime beginning, OffsetDateTime end) {
         Balance balance = findById(id);
         return balance.getReport(beginning, end);
     }
 
     @Override
+    @Transactional
     public List<Transaction> getAllTransactions(OffsetDateTime from, OffsetDateTime to, BigDecimal minAmount,
                                                 BigDecimal maxAmount, TransactionType transactionType) {
         List<Transaction> result = new LinkedList<>();

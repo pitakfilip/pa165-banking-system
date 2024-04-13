@@ -6,31 +6,41 @@ import cz.muni.pa165.banking.domain.transaction.TransactionType;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @author Martin Mojzis
  */
+@Entity
+@Table(name = "balance")
 public class Balance {
 
-    private final String accountId;
+    @Id
+    @NotNull
+    @Column(name = "id_account")
+    private String accountId;
 
+    @Column(name = "amount")
     private BigDecimal amount;
 
-    private final List<Transaction> transactionList;
+    @Column(name = "transactions")
+    @OneToMany(mappedBy = "balance")
+    private Set<Transaction> transactionList;
 
-    public Balance(String userId) {
+    public Balance(String accountId) {
         this.amount = new BigDecimal(0);
-        this.transactionList = new ArrayList<>();
-        this.accountId = userId;
+        this.accountId = accountId;
+        this.transactionList = new HashSet<>();
+    }
+    public Balance() {
     }
 
     public void addTransaction(BigDecimal amount, TransactionType type, UUID processId) {
         transactionList.add(new Transaction(type, amount,
-                OffsetDateTime.now(), processId));
+                OffsetDateTime.now(), processId, this));
         this.amount = this.amount.add(amount);
     }
 
@@ -39,7 +49,7 @@ public class Balance {
     }
 
     public List<Transaction> getTransactions() {
-        return transactionList;
+        return transactionList.stream().toList();
     }
 
     public Transaction getTransaction(UUID pid) throws RuntimeException {
@@ -85,5 +95,13 @@ public class Balance {
         return result.stream()
                 .filter(a -> a.getType() == type)
                 .toList();
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 }
