@@ -4,3 +4,10 @@ server:
 spring:
   application:
     name: Transaction-Processor
+  datasource:
+    url: jdbc:postgresql://localhost:5432/banking
+    driver-class-name: org.postgresql.Driver
+    username: ACC_TRANSACTION
+    password: transactionAccPasswd
+  jpa:
+    mapping-resources: hibernate/Transaction.hbm.xml

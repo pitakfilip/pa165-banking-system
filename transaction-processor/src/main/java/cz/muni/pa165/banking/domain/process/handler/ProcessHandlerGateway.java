@@ -22,9 +22,9 @@ public class ProcessHandlerGateway {
         }
         
         ProcessHandler handler = switch (type) {
-            case WITHDRAW -> new WithdrawHandler();
+            case WITHDRAWAL -> new WithdrawHandler();
             case DEPOSIT -> new DepositHandler();
-            case CROSS_ACCOUNT -> new CrossAccountHandler();
+            case TRANSFER -> new CrossAccountHandler();
             case SCHEDULED -> new ScheduledHandler();
         };
         

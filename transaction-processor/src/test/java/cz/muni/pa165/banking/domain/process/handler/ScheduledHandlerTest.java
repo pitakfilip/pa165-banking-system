@@ -51,7 +51,7 @@ class ScheduledHandlerTest {
     void nonexistingFirstAccountValidation() {
         AccountService accountService = new AccountServiceStub(false, false,null, false);
         Process process = new ProcessMock();
-        ProcessTransaction processTransaction = new ProcessTransaction(account1, account2, TransactionType.CROSS_ACCOUNT, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
+        ProcessTransaction processTransaction = new ProcessTransaction(account1, account2, TransactionType.TRANSFER, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
 
         when(processRepository.findById(process.uuid())).thenReturn(process);
         when(processTransactionRepository.findTransactionByProcessId(process.uuid())).thenReturn(processTransaction);
@@ -67,7 +67,7 @@ class ScheduledHandlerTest {
     void twoSameAccountsValidation() {
         AccountService accountService = new AccountServiceStub(true, false,null, false);
         Process process = new ProcessMock();
-        ProcessTransaction processTransaction = new ProcessTransaction(account1, account1, TransactionType.CROSS_ACCOUNT, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
+        ProcessTransaction processTransaction = new ProcessTransaction(account1, account1, TransactionType.TRANSFER, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
 
         when(processRepository.findById(process.uuid())).thenReturn(process);
         when(processTransactionRepository.findTransactionByProcessId(process.uuid())).thenReturn(processTransaction);
@@ -83,7 +83,7 @@ class ScheduledHandlerTest {
     void nonexistingSecondAccountValidation() {
         AccountService accountService = new AccountServiceStub(true, false,null, false);
         Process process = new ProcessMock();
-        ProcessTransaction processTransaction = new ProcessTransaction(account1, account2, TransactionType.CROSS_ACCOUNT, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
+        ProcessTransaction processTransaction = new ProcessTransaction(account1, account2, TransactionType.TRANSFER, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
 
         when(processRepository.findById(process.uuid())).thenReturn(process);
         when(processTransactionRepository.findTransactionByProcessId(process.uuid())).thenReturn(processTransaction);
@@ -99,7 +99,7 @@ class ScheduledHandlerTest {
     void crossAccountTransactionSuccessful() {
         AccountService accountService = new AccountServiceStub(true, true, null, true);
         Process process = new ProcessMock();
-        ProcessTransaction  processTransaction = new ProcessTransaction(account1, account2, TransactionType.CROSS_ACCOUNT, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
+        ProcessTransaction  processTransaction = new ProcessTransaction(account1, account2, TransactionType.TRANSFER, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
 
         when(processRepository.findById(process.uuid())).thenReturn(process);
         when(processTransactionRepository.findTransactionByProcessId(process.uuid())).thenReturn(processTransaction);
