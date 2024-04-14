@@ -92,7 +92,25 @@
     </dependencies>
     
     <build>
+        <finalName>transactions-processor</finalName>
+
         <plugins>
+            <!--    JAR Build    -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>cz.muni.pa165.banking.ProcessorApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
             <!--    OpenApi generator    -->
             <plugin>
                 <groupId>org.openapitools</groupId>

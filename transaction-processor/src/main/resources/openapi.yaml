@@ -95,9 +95,9 @@ components:
     TransactionTypeDto:
       type: string
       enum:
-        - WITHDRAW
+        - WITHDRAWAL
         - DEPOSIT
-        - CROSS_ACCOUNT
+        - TRANSFER
         - SCHEDULED
       description: Enumaration defining a type for a transaction. Each type may have different certain implementations and validations.
       
