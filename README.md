@@ -13,7 +13,7 @@ which can report total and average (per account) transactions (deposits, withdra
 ## Use case diagram
 <img src="./useCaseDiagram.png" width="800">
 
-## Artefact Structure
+## Artifact Structure
 
 | Service	                    | Specification	                                                                                                        |
 |-----------------------------|-----------------------------------------------------------------------------------------------------------------------|
@@ -25,7 +25,7 @@ which can report total and average (per account) transactions (deposits, withdra
 
 ## Module Architecture
 Each service is implemented as a separate maven artifact consisting of a Spring-boot application. Within each project
-we used the principles of `Hexagonal architecture` and `DDD`, where the domain itself consists of only pure Java classes,
+we used the principles of `Hexagonal architecture`, where the domain itself consists of only pure Java classes,
 with no technological dependencies. By using such separation, we nicely created an extra separated layer on top of the
 traditional `Controller, Facade, Service and Repository` layers. The main benefit of such separation is visible mainly when 
 extending new features, implementation of tests and usage of custom abstractions with ease.
