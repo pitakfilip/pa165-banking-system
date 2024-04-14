@@ -1,8 +1,10 @@
+db:
+  hostname: localhost
 spring:
   application:
     name: Transaction-Processor
   datasource:
-    url: jdbc:postgresql://banking-db:5432/banking
+    url: jdbc:postgresql://${db.hostname}:5432/banking
     driver-class-name: org.postgresql.Driver
     username: ACC_TRANSACTION
     password: transactionAccPasswd
