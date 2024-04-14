@@ -39,8 +39,12 @@ public class Balance {
     }
 
     @Transactional
-    public void addTransaction(BigDecimal amount, TransactionType type, UUID processId) {
+    public Transaction addTransaction(BigDecimal amount, TransactionType type, UUID processId) {
         this.amount = this.amount.add(amount);
+        Transaction tr = new Transaction(type, amount,
+                OffsetDateTime.now(), processId, this);
+        transactionList.add(tr);
+        return tr;
     }
 
     public BigDecimal getAmount() {

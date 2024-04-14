@@ -73,8 +73,9 @@ public class BalanceServiceImpl implements BalanceService {
     public void addToBalance(String id, BigDecimal amount, UUID processID, TransactionType type)
             throws NotFoundAccountException {
         Balance balance = findById(id);
-        balance.addTransaction(amount, type, processID);
-        transactionRepository.addTransaction(amount, type, processID, balance);
+        Transaction t = balance.addTransaction(amount, type, processID);
+        balanceRepository.save(balance);
+        transactionRepository.save(t);
     }
 
     @Override

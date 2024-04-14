@@ -124,7 +124,7 @@ public class BalanceControllerIT {
         mockMvc.perform(post("/balance/add?id=id&amount=20&processId=5612b08f-27c2-42ca-9f23-0c9aff6ad877&type=WITHDRAW"));
         cz.muni.pa165.banking.account.query.dto.Transaction transaction = new Transaction();
         transaction.setDate(OffsetDateTime.now());
-        transaction.setAmount(BigDecimal.valueOf(20));
+        transaction.setAmount(BigDecimal.valueOf(20.00));
         transaction.setProcessId(UUID.fromString("5612b08f-27c2-42ca-9f23-0c9aff6ad877"));
         transaction.setTransactionType(cz.muni.pa165.banking.account.query.dto.TransactionType.WITHDRAW);
         // Act
@@ -137,7 +137,7 @@ public class BalanceControllerIT {
         cz.muni.pa165.banking.account.query.dto.Transaction[] response = OBJECT_MAPPER.readValue(responseJson, cz.muni.pa165.banking.account.query.dto.Transaction[].class);
 
         // Assert
-        assertThat(response[0].getAmount()).isEqualTo(transaction.getAmount());
+        assertThat(response[0].getAmount().byteValueExact()).isEqualTo(transaction.getAmount().byteValueExact());
         assertThat(response[0].getProcessId()).isEqualTo(transaction.getProcessId());
         assertThat(response[0].getTransactionType()).isEqualTo(transaction.getTransactionType());
     }
@@ -182,10 +182,10 @@ public class BalanceControllerIT {
         cz.muni.pa165.banking.account.query.dto.Transaction[] response = OBJECT_MAPPER.readValue(responseJson, cz.muni.pa165.banking.account.query.dto.Transaction[].class);
 
         // Assert
-        assertThat(response[0].getAmount()).isEqualTo(transaction2.getAmount());
+        assertThat(response[0].getAmount().byteValueExact()).isEqualTo(transaction2.getAmount().byteValueExact());
         assertThat(response[0].getProcessId()).isEqualTo(transaction2.getProcessId());
         assertThat(response[0].getTransactionType()).isEqualTo(transaction2.getTransactionType());
-        assertThat(response[1].getAmount()).isEqualTo(transaction.getAmount());
+        assertThat(response[1].getAmount().byteValueExact()).isEqualTo(transaction.getAmount().byteValueExact());
         assertThat(response[1].getProcessId()).isEqualTo(transaction.getProcessId());
         assertThat(response[1].getTransactionType()).isEqualTo(transaction.getTransactionType());
     }
@@ -193,8 +193,8 @@ public class BalanceControllerIT {
     @Test
     void getReport_personExists_returnsReport() throws Exception {
         // Arrange
-        mockMvc.perform(post("/balance/new?id=id"));
-        mockMvc.perform(post("/balance/add?id=id&amount=20&processId=5612b08f-27c2-42ca-9f23-0c9aff6ad877&type=WITHDRAW"));
+        mockMvc.perform(post("/balance/new?id=iddd"));
+        mockMvc.perform(post("/balance/add?id=iddd&amount=20&processId=5612b08f-27c2-42ca-9f23-0c9aff6ad877&type=WITHDRAW"));
         cz.muni.pa165.banking.account.query.dto.Transaction transaction = new Transaction();
         transaction.setDate(OffsetDateTime.now());
         transaction.setAmount(BigDecimal.valueOf(20));
@@ -202,7 +202,7 @@ public class BalanceControllerIT {
         transaction.setTransactionType(cz.muni.pa165.banking.account.query.dto.TransactionType.WITHDRAW);
         // Act
         String id = "id";
-        String responseJson = mockMvc.perform(get("/balance/account/report?id=id&beginning=2020-02-02&end=2024-05-05")
+        String responseJson = mockMvc.perform(get("/balance/account/report?id=iddd&beginning=2020-02-02&end=2024-05-05")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is(200))
                 .andReturn()
@@ -211,7 +211,7 @@ public class BalanceControllerIT {
         cz.muni.pa165.banking.account.query.dto.TransactionsReport response = OBJECT_MAPPER.readValue(responseJson, cz.muni.pa165.banking.account.query.dto.TransactionsReport.class);
 
         // Assert
-        assertThat(response.getWithdrawalAmount().getAmountIn()).isEqualTo(BigDecimal.valueOf(20));
+        assertThat(response.getWithdrawalAmount().getAmountIn().byteValueExact()).isEqualTo(BigDecimal.valueOf(20).byteValueExact());
         assertThat(response.getTotalAmount().getTimesIn()).isEqualTo(BigDecimal.ONE);
     }
 

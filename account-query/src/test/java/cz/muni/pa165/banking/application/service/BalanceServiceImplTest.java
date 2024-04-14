@@ -155,7 +155,7 @@ class BalanceServiceImplTest {
         String id = "id";
         UUID uuid = new UUID(2, 2);
         OffsetDateTime time = OffsetDateTime.now();
-        Mockito.doNothing().when(balance).addTransaction(BigDecimal.TEN, TransactionType.CREDIT, uuid);
+        Mockito.when(balance.addTransaction(BigDecimal.TEN, TransactionType.CREDIT, uuid)).thenReturn(new Transaction());
         Mockito.when(balanceRepository.findById(id)).thenReturn(Optional.of(balance));
 
         // Act
