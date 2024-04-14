@@ -1,6 +1,8 @@
 stages:
   - test
 
+image: maven:latest
+
 test-account-management:
   stage: test
   tags:
