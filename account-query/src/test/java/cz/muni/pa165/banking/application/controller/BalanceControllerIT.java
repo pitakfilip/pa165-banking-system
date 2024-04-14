@@ -95,7 +95,7 @@ public class BalanceControllerIT {
                 .andReturn()
                 .getResponse()
                 .getContentAsString(StandardCharsets.UTF_8);
-        Integer response = Integer.valueOf(responseJson);
+        Double response = Double.valueOf(responseJson);
 
         // Assert
         assertThat(response).isEqualTo(0);
@@ -182,12 +182,12 @@ public class BalanceControllerIT {
         cz.muni.pa165.banking.account.query.dto.Transaction[] response = OBJECT_MAPPER.readValue(responseJson, cz.muni.pa165.banking.account.query.dto.Transaction[].class);
 
         // Assert
-        assertThat(response[1].getAmount()).isEqualTo(transaction.getAmount());
-        assertThat(response[1].getProcessId()).isEqualTo(transaction.getProcessId());
-        assertThat(response[1].getTransactionType()).isEqualTo(transaction.getTransactionType());
         assertThat(response[0].getAmount()).isEqualTo(transaction2.getAmount());
         assertThat(response[0].getProcessId()).isEqualTo(transaction2.getProcessId());
         assertThat(response[0].getTransactionType()).isEqualTo(transaction2.getTransactionType());
+        assertThat(response[1].getAmount()).isEqualTo(transaction.getAmount());
+        assertThat(response[1].getProcessId()).isEqualTo(transaction.getProcessId());
+        assertThat(response[1].getTransactionType()).isEqualTo(transaction.getTransactionType());
     }
 
     @Test

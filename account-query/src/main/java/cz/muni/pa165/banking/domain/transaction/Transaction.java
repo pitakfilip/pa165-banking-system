@@ -38,7 +38,7 @@ public class Transaction {
     private UUID processId;
 
     @ManyToOne
-    @JoinColumn(name="balance_id", nullable=false)
+    @JoinColumn(name="balance_id", updatable = false)
     private Balance balance;
 
     public Transaction(TransactionType type, BigDecimal amount, OffsetDateTime date, UUID processId) {

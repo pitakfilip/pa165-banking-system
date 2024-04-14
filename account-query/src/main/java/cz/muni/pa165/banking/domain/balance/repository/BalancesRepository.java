@@ -1,6 +1,7 @@
 package cz.muni.pa165.banking.domain.balance.repository;
 
 import cz.muni.pa165.banking.domain.balance.Balance;
+import cz.muni.pa165.banking.domain.transaction.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

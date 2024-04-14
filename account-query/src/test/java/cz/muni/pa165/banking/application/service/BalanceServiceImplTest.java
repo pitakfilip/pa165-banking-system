@@ -6,6 +6,7 @@ import cz.muni.pa165.banking.domain.balance.repository.BalancesRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import cz.muni.pa165.banking.domain.balance.repository.TransactionRepository;
 import cz.muni.pa165.banking.domain.report.StatisticalReport;
 import cz.muni.pa165.banking.domain.transaction.Transaction;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
@@ -31,6 +32,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class BalanceServiceImplTest {
     @Mock
     private BalancesRepository balanceRepository;
+    @Mock
+    private TransactionRepository transactionRepository;
 
     @InjectMocks
     private BalanceServiceImpl balanceService;

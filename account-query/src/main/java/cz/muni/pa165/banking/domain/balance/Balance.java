@@ -10,6 +10,7 @@ import java.util.*;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Martin Mojzis
@@ -20,27 +21,25 @@ public class Balance {
 
     @Id
     @NotNull
-    @Column(name = "id_account")
+    @Column(name = "balance_id")
     private String accountId;
 
     @Column(name = "amount")
     private BigDecimal amount;
 
-    @Column(name = "transactions")
     @OneToMany(mappedBy = "balance")
-    private Set<Transaction> transactionList;
+    //@JoinColumn(name="balance_id")
+    private List<Transaction> transactionList = new ArrayList<>();
 
     public Balance(String accountId) {
         this.amount = new BigDecimal(0);
         this.accountId = accountId;
-        this.transactionList = new HashSet<>();
     }
     public Balance() {
     }
 
+    @Transactional
     public void addTransaction(BigDecimal amount, TransactionType type, UUID processId) {
-        transactionList.add(new Transaction(type, amount,
-                OffsetDateTime.now(), processId, this));
         this.amount = this.amount.add(amount);
     }
 
@@ -65,14 +64,17 @@ public class Balance {
         return !result.isEmpty();
     }
 
+    @Transactional
     public StatisticalReport getReport(OffsetDateTime after, OffsetDateTime before) {
         return new StatisticalReport(this.getData(after, before));
     }
 
+    @Transactional
     public List<Transaction> getData(OffsetDateTime after, OffsetDateTime before) {
         return transactionList.stream().filter(a -> a.getDate().isAfter(after) && a.getDate().isBefore(before)).toList();
     }
 
+    @Transactional
     public List<Transaction> getData(OffsetDateTime after, OffsetDateTime before, BigDecimal amountMin, BigDecimal amountMax, TransactionType type) {
         List<Transaction> result = this.getData(after, before);
         return result.stream()
@@ -80,6 +82,7 @@ public class Balance {
                 .toList();
     }
 
+    @Transactional
     public List<Transaction> getData(OffsetDateTime after, OffsetDateTime before, BigDecimal amountMin, BigDecimal amountMax) {
         List<Transaction> result = this.getData(after, before);
         return result.stream()
@@ -90,6 +93,7 @@ public class Balance {
         return accountId;
     }
 
+    @Transactional
     public List<Transaction> getData(OffsetDateTime from, OffsetDateTime to, TransactionType type) {
         List<Transaction> result = this.getData(from, to);
         return result.stream()

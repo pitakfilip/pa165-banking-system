@@ -3,6 +3,7 @@ package cz.muni.pa165.banking.application.service;
 import cz.muni.pa165.banking.application.exception.NotFoundAccountException;
 import cz.muni.pa165.banking.domain.balance.Balance;
 import cz.muni.pa165.banking.domain.balance.repository.BalancesRepository;
+import cz.muni.pa165.banking.domain.balance.repository.TransactionRepository;
 import cz.muni.pa165.banking.domain.balance.service.BalanceService;
 import cz.muni.pa165.banking.domain.report.StatisticalReport;
 import cz.muni.pa165.banking.domain.transaction.Transaction;
@@ -24,9 +25,11 @@ import java.util.UUID;
 public class BalanceServiceImpl implements BalanceService {
 
     private final BalancesRepository balanceRepository;
+    private final TransactionRepository transactionRepository;
 
-    public BalanceServiceImpl(BalancesRepository balanceRepository) {
+    public BalanceServiceImpl(BalancesRepository balanceRepository, TransactionRepository transactionRepository) {
         this.balanceRepository = balanceRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     @Transactional
@@ -71,6 +74,7 @@ public class BalanceServiceImpl implements BalanceService {
             throws NotFoundAccountException {
         Balance balance = findById(id);
         balance.addTransaction(amount, type, processID);
+        transactionRepository.addTransaction(amount, type, processID, balance);
     }
 
     @Override
