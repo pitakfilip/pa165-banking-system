@@ -4,10 +4,14 @@ import cz.muni.pa165.banking.domain.balance.Balance;
 import cz.muni.pa165.banking.domain.transaction.Transaction;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -20,4 +24,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
                 OffsetDateTime.now(), processId, balance);
         this.save(tr);
     }
+
+    @Query("SELECT u FROM Transaction u where u.balance = :balance")
+    Collection<Transaction> findByBalance(Balance balance);
 }

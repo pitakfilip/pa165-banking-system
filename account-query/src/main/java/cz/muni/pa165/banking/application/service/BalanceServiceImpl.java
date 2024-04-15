@@ -95,4 +95,11 @@ public class BalanceServiceImpl implements BalanceService {
         }
         return result;
     }
+
+    @Override
+    public void deleteBalance(String id) throws NotFoundAccountException {
+        Balance balance = findById(id);
+        transactionRepository.findByBalance(balance).forEach(a -> transactionRepository.delete(a));
+        balanceRepository.delete(balance);
+    }
 }

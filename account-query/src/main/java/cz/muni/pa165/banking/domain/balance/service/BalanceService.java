@@ -28,4 +28,6 @@ public interface BalanceService {
 
     List<Transaction> getAllTransactions(OffsetDateTime from, OffsetDateTime from1, BigDecimal minAmount,
                                          BigDecimal maxAmount, TransactionType transactionType);
+
+    void deleteBalance(String id) throws NotFoundAccountException;
 }

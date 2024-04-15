@@ -65,4 +65,7 @@ public class BalanceFacade {
         return toReturn.stream().map(balanceMapper::mapTransactionIn).toList();
     }
 
+    public void deleteBalance(String id) throws NotFoundAccountException {
+        balanceService.deleteBalance(id);
+    }
 }

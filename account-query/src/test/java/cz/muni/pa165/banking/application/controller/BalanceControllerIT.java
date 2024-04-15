@@ -18,11 +18,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -157,19 +157,20 @@ public class BalanceControllerIT {
     @Test
     void getAllTransactions_returnsAllTransactions() throws Exception {
         // Arrange
-        mockMvc.perform(post("/balance/new?id=id"));
-        mockMvc.perform(post("/balance/add?id=id&amount=20&processId=5612b08f-27c2-42ca-9f23-0c9aff6ad877&type=WITHDRAW"));
-        mockMvc.perform(post("/balance/new?id=i"));
-        mockMvc.perform(post("/balance/add?id=i&amount=40&processId=5612b08f-27c2-42ca-9f23-0c9aff6ad874&type=WITHDRAW"));
+
+        mockMvc.perform(post("/balance/new?id=idddd"));
+        mockMvc.perform(post("/balance/add?id=idddd&amount=20&processId=5612b08f-27c2-42ca-9f23-0c9aff6ad847&type=WITHDRAW"));
+        mockMvc.perform(post("/balance/new?id=idd"));
+        mockMvc.perform(post("/balance/add?id=idd&amount=40&processId=5612b08f-27c2-42ca-9f23-0c9aff64d874&type=WITHDRAW"));
         cz.muni.pa165.banking.account.query.dto.Transaction transaction = new Transaction();
         transaction.setDate(OffsetDateTime.now());
         transaction.setAmount(BigDecimal.valueOf(20));
-        transaction.setProcessId(UUID.fromString("5612b08f-27c2-42ca-9f23-0c9aff6ad877"));
+        transaction.setProcessId(UUID.fromString("5612b08f-27c2-42ca-9f23-0c9aff6ad847"));
         transaction.setTransactionType(cz.muni.pa165.banking.account.query.dto.TransactionType.WITHDRAW);
         cz.muni.pa165.banking.account.query.dto.Transaction transaction2 = new Transaction();
         transaction2.setDate(OffsetDateTime.now());
         transaction2.setAmount(BigDecimal.valueOf(40));
-        transaction2.setProcessId(UUID.fromString("5612b08f-27c2-42ca-9f23-0c9aff6ad874"));
+        transaction2.setProcessId(UUID.fromString("5612b08f-27c2-42ca-9f23-0c9aff64d874"));
         transaction2.setTransactionType(cz.muni.pa165.banking.account.query.dto.TransactionType.WITHDRAW);
         // Act
         String id = "id";
@@ -179,26 +180,30 @@ public class BalanceControllerIT {
                 .andReturn()
                 .getResponse()
                 .getContentAsString(StandardCharsets.UTF_8);
-        cz.muni.pa165.banking.account.query.dto.Transaction[] response = OBJECT_MAPPER.readValue(responseJson, cz.muni.pa165.banking.account.query.dto.Transaction[].class);
+        List<cz.muni.pa165.banking.account.query.dto.Transaction> response = Arrays.stream(OBJECT_MAPPER.readValue(responseJson, Transaction[].class)).toList();
+        mockMvc.perform(delete("/balance?id=idddd"));
+        mockMvc.perform(delete("/balance?id=idd"));
 
         // Assert
-        assertThat(response[0].getAmount().byteValueExact()).isEqualTo(transaction2.getAmount().byteValueExact());
-        assertThat(response[0].getProcessId()).isEqualTo(transaction2.getProcessId());
-        assertThat(response[0].getTransactionType()).isEqualTo(transaction2.getTransactionType());
-        assertThat(response[1].getAmount().byteValueExact()).isEqualTo(transaction.getAmount().byteValueExact());
-        assertThat(response[1].getProcessId()).isEqualTo(transaction.getProcessId());
-        assertThat(response[1].getTransactionType()).isEqualTo(transaction.getTransactionType());
+        assertThat(response.stream().filter(a -> a.getProcessId().equals(transaction2.getProcessId())).findFirst().get()
+                .getAmount().byteValueExact()).isEqualTo(transaction2.getAmount().byteValueExact());
+        assertThat(response.stream().filter(a -> a.getProcessId().equals(transaction2.getProcessId())).findFirst().get()
+                .getTransactionType()).isEqualTo(transaction2.getTransactionType());
+        assertThat(response.stream().filter(a -> a.getProcessId().equals(transaction.getProcessId())).findFirst().get()
+                .getAmount().byteValueExact()).isEqualTo(transaction.getAmount().byteValueExact());
+        assertThat(response.stream().filter(a -> a.getProcessId().equals(transaction.getProcessId())).findFirst().get()
+                .getTransactionType()).isEqualTo(transaction.getTransactionType());
     }
 
     @Test
     void getReport_personExists_returnsReport() throws Exception {
         // Arrange
         mockMvc.perform(post("/balance/new?id=iddd"));
-        mockMvc.perform(post("/balance/add?id=iddd&amount=20&processId=5612b08f-27c2-42ca-9f23-0c9aff6ad877&type=WITHDRAW"));
+        mockMvc.perform(post("/balance/add?id=iddd&amount=20&processId=5612b08f-27c2-42ca-9f26-0c9aff6ad877&type=WITHDRAW"));
         cz.muni.pa165.banking.account.query.dto.Transaction transaction = new Transaction();
         transaction.setDate(OffsetDateTime.now());
         transaction.setAmount(BigDecimal.valueOf(20));
-        transaction.setProcessId(UUID.fromString("5612b08f-27c2-42ca-9f23-0c9aff6ad877"));
+        transaction.setProcessId(UUID.fromString("5612b08f-27c2-42ca-9f26-0c9aff6ad877"));
         transaction.setTransactionType(cz.muni.pa165.banking.account.query.dto.TransactionType.WITHDRAW);
         // Act
         String id = "id";
@@ -209,6 +214,7 @@ public class BalanceControllerIT {
                 .getResponse()
                 .getContentAsString(StandardCharsets.UTF_8);
         cz.muni.pa165.banking.account.query.dto.TransactionsReport response = OBJECT_MAPPER.readValue(responseJson, cz.muni.pa165.banking.account.query.dto.TransactionsReport.class);
+        mockMvc.perform(delete("/balance?id=iddd"));
 
         // Assert
         assertThat(response.getWithdrawalAmount().getAmountIn().byteValueExact()).isEqualTo(BigDecimal.valueOf(20).byteValueExact());

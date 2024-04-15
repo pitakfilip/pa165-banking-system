@@ -1,4 +1,5 @@
 stages:
+  - build
   - test
 
 image: maven:latest
@@ -13,11 +14,14 @@ test-account-management:
 
 test-account-query:
   stage: test
+  image: docker
   tags:
     - shared-fi
   script:
+    - 'docker-compose up -d'
     - 'cd account-query'
     - 'mvn clean install'
+    - 'docker-compose down'
 
 test-infrastructure:
   stage: test

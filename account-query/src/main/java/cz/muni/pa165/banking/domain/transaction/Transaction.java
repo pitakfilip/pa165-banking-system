@@ -13,7 +13,7 @@ import java.util.UUID;
  * @author Martin Mojzis
  */
 @Entity
-@Table(name = "transaction")
+@Table(name = "bal_transaction")
 public class Transaction {
 
     @Id
