@@ -41,7 +41,7 @@ public class BalanceControllerIT {
 
 
     @Test
-    void createBalance_returnsCreated() throws Exception {
+    void createBalance_returnsCreated_IT() throws Exception {
         // Arrange
 
         // Act
@@ -55,7 +55,7 @@ public class BalanceControllerIT {
     }
 
     @Test
-    void addToBalance_accountExists_returnsOK() throws Exception {
+    void addToBalance_accountExists_returnsOK_IT() throws Exception {
         // Arrange
         mockMvc.perform(post("/balance/new?id=id"));
         // Act
@@ -69,7 +69,7 @@ public class BalanceControllerIT {
     }
 
     @Test
-    void addToBalance_accountNotExists_returnsNOK() throws Exception {
+    void addToBalance_accountNotExists_returnsNOK_IT() throws Exception {
         // Arrange
         mockMvc.perform(post("/balance/new?id=id"));
         // Act
@@ -85,7 +85,7 @@ public class BalanceControllerIT {
     }
 
     @Test
-    void getStatus_personExists_returnsBalanceStatus() throws Exception {
+    void getStatus_personExists_returnsBalanceStatus_IT() throws Exception {
         // Arrange
         mockMvc.perform(post("/balance/new?id=id"));
         // Act
@@ -102,7 +102,7 @@ public class BalanceControllerIT {
     }
 
     @Test
-    void getStatus_personNotExists_returnsBadRequest() throws Exception {
+    void getStatus_personNotExists_returnsBadRequest_IT() throws Exception {
         // Arrange
         mockMvc.perform(post("/balance/new?id=id"));
         // Act
@@ -118,7 +118,7 @@ public class BalanceControllerIT {
     }
 
     @Test
-    void getTransactions_personExists_returnsTransactions() throws Exception {
+    void getTransactions_personExists_returnsTransactions_IT() throws Exception {
         // Arrange
         mockMvc.perform(post("/balance/new?id=id"));
         mockMvc.perform(post("/balance/add?id=id&amount=20&processId=5612b08f-27c2-42ca-9f23-0c9aff6ad877&type=WITHDRAW"));
@@ -142,7 +142,7 @@ public class BalanceControllerIT {
         assertThat(response[0].getTransactionType()).isEqualTo(transaction.getTransactionType());
     }
     @Test
-    void getTransactions_personNotExists_returnsError() throws Exception {
+    void getTransactions_personNotExists_returnsError_IT() throws Exception {
         // Act
         String responseJson = mockMvc.perform(get("/balance/transactions?id=d&beginning=2020-02-02&end=2025-02-02")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
@@ -155,7 +155,7 @@ public class BalanceControllerIT {
     }
 
     @Test
-    void getAllTransactions_returnsAllTransactions() throws Exception {
+    void getAllTransactions_returnsAllTransactions_IT() throws Exception {
         // Arrange
 
         mockMvc.perform(post("/balance/new?id=idddd"));
@@ -196,7 +196,7 @@ public class BalanceControllerIT {
     }
 
     @Test
-    void getReport_personExists_returnsReport() throws Exception {
+    void getReport_personExists_returnsReport_IT() throws Exception {
         // Arrange
         mockMvc.perform(post("/balance/new?id=iddd"));
         mockMvc.perform(post("/balance/add?id=iddd&amount=20&processId=5612b08f-27c2-42ca-9f26-0c9aff6ad877&type=WITHDRAW"));
@@ -222,7 +222,7 @@ public class BalanceControllerIT {
     }
 
     @Test
-    void getReport_personNotExists_returnsError() throws Exception {
+    void getReport_personNotExists_returnsError_IT() throws Exception {
         // Act
         String responseJson = mockMvc.perform(get("/balance/account/report?id=notanaccount&beginning=2020-02-02&end=2024-05-05")
                         .accept(MediaType.APPLICATION_JSON_VALUE))

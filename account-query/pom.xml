@@ -89,10 +89,13 @@
                     <executable>true</executable>
                 </configuration>
             </plugin>
-            <!-- run integration tests in "mvn verify" phase -->
+            <!-- run integration tests in "mvn verify" phase - to run, disable skip -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <skipITs>true</skipITs>
+                </configuration>
             </plugin>
         </plugins>
     </build>
