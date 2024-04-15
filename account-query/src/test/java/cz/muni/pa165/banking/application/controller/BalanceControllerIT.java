@@ -6,12 +6,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import cz.muni.pa165.banking.account.query.dto.Transaction;
-import cz.muni.pa165.banking.domain.transaction.TransactionType;
+import cz.muni.pa165.banking.application.facade.BalanceFacade;
+import cz.muni.pa165.banking.application.mapper.BalanceMapperImpl;
+import cz.muni.pa165.banking.application.service.BalanceServiceImpl;
+import cz.muni.pa165.banking.domain.balance.Balance;
+import cz.muni.pa165.banking.domain.balance.repository.BalancesRepository;
+import cz.muni.pa165.banking.domain.balance.repository.TransactionRepository;
+import cz.muni.pa165.banking.domain.balance.service.BalanceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -20,8 +32,10 @@ import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,6 +47,40 @@ public class BalanceControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
+    @MockBean
+    private BalancesRepository balancesRepository;
+    
+    @MockBean
+    private TransactionRepository transactionRepository;
+
+    @Autowired
+    private BalanceService service;
+
+    @Autowired
+    private BalanceFacade facade;
+    
+    
+    // disable connecting to database
+    @TestConfiguration
+    @SpringBootApplication(exclude = {
+            DataSourceAutoConfiguration.class,
+            DataSourceTransactionManagerAutoConfiguration.class,
+            HibernateJpaAutoConfiguration.class
+    })
+    static class IntegrationTestConfig {
+        
+        @Bean 
+        public BalanceService service(BalancesRepository bRepo, TransactionRepository tRepo) {
+            return new BalanceServiceImpl(bRepo, tRepo);
+        }
+        
+        @Bean
+        public BalanceFacade facade(BalanceService service) {
+            return new BalanceFacade(service, new BalanceMapperImpl());
+        }
+        
+    }
+    
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .registerModule(new JavaTimeModule())
@@ -57,9 +105,10 @@ public class BalanceControllerIT {
     @Test
     void addToBalance_accountExists_returnsOK_IT() throws Exception {
         // Arrange
-        mockMvc.perform(post("/balance/new?id=id"));
-        // Act
         String id = "id";
+        Balance mockBalance = new Balance(id);
+        when(balancesRepository.findById(id)).thenReturn(Optional.of(mockBalance));
+        // Act
         String responseJson = mockMvc.perform(post("/balance/add?id=id&amount=20&processId=5612b08f-27c2-42ca-9f23-0c9aff6ad877&type=WITHDRAW")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is(200))
