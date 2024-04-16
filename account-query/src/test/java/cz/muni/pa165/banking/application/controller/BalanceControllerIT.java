@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import cz.muni.pa165.banking.account.query.dto.Transaction;
+import cz.muni.pa165.banking.application.exception.RestApiExceptionHandler;
 import cz.muni.pa165.banking.application.facade.BalanceFacade;
 import cz.muni.pa165.banking.application.mapper.BalanceMapperImpl;
 import cz.muni.pa165.banking.application.service.BalanceServiceImpl;
@@ -13,6 +14,7 @@ import cz.muni.pa165.banking.domain.balance.Balance;
 import cz.muni.pa165.banking.domain.balance.repository.BalancesRepository;
 import cz.muni.pa165.banking.domain.balance.repository.TransactionRepository;
 import cz.muni.pa165.banking.domain.balance.service.BalanceService;
+import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,10 +32,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.OffsetDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -58,6 +57,9 @@ public class BalanceControllerIT {
 
     @Autowired
     private BalanceFacade facade;
+
+    @Autowired
+    private RestApiExceptionHandler exceptionHandler;
     
     
     // disable connecting to database
@@ -77,6 +79,11 @@ public class BalanceControllerIT {
         @Bean
         public BalanceFacade facade(BalanceService service) {
             return new BalanceFacade(service, new BalanceMapperImpl());
+        }
+
+        @Bean
+        public RestApiExceptionHandler restApiExceptionHandler(BalanceService service) {
+            return new RestApiExceptionHandler();
         }
         
     }
@@ -120,9 +127,10 @@ public class BalanceControllerIT {
     @Test
     void addToBalance_accountNotExists_returnsNOK_IT() throws Exception {
         // Arrange
-        mockMvc.perform(post("/balance/new?id=id"));
+        String id = "badid";
+        when(balancesRepository.findById(id)).thenReturn(Optional.empty());
         // Act
-        String id = "id";
+
         String responseJson = mockMvc.perform(post("/balance/add?id=badid&amount=20&processId=5612b08f-27c2-42ca-9f23-0c9aff6ad877&type=WITHDRAW")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is(400))
@@ -136,9 +144,11 @@ public class BalanceControllerIT {
     @Test
     void getStatus_personExists_returnsBalanceStatus_IT() throws Exception {
         // Arrange
-        mockMvc.perform(post("/balance/new?id=id"));
-        // Act
         String id = "id";
+        Balance mockBalance = new Balance(id);
+        when(balancesRepository.findById(id)).thenReturn(Optional.of(mockBalance));
+        when(transactionRepository.findByBalance(mockBalance)).thenReturn(mockBalance.getTransactions());
+        // Act
         String responseJson = mockMvc.perform(get("/balance/status?id=id")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn()
@@ -169,21 +179,29 @@ public class BalanceControllerIT {
     @Test
     void getTransactions_personExists_returnsTransactions_IT() throws Exception {
         // Arrange
-        mockMvc.perform(post("/balance/new?id=id"));
-        mockMvc.perform(post("/balance/add?id=id&amount=20&processId=5612b08f-27c2-42ca-9f23-0c9aff6ad877&type=WITHDRAW"));
+        String id = "id";
+        Balance mockBalance = new Balance(id);
+        when(balancesRepository.findById(id)).thenReturn(Optional.of(mockBalance));
+
         cz.muni.pa165.banking.account.query.dto.Transaction transaction = new Transaction();
         transaction.setDate(OffsetDateTime.now());
         transaction.setAmount(BigDecimal.valueOf(20.00));
         transaction.setProcessId(UUID.fromString("5612b08f-27c2-42ca-9f23-0c9aff6ad877"));
         transaction.setTransactionType(cz.muni.pa165.banking.account.query.dto.TransactionType.WITHDRAW);
+
+        mockBalance.addTransaction(BigDecimal.valueOf(20), TransactionType.WITHDRAW,
+                UUID.fromString("5612b08f-27c2-42ca-9f23-0c9aff6ad877"));
+        when(balancesRepository.findById(id)).thenReturn(Optional.of(mockBalance));
+        when(transactionRepository.findByBalance(mockBalance)).thenReturn(mockBalance.getTransactions());
+
         // Act
-        String id = "id";
         String responseJson = mockMvc.perform(get("/balance/transactions?id=id&beginning=2020-02-02&end=2025-02-02")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn()
                 .getResponse()
                 .getContentAsString(StandardCharsets.UTF_8);
-        cz.muni.pa165.banking.account.query.dto.Transaction[] response = OBJECT_MAPPER.readValue(responseJson, cz.muni.pa165.banking.account.query.dto.Transaction[].class);
+        cz.muni.pa165.banking.account.query.dto.Transaction[] response =
+                OBJECT_MAPPER.readValue(responseJson, cz.muni.pa165.banking.account.query.dto.Transaction[].class);
 
         // Assert
         assertThat(response[0].getAmount().byteValueExact()).isEqualTo(transaction.getAmount().byteValueExact());
@@ -207,10 +225,11 @@ public class BalanceControllerIT {
     void getAllTransactions_returnsAllTransactions_IT() throws Exception {
         // Arrange
 
-        mockMvc.perform(post("/balance/new?id=idddd"));
-        mockMvc.perform(post("/balance/add?id=idddd&amount=20&processId=5612b08f-27c2-42ca-9f23-0c9aff6ad847&type=WITHDRAW"));
-        mockMvc.perform(post("/balance/new?id=idd"));
-        mockMvc.perform(post("/balance/add?id=idd&amount=40&processId=5612b08f-27c2-42ca-9f23-0c9aff64d874&type=WITHDRAW"));
+        String id1 = "idddd";
+        String id2 = "idd";
+        Balance mockBalance1 = new Balance(id1);
+        Balance mockBalance2  = new Balance(id2);
+
         cz.muni.pa165.banking.account.query.dto.Transaction transaction = new Transaction();
         transaction.setDate(OffsetDateTime.now());
         transaction.setAmount(BigDecimal.valueOf(20));
@@ -221,6 +240,16 @@ public class BalanceControllerIT {
         transaction2.setAmount(BigDecimal.valueOf(40));
         transaction2.setProcessId(UUID.fromString("5612b08f-27c2-42ca-9f23-0c9aff64d874"));
         transaction2.setTransactionType(cz.muni.pa165.banking.account.query.dto.TransactionType.WITHDRAW);
+
+        mockBalance1.addTransaction(BigDecimal.valueOf(20), TransactionType.WITHDRAW,
+                UUID.fromString("5612b08f-27c2-42ca-9f23-0c9aff6ad847"));
+        when(balancesRepository.findById(id1)).thenReturn(Optional.of(mockBalance1));
+        mockBalance2.addTransaction(BigDecimal.valueOf(40), TransactionType.WITHDRAW,
+                UUID.fromString("5612b08f-27c2-42ca-9f23-0c9aff64d874"));
+        when(balancesRepository.findById(id2)).thenReturn(Optional.of(mockBalance2));
+        when(transactionRepository.findByBalance(mockBalance1)).thenReturn(mockBalance1.getTransactions());
+        when(transactionRepository.findByBalance(mockBalance2)).thenReturn(mockBalance2.getTransactions());
+        when(balancesRepository.getAllIds()).thenReturn(List.of(id1, id2));
         // Act
         String id = "id";
         String responseJson = mockMvc.perform(get("/balance/alltransactions?beginning=2020-02-02&end=2025-02-02")
@@ -234,28 +263,29 @@ public class BalanceControllerIT {
         mockMvc.perform(delete("/balance?id=idd"));
 
         // Assert
-        assertThat(response.stream().filter(a -> a.getProcessId().equals(transaction2.getProcessId())).findFirst().get()
-                .getAmount().byteValueExact()).isEqualTo(transaction2.getAmount().byteValueExact());
-        assertThat(response.stream().filter(a -> a.getProcessId().equals(transaction2.getProcessId())).findFirst().get()
-                .getTransactionType()).isEqualTo(transaction2.getTransactionType());
-        assertThat(response.stream().filter(a -> a.getProcessId().equals(transaction.getProcessId())).findFirst().get()
-                .getAmount().byteValueExact()).isEqualTo(transaction.getAmount().byteValueExact());
-        assertThat(response.stream().filter(a -> a.getProcessId().equals(transaction.getProcessId())).findFirst().get()
-                .getTransactionType()).isEqualTo(transaction.getTransactionType());
+        assertThat(response.get(1).getAmount()).isEqualTo(transaction2.getAmount());
+        assertThat(response.get(1).getTransactionType()).isEqualTo(transaction2.getTransactionType());
+        assertThat(response.get(0).getAmount().byteValueExact()).isEqualTo(transaction.getAmount().byteValueExact());
+        assertThat(response.get(0).getTransactionType()).isEqualTo(transaction.getTransactionType());
     }
 
     @Test
     void getReport_personExists_returnsReport_IT() throws Exception {
         // Arrange
-        mockMvc.perform(post("/balance/new?id=iddd"));
-        mockMvc.perform(post("/balance/add?id=iddd&amount=20&processId=5612b08f-27c2-42ca-9f26-0c9aff6ad877&type=WITHDRAW"));
+        String id = "iddd";
+        Balance mockBalance = new Balance(id);
+
         cz.muni.pa165.banking.account.query.dto.Transaction transaction = new Transaction();
         transaction.setDate(OffsetDateTime.now());
         transaction.setAmount(BigDecimal.valueOf(20));
         transaction.setProcessId(UUID.fromString("5612b08f-27c2-42ca-9f26-0c9aff6ad877"));
         transaction.setTransactionType(cz.muni.pa165.banking.account.query.dto.TransactionType.WITHDRAW);
+
+        mockBalance.addTransaction(BigDecimal.valueOf(20), TransactionType.WITHDRAW,
+                UUID.fromString("5612b08f-27c2-42ca-9f26-0c9aff6ad877"));
+        when(balancesRepository.findById(id)).thenReturn(Optional.of(mockBalance));
+        when(transactionRepository.findByBalance(mockBalance)).thenReturn(mockBalance.getTransactions());
         // Act
-        String id = "id";
         String responseJson = mockMvc.perform(get("/balance/account/report?id=iddd&beginning=2020-02-02&end=2024-05-05")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is(200))
