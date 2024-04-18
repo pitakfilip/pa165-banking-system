@@ -112,4 +112,24 @@ public class Balance {
     public void setAccountId(String accountId) {
         this.accountId = accountId;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Balance balance)) return false;
+        return Objects.equals(accountId, balance.accountId) && Objects.equals(amount, balance.amount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(accountId, amount);
+    }
+
+    @Override
+    public String toString() {
+        return "Balance{" +
+                "accountId='" + accountId + '\'' +
+                ", amount=" + amount +
+                '}';
+    }
 }
