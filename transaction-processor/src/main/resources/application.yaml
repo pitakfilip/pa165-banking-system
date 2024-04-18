@@ -4,3 +4,15 @@ server:
 spring:
   application:
     name: Transaction-Processor
+
+banking:
+  apps:
+    management:
+      host: localhost
+      port: 8080
+      url: ${banking.apps.management.host}:${banking.apps.management.port}
+    query:
+      host: localhost
+      port: 8081
+      url: ${banking.apps.query.host}:${banking.apps.query.port}
+    

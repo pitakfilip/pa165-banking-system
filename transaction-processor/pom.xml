@@ -13,7 +13,7 @@
     
     
     <groupId>cz.muni.pa165.banking</groupId>
-    <artifactId>transactions.processor</artifactId>
+    <artifactId>transactions-processor</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -22,19 +22,42 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
         <banking-infrastructure.version>1.0-SNAPSHOT</banking-infrastructure.version>
+        <account-management-api.version>1.0-SNAPSHOT</account-management-api.version>
+        <account-query-api.version>1.0-SNAPSHOT</account-query-api.version>
         <transaction-api.version>1.0-SNAPSHOT</transaction-api.version>
         
-        <spring.version>3.2.4</spring.version>
+        <spring-cloud.version>2023.0.1</spring-cloud.version>
         <openapi-generator.version>6.6.0</openapi-generator.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
     </properties>
     
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
             <groupId>cz.muni.pa165.banking</groupId>
             <artifactId>transaction-api</artifactId>
             <version>${transaction-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cz.muni.pa165.banking</groupId>
+            <artifactId>account-management-api</artifactId>
+            <version>${account-management-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cz.muni.pa165.banking</groupId>
+            <artifactId>account-query-api</artifactId>
+            <version>${account-query-api.version}</version>
         </dependency>
         <dependency>
             <groupId>cz.muni.pa165.banking</groupId>
@@ -51,6 +74,10 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
         
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -59,6 +86,11 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
             <version>${org.mapstruct.version}</version>
         </dependency>
 
@@ -81,9 +113,8 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.0.2</version>
+            <version>2.3.0</version>
         </dependency>
-              
     </dependencies>
     
     <build>
@@ -95,7 +126,7 @@
                 <version>${maven-dependency-plugin.version}</version>
                 <executions>
                     <execution>
-                        <id>unpack</id>
+                        <id>unpack-transaction-api</id>
                         <phase>validate</phase>
                         <goals>
                             <goal>unpack-dependencies</goal>
@@ -103,7 +134,31 @@
                         <configuration>
                             <includeArtifactIds>transaction-api</includeArtifactIds>
                             <includes>**/openapi.yaml</includes>
-                            <outputDirectory>${project.build.directory}/transaction-api</outputDirectory>
+                            <outputDirectory>${project.build.directory}/openapi/transaction-api</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-account-management-api</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>account-management-api</includeArtifactIds>
+                            <includes>**/openapi.yaml</includes>
+                            <outputDirectory>${project.build.directory}/openapi/account-management-api</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-account-query-api</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>account-query-api</includeArtifactIds>
+                            <includes>**/openapi.yaml</includes>
+                            <outputDirectory>${project.build.directory}/openapi/account-query-api</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -113,51 +168,57 @@
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
                 <version>${openapi-generator.version}</version>
+                <configuration>
+                    <generatorName>spring</generatorName>
+                    <library>spring-boot</library>
+                    <configOptions>
+                        <useTags>true</useTags>
+                        <interfaceOnly>true</interfaceOnly>
+                        <skipDefaultInterface>true</skipDefaultInterface>
+                        <openApiNullable>false</openApiNullable>
+                        <documentationProvider>none</documentationProvider>
+                        <useSpringBoot3>true</useSpringBoot3>
+                    </configOptions>
+                </configuration>
+
                 <executions>
                     <execution>
+                        <id>transaction-api</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.build.directory}/transaction-api/openapi.yaml</inputSpec>
-                            <generatorName>spring</generatorName>
+                            <inputSpec>${project.build.directory}/openapi/transaction-api/openapi.yaml</inputSpec>
                             <apiPackage>cz.muni.pa165.banking.transaction.processor</apiPackage>
                             <modelPackage>cz.muni.pa165.banking.transaction.processor.dto</modelPackage>
-                            <library>spring-boot</library>
-                            <configOptions>
-                                <useTags>true</useTags>
-                                <interfaceOnly>true</interfaceOnly>
-                                <skipDefaultInterface>true</skipDefaultInterface>
-                                <openApiNullable>false</openApiNullable>
-                                <documentationProvider>none</documentationProvider>
-                                <useSpringBoot3>true</useSpringBoot3>
-                            </configOptions>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>account-management-api</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.build.directory}/openapi/account-management-api/openapi.yaml</inputSpec>
+                            <apiPackage>cz.muni.pa165.banking.account.management</apiPackage>
+                            <modelPackage>cz.muni.pa165.banking.account.management.dto</modelPackage>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>account-query-api</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.build.directory}/openapi/account-query-api/openapi.yaml</inputSpec>
+                            <apiPackage>cz.muni.pa165.banking.account.query</apiPackage>
+                            <modelPackage>cz.muni.pa165.banking.account.query.dto</modelPackage>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-
-            <!--    Mapstruct processor - generates implementation    -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.mapstruct</groupId>
-                            <artifactId>mapstruct-processor</artifactId>
-                            <version>${org.mapstruct.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                    <showWarnings>true</showWarnings>
-                    <compilerArgs>
-                        <arg>-Amapstruct.unmappedTargetPolicy=ERROR</arg>
-                        <arg>-Amapstruct.unmappedSourcePolicy=ERROR</arg>
-                        <arg>-Amapstruct.verbose=true</arg>
-                    </compilerArgs>
-                </configuration>
             </plugin>
         </plugins>
     </build>
