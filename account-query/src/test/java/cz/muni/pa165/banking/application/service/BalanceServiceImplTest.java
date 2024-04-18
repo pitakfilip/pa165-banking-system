@@ -1,6 +1,5 @@
 package cz.muni.pa165.banking.application.service;
 
-import cz.muni.pa165.banking.application.exception.NotFoundAccountException;
 import cz.muni.pa165.banking.domain.balance.Balance;
 import cz.muni.pa165.banking.domain.balance.repository.BalancesRepository;
 
@@ -10,6 +9,7 @@ import cz.muni.pa165.banking.domain.balance.repository.TransactionRepository;
 import cz.muni.pa165.banking.domain.report.StatisticalReport;
 import cz.muni.pa165.banking.domain.transaction.Transaction;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
+import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -58,7 +58,7 @@ class BalanceServiceImplTest {
 
     @Test
     void findById_personNotFound_throwsResourceNotFoundException() {
-        assertThrows(NotFoundAccountException.class, () -> Optional
+        assertThrows(EntityNotFoundException.class, () -> Optional
                 .ofNullable(balanceService.findById("ol")));
     }
     @Test
@@ -76,7 +76,7 @@ class BalanceServiceImplTest {
 
     @Test
     void getBalance_personNotFound_throwsResourceNotFoundException() {
-        assertThrows(NotFoundAccountException.class, () -> Optional
+        assertThrows(EntityNotFoundException.class, () -> Optional
                 .ofNullable(balanceService.getBalance("ol")));
     }
 
@@ -95,7 +95,7 @@ class BalanceServiceImplTest {
 
     @Test
     void getTransactions_accountDoesNotExist_throwsException() {
-        assertThrows(NotFoundAccountException.class, () -> Optional
+        assertThrows(EntityNotFoundException.class, () -> Optional
                 .ofNullable(balanceService
                         .getTransactions("ol", OffsetDateTime.now(), OffsetDateTime.now(),
                                 BigDecimal.ZERO, BigDecimal.TEN, null)));

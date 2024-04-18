@@ -20,6 +20,9 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <!--    External project artifact versions    -->
+        <banking-infrastructure.version>1.0-SNAPSHOT</banking-infrastructure.version>
+
         <spring.version>3.2.4</spring.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <jdbc-postgres.version>42.7.3</jdbc-postgres.version>
@@ -89,7 +92,7 @@
                     <executable>true</executable>
                 </configuration>
             </plugin>
-            <!-- run integration tests in "mvn verify" phase - to run, disable skip -->
+            <!-- run integration tests in "mvn verify" phase -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
@@ -98,6 +101,12 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>cz.muni.pa165.banking</groupId>
+            <artifactId>infrastructure</artifactId>
+            <version>${banking-infrastructure.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

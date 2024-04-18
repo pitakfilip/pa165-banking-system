@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import cz.muni.pa165.banking.account.query.dto.Transaction;
-import cz.muni.pa165.banking.application.exception.RestApiExceptionHandler;
 import cz.muni.pa165.banking.application.facade.BalanceFacade;
 import cz.muni.pa165.banking.application.mapper.BalanceMapperImpl;
 import cz.muni.pa165.banking.application.service.BalanceServiceImpl;
@@ -15,6 +14,7 @@ import cz.muni.pa165.banking.domain.balance.repository.BalancesRepository;
 import cz.muni.pa165.banking.domain.balance.repository.TransactionRepository;
 import cz.muni.pa165.banking.domain.balance.service.BalanceService;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
+import cz.muni.pa165.banking.exception.CustomExceptionHandler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -59,7 +59,7 @@ public class BalanceControllerIT {
     private BalanceFacade facade;
 
     @Autowired
-    private RestApiExceptionHandler exceptionHandler;
+    private CustomExceptionHandler exceptionHandler;
     
     
     // disable connecting to database
@@ -82,8 +82,8 @@ public class BalanceControllerIT {
         }
 
         @Bean
-        public RestApiExceptionHandler restApiExceptionHandler(BalanceService service) {
-            return new RestApiExceptionHandler();
+        public CustomExceptionHandler restApiExceptionHandler(BalanceService service) {
+            return new CustomExceptionHandler();
         }
         
     }
@@ -133,7 +133,7 @@ public class BalanceControllerIT {
 
         String responseJson = mockMvc.perform(post("/balance/add?id=badid&amount=20&processId=5612b08f-27c2-42ca-9f23-0c9aff6ad877&type=WITHDRAW")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().is(400))
+                .andExpect(status().is(404))
                 .andReturn()
                 .getResponse()
                 .getContentAsString(StandardCharsets.UTF_8);
@@ -168,7 +168,7 @@ public class BalanceControllerIT {
         String id = "id";
         String responseJson = mockMvc.perform(get("/balance/status?id=notexistingid")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().is(400))
+                .andExpect(status().is(404))
                 .andReturn()
                 .getResponse()
                 .getContentAsString(StandardCharsets.UTF_8);
@@ -213,7 +213,7 @@ public class BalanceControllerIT {
         // Act
         String responseJson = mockMvc.perform(get("/balance/transactions?id=d&beginning=2020-02-02&end=2025-02-02")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().is(400))
+                .andExpect(status().is(404))
                 .andReturn()
                 .getResponse()
                 .getContentAsString(StandardCharsets.UTF_8);
@@ -305,7 +305,7 @@ public class BalanceControllerIT {
         // Act
         String responseJson = mockMvc.perform(get("/balance/account/report?id=notanaccount&beginning=2020-02-02&end=2024-05-05")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().is(400))
+                .andExpect(status().is(404))
                 .andReturn()
                 .getResponse()
                 .getContentAsString(StandardCharsets.UTF_8);
