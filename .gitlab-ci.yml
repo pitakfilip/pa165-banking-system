@@ -36,6 +36,9 @@ test:
      - shared-fi
    stage: test
    script:
+    - cd infrastructure
+    - mvn clean install $MAVEN_CLI_OPTS
+    - cd ..
     - 'cd account-management'
     - 'mvn verify'
     - cd ..
