@@ -115,6 +115,18 @@ paths:
         "201":
           description: OK
 
+  /balance:
+    delete:
+      tags:
+        - SystemService
+      summary: deletes a balance
+      operationId: deleteBalance
+      parameters:
+        - { name: id, in: query, required: true, schema: { type: string }, description: "id of account" }
+      responses:
+        "200":
+          description: OK
+
   /balance/add:
     post:
       tags:

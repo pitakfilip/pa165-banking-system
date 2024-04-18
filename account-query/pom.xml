@@ -20,10 +20,13 @@
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <!--    External project artifact versions    -->
         <account-query-api.version>1.0-SNAPSHOT</account-query-api.version>
+        <banking-infrastructure.version>1.0-SNAPSHOT</banking-infrastructure.version>
         
         <spring.version>3.2.4</spring.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+        <jdbc-postgres.version>42.7.3</jdbc-postgres.version>
     </properties>
 
     <build>
@@ -123,6 +126,12 @@
             <artifactId>account-query-api</artifactId>
             <version>${account-query-api.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>cz.muni.pa165.banking</groupId>
+            <artifactId>infrastructure</artifactId>
+            <version>${banking-infrastructure.version}</version>
+        </dependency>
         
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -139,6 +148,18 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-quartz</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <!--   DB     -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${jdbc-postgres.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>

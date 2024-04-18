@@ -1,13 +1,15 @@
 package cz.muni.pa165.banking.application.service;
 
-import cz.muni.pa165.banking.application.exception.NotFoundAccountException;
 import cz.muni.pa165.banking.domain.balance.Balance;
 import cz.muni.pa165.banking.domain.balance.repository.BalancesRepository;
+import cz.muni.pa165.banking.domain.balance.repository.TransactionRepository;
 import cz.muni.pa165.banking.domain.balance.service.BalanceService;
 import cz.muni.pa165.banking.domain.report.StatisticalReport;
 import cz.muni.pa165.banking.domain.transaction.Transaction;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
+import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -23,31 +25,37 @@ import java.util.UUID;
 public class BalanceServiceImpl implements BalanceService {
 
     private final BalancesRepository balanceRepository;
+    private final TransactionRepository transactionRepository;
 
-    public BalanceServiceImpl(BalancesRepository balanceRepository) {
+    public BalanceServiceImpl(BalancesRepository balanceRepository, TransactionRepository transactionRepository) {
         this.balanceRepository = balanceRepository;
+        this.transactionRepository = transactionRepository;
     }
 
-    public Balance findById(String id) throws NotFoundAccountException {
+    @Transactional
+    public Balance findById(String id) throws EntityNotFoundException {
         return balanceRepository.findById(id)
-                .orElseThrow(() -> new NotFoundAccountException("Balance  of person with id: " + id + " was not found."));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Balance  of person with id: " + id + " was not found.")));
     }
 
     @Override
+    @Transactional
     public void addNewBalance(String id) {
         balanceRepository.addBalance(id);
     }
 
     @Override
-    public BigDecimal getBalance(String id) throws NotFoundAccountException {
+    @Transactional
+    public BigDecimal getBalance(String id) throws EntityNotFoundException {
         Balance balance = findById(id);
         return balance.getAmount();
     }
 
     @Override
+    @Transactional
     public List<Transaction> getTransactions(String id, OffsetDateTime from, OffsetDateTime to, BigDecimal minAmount,
                                              BigDecimal maxAmount, TransactionType type)
-            throws NotFoundAccountException {
+            throws EntityNotFoundException {
         Balance balance = findById(id);
         if (minAmount == null && maxAmount == null && type == null)
             return balance.getData(from, to);
@@ -61,19 +69,24 @@ public class BalanceServiceImpl implements BalanceService {
     }
 
     @Override
+    @Transactional
     public void addToBalance(String id, BigDecimal amount, UUID processID, TransactionType type)
-            throws NotFoundAccountException {
+            throws EntityNotFoundException {
         Balance balance = findById(id);
-        balance.addTransaction(amount, type, processID);
+        Transaction t = balance.addTransaction(amount, type, processID);
+        balanceRepository.save(balance);
+        transactionRepository.save(t);
     }
 
     @Override
+    @Transactional
     public StatisticalReport getReport(String id, OffsetDateTime beginning, OffsetDateTime end) {
         Balance balance = findById(id);
         return balance.getReport(beginning, end);
     }
 
     @Override
+    @Transactional
     public List<Transaction> getAllTransactions(OffsetDateTime from, OffsetDateTime to, BigDecimal minAmount,
                                                 BigDecimal maxAmount, TransactionType transactionType) {
         List<Transaction> result = new LinkedList<>();
@@ -81,5 +94,12 @@ public class BalanceServiceImpl implements BalanceService {
             result.addAll(getTransactions(id, from, to, minAmount, maxAmount, transactionType));
         }
         return result;
+    }
+
+    @Override
+    public void deleteBalance(String id) throws EntityNotFoundException {
+        Balance balance = findById(id);
+        transactionRepository.findByBalance(balance).forEach(a -> transactionRepository.delete(a));
+        balanceRepository.delete(balance);
     }
 }

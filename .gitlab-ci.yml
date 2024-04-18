@@ -1,0 +1,49 @@
+stages:
+  - build
+  - test
+
+image: maven:latest
+
+variables:
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -Dmaven.test.skip=true"
+
+
+build:
+   tags:
+     - shared-fi
+   stage: build
+   script:
+     - echo "We are building your project, $GITLAB_USER_LOGIN"
+     - cd infrastructure
+     - mvn clean install $MAVEN_CLI_OPTS
+     - cd ..
+     - cd account-query
+     - mvn clean install $MAVEN_CLI_OPTS
+     - cd ..
+     - cd account-management
+     - mvn clean install $MAVEN_CLI_OPTS
+     - cd ..
+     - cd transaction-processor
+     - mvn clean install $MAVEN_CLI_OPTS
+     - cd ..
+   artifacts:
+      expire_in: 10 min
+      paths:
+          - "*/target/*.jar"
+
+test:
+   tags:
+     - shared-fi
+   stage: test
+   script:
+    - cd infrastructure
+    - mvn clean install $MAVEN_CLI_OPTS
+    - cd ..
+    - 'cd account-management'
+    - 'mvn verify'
+    - cd ..
+    - 'cd account-query'
+    - 'mvn verify'
+    - cd ..
+    - 'cd transaction-processor'
+    - 'mvn verify'

@@ -3,6 +3,7 @@ package cz.muni.pa165.banking.domain.report;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * @author Martin Mojzis
@@ -54,5 +55,28 @@ public class TransactionStatistics {
 
     public TransactionType getType() {
         return type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TransactionStatistics that)) return false;
+        return type == that.type && Objects.equals(amountIn, that.amountIn) && Objects.equals(amountOut, that.amountOut) && Objects.equals(timesIn, that.timesIn) && Objects.equals(timesOut, that.timesOut);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, amountIn, amountOut, timesIn, timesOut);
+    }
+
+    @Override
+    public String toString() {
+        return "TransactionStatistics{" +
+                "type=" + type +
+                ", amountIn=" + amountIn +
+                ", amountOut=" + amountOut +
+                ", timesIn=" + timesIn +
+                ", timesOut=" + timesOut +
+                '}';
     }
 }

@@ -1,15 +1,15 @@
 package cz.muni.pa165.banking.application.service;
 
-import cz.muni.pa165.banking.application.exception.NotFoundAccountException;
-import cz.muni.pa165.banking.application.repository.BalancesRepositoryImpl;
 import cz.muni.pa165.banking.domain.balance.Balance;
 import cz.muni.pa165.banking.domain.balance.repository.BalancesRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import cz.muni.pa165.banking.domain.balance.repository.TransactionRepository;
 import cz.muni.pa165.banking.domain.report.StatisticalReport;
 import cz.muni.pa165.banking.domain.transaction.Transaction;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
+import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,7 +31,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(MockitoExtension.class)
 class BalanceServiceImplTest {
     @Mock
-    private BalancesRepositoryImpl balanceRepository;
+    private BalancesRepository balanceRepository;
+    @Mock
+    private TransactionRepository transactionRepository;
 
     @InjectMocks
     private BalanceServiceImpl balanceService;
@@ -56,7 +58,7 @@ class BalanceServiceImplTest {
 
     @Test
     void findById_personNotFound_throwsResourceNotFoundException() {
-        assertThrows(NotFoundAccountException.class, () -> Optional
+        assertThrows(EntityNotFoundException.class, () -> Optional
                 .ofNullable(balanceService.findById("ol")));
     }
     @Test
@@ -74,7 +76,7 @@ class BalanceServiceImplTest {
 
     @Test
     void getBalance_personNotFound_throwsResourceNotFoundException() {
-        assertThrows(NotFoundAccountException.class, () -> Optional
+        assertThrows(EntityNotFoundException.class, () -> Optional
                 .ofNullable(balanceService.getBalance("ol")));
     }
 
@@ -93,7 +95,7 @@ class BalanceServiceImplTest {
 
     @Test
     void getTransactions_accountDoesNotExist_throwsException() {
-        assertThrows(NotFoundAccountException.class, () -> Optional
+        assertThrows(EntityNotFoundException.class, () -> Optional
                 .ofNullable(balanceService
                         .getTransactions("ol", OffsetDateTime.now(), OffsetDateTime.now(),
                                 BigDecimal.ZERO, BigDecimal.TEN, null)));
@@ -153,7 +155,7 @@ class BalanceServiceImplTest {
         String id = "id";
         UUID uuid = new UUID(2, 2);
         OffsetDateTime time = OffsetDateTime.now();
-        Mockito.doNothing().when(balance).addTransaction(BigDecimal.TEN, TransactionType.CREDIT, uuid);
+        Mockito.when(balance.addTransaction(BigDecimal.TEN, TransactionType.CREDIT, uuid)).thenReturn(new Transaction());
         Mockito.when(balanceRepository.findById(id)).thenReturn(Optional.of(balance));
 
         // Act
