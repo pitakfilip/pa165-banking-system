@@ -13,19 +13,12 @@ build:
      - shared-fi
    stage: build
    script:
-     - echo "We are building your project, $GITLAB_USER_LOGIN"
-     - cd infrastructure
-     - mvn clean install $MAVEN_CLI_OPTS
-     - cd ..
-     - cd account-query
-     - mvn clean install $MAVEN_CLI_OPTS
-     - cd ..
-     - cd account-management
-     - mvn clean install $MAVEN_CLI_OPTS
-     - cd ..
-     - cd transaction-processor
-     - mvn clean install $MAVEN_CLI_OPTS
-     - cd ..
+      - echo "We are building your project, $GITLAB_USER_LOGIN"
+      - mvn -f ./infrastructure clean install $MAVEN_CLI_OPTS
+      - mvn -f ./m2m-banking-api clean install $MAVEN_CLI_OPTS
+      - mvn -f ./account-query clean install $MAVEN_CLI_OPTS
+      - mvn -f ./account-management clean install $MAVEN_CLI_OPTS
+      - mvn -f ./transaction-processor clean install $MAVEN_CLI_OPTS
    artifacts:
       expire_in: 10 min
       paths:
@@ -36,14 +29,8 @@ test:
      - shared-fi
    stage: test
    script:
-    - cd infrastructure
-    - mvn clean install $MAVEN_CLI_OPTS
-    - cd ..
-    - 'cd account-management'
-    - 'mvn verify'
-    - cd ..
-    - 'cd account-query'
-    - 'mvn verify'
-    - cd ..
-    - 'cd transaction-processor'
-    - 'mvn verify'
+    - mvn -f ./infrastructure clean install $MAVEN_CLI_OPTS
+    - mvn -f ./m2m-banking-api clean install $MAVEN_CLI_OPTS
+    - mvn -f ./account-management clean verify
+    - mvn -f ./account-query clean verify
+    - mvn -f ./transaction-processor clean verify
