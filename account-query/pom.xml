@@ -21,17 +21,37 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!--    External project artifact versions    -->
+        <account-query-api.version>1.0-SNAPSHOT</account-query-api.version>
         <banking-infrastructure.version>1.0-SNAPSHOT</banking-infrastructure.version>
-
+        
         <spring.version>3.2.4</spring.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <jdbc-postgres.version>42.7.3</jdbc-postgres.version>
     </properties>
 
     <build>
-        <finalName>server_generated</finalName>
-
         <plugins>
+            <!--    Copy OpenApi resources    -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>${maven-dependency-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>account-query-api</includeArtifactIds>
+                            <includes>**/openapi.yaml</includes>
+                            <outputDirectory>${project.build.directory}/account-query-api</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
             <plugin>
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
@@ -43,7 +63,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
+                            <inputSpec>${project.build.directory}/account-query-api/openapi.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <apiPackage>cz.muni.pa165.banking.account.query</apiPackage>
                             <modelPackage>cz.muni.pa165.banking.account.query.dto</modelPackage>
@@ -103,10 +123,16 @@
     <dependencies>
         <dependency>
             <groupId>cz.muni.pa165.banking</groupId>
+            <artifactId>account-query-api</artifactId>
+            <version>${account-query-api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cz.muni.pa165.banking</groupId>
             <artifactId>infrastructure</artifactId>
             <version>${banking-infrastructure.version}</version>
         </dependency>
-
+        
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
