@@ -1,4 +1,4 @@
-package cz.muni.pa165.banking.application.api;
+package cz.muni.pa165.banking.application.controller;
 
 import cz.muni.pa165.banking.account.management.AccountApi;
 import cz.muni.pa165.banking.account.management.dto.*;
@@ -22,13 +22,27 @@ public class AccountController implements AccountApi {
     }
 
     @Override
-    public ResponseEntity<AccountDto> getAccount(String accountNumber) {
-        return ResponseEntity.ok(accountFacade.getAccount(accountNumber));
+    public ResponseEntity<AccountDto> findAccountById (Long accountId) {
+        AccountDto account;
+        try{
+            account = accountFacade.findById(accountId);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(account);
     }
 
     @Override
     public ResponseEntity<ScheduledPaymentsDto> getScheduledPayments(String accountNumber) {
-        return ResponseEntity.ok(accountFacade.getScheduledPaymentsOfAccount(accountNumber));
+        ScheduledPaymentsDto payments;
+        try{
+            payments = accountFacade.findScheduledPaymentsByNumber(accountNumber);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(payments);
     }
 
     @Override

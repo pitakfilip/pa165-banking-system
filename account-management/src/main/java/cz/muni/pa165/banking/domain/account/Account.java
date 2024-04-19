@@ -1,17 +1,34 @@
 package cz.muni.pa165.banking.domain.account;
 
 import cz.muni.pa165.banking.domain.scheduled.ScheduledPayment;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
+import java.util.Currency;
 import java.util.List;
 
+@Entity
+@Table(name = "account")
 public class Account {
 
+    @Id
+    @NotNull
+    @Column(name = "id")
     private Long id;
+    @Column(name = "number")
     private String accountNumber;
+    @Column(name = "user_id")
     private Long userId;
+    @Column(name = "max_spending_limit")
     private Integer maxSpendingLimit;
+    @Column(name = "type")
     private AccountType type;
-    private List<ScheduledPayment> scheduledPayments;
+    @Column(name = "currency")
+    private Currency currency;
+    //private List<ScheduledPayment> scheduledPayments;
 
     public Account(){}
 
@@ -55,11 +72,19 @@ public class Account {
         this.type = type;
     }
 
-    public List<ScheduledPayment> getScheduledPayments() {
+    public void setCurrency(Currency currency) {
+        this.currency = currency;
+    }
+
+    public Currency getCurrency() {
+        return currency;
+    }
+
+    /*public List<ScheduledPayment> getScheduledPayments() {
         return scheduledPayments;
     }
 
     public void setScheduledPayments(List<ScheduledPayment> scheduledPayments) {
         this.scheduledPayments = scheduledPayments;
-    }
+    }*/
 }

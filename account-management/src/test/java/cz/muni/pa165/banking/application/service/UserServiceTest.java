@@ -7,8 +7,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,29 +37,32 @@ class UserServiceTest {
     }
 
     @Test
-    void getUser_ValidUserId_ReturnsUser() {
+    void getUser_ValidUserId_ReturnsUser() throws Exception {
         // Arrange
         Long userId = 1L;
         User user = new User();
-        when(userRepository.getById(userId)).thenReturn(user);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         // Act
-        User result = userService.getUser(userId);
+        User result = userService.findById(userId);
 
         // Assert
         assertEquals(user, result);
-        verify(userRepository).getById(userId);
+        verify(userRepository).findById(userId);
     }
 
     @Test
-    void getUser_InvalidUserId_ReturnsNull() {
+    void getUser_InvalidUserId_ThrowsException() {
         // Arrange
         Long userId = 1L;
-        when(userRepository.getById(userId)).thenReturn(null);
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertNull(userService.getUser(userId));
-        verify(userRepository).getById(userId);
+        assertThrows(Exception.class, () -> {
+            userService.findById(userId);
+        });
+
+        verify(userRepository).findById(userId);
     }
 }
 

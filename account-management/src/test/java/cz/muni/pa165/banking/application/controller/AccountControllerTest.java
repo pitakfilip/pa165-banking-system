@@ -1,4 +1,4 @@
-package cz.muni.pa165.banking.application.api;
+package cz.muni.pa165.banking.application.controller;
 
 import cz.muni.pa165.banking.account.management.dto.AccountDto;
 import cz.muni.pa165.banking.account.management.dto.NewAccountDto;
@@ -40,61 +40,61 @@ class AccountControllerTest {
     }
 
     @Test
-    void getAccount_ValidAccountNumber_ReturnsAccount() {
+    void getAccount_ValidAccountNumber_ReturnsAccount() throws Exception {
         // Arrange
-        String accountNumber = "123456789";
+        Long accountId = 123456789L;
         AccountDto accountDto = new AccountDto();
-        when(accountFacade.getAccount(accountNumber)).thenReturn(accountDto);
+        when(accountFacade.findById(accountId)).thenReturn(accountDto);
 
         // Act
-        ResponseEntity<AccountDto> responseEntity = accountController.getAccount(accountNumber);
+        ResponseEntity<AccountDto> responseEntity = accountController.findAccountById(accountId);
 
         // Assert
         assertNotNull(responseEntity.getBody());
-        verify(accountFacade).getAccount(accountNumber);
+        verify(accountFacade).findById(accountId);
     }
 
     @Test
-    void getAccount_InvalidAccountNumber_ReturnsNull() {
+    void getAccount_InvalidAccountNumber_ReturnsNull() throws Exception {
         // Arrange
-        String invalidAccountNumber = "123456789";
-        when(accountFacade.getAccount(invalidAccountNumber)).thenReturn(null);
+        Long invalidId = 123456789L;
+        when(accountFacade.findById(invalidId)).thenReturn(null);
 
         // Act
-        ResponseEntity<AccountDto> responseEntity = accountController.getAccount(invalidAccountNumber);
+        ResponseEntity<AccountDto> responseEntity = accountController.findAccountById(invalidId);
 
         // Assert
         assertNull(responseEntity.getBody());
-        verify(accountFacade).getAccount(invalidAccountNumber);
+        verify(accountFacade).findById(invalidId);
     }
 
     @Test
-    void getScheduledPayments_ValidAccountNumber_ReturnsPayments() {
+    void getScheduledPayments_ValidAccountNumber_ReturnsPayments() throws Exception {
         // Arrange
         String accountNumber = "123456789";
         ScheduledPaymentsDto scheduledPaymentsDto = new ScheduledPaymentsDto();
-        when(accountFacade.getScheduledPaymentsOfAccount(accountNumber)).thenReturn(scheduledPaymentsDto);
+        when(accountFacade.findScheduledPaymentsByNumber(accountNumber)).thenReturn(scheduledPaymentsDto);
 
         // Act
         ResponseEntity<ScheduledPaymentsDto> responseEntity = accountController.getScheduledPayments(accountNumber);
 
         // Assert
         assertNotNull(responseEntity.getBody());
-        verify(accountFacade).getScheduledPaymentsOfAccount(accountNumber);
+        verify(accountFacade).findScheduledPaymentsByNumber(accountNumber);
     }
 
     @Test
-    void getScheduledPayments_InvalidAccountNumber_ReturnsNull() {
+    void getScheduledPayments_InvalidAccountNumber_ReturnsNull() throws Exception {
         // Arrange
         String invalidAccountNumber = "123456789";
-        when(accountFacade.getScheduledPaymentsOfAccount(invalidAccountNumber)).thenReturn(null);
+        when(accountFacade.findScheduledPaymentsByNumber(invalidAccountNumber)).thenReturn(null);
 
         // Act
         ResponseEntity<ScheduledPaymentsDto> responseEntity = accountController.getScheduledPayments(invalidAccountNumber);
 
         // Assert
         assertNull(responseEntity.getBody());
-        verify(accountFacade).getScheduledPaymentsOfAccount(invalidAccountNumber);
+        verify(accountFacade).findScheduledPaymentsByNumber(invalidAccountNumber);
     }
 
     @Test

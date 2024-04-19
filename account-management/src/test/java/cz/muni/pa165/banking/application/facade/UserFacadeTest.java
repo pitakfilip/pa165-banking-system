@@ -48,34 +48,34 @@ class UserFacadeTest {
     }
 
     @Test
-    void getUser_ValidUserId_ReturnsUserDto() {
+    void getUser_ValidUserId_ReturnsUserDto() throws Exception {
         // Arrange
         Long userId = 1L;
         UserDto userDto = new UserDto();
-        when(userService.getUser(userId)).thenReturn(new User());
+        when(userService.findById(userId)).thenReturn(new User());
         when(mapper.map(any(User.class))).thenReturn(userDto);
 
         // Act
-        UserDto result = userFacade.getUser(userId);
+        UserDto result = userFacade.findById(userId);
 
         // Assert
         assertEquals(userDto, result);
-        verify(userService).getUser(userId);
+        verify(userService).findById(userId);
         verify(mapper).map(any(User.class));
     }
 
     @Test
-    void getUser_InvalidUserId_ReturnsNull() {
+    void getUser_InvalidUserId_ReturnsNull() throws Exception {
         // Arrange
         Long invalidUserId = 123L;
-        when(userService.getUser(invalidUserId)).thenReturn(null);
+        when(userService.findById(invalidUserId)).thenReturn(null);
 
         // Act
-        UserDto result = userFacade.getUser(invalidUserId);
+        UserDto result = userFacade.findById(invalidUserId);
 
         // Assert
         assertNull(result);
-        verify(userService).getUser(invalidUserId);
+        verify(userService).findById(invalidUserId);
     }
 }
 

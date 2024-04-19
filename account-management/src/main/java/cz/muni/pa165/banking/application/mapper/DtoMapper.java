@@ -11,7 +11,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 
+import java.util.Currency;
 import java.util.List;
+import java.util.UUID;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface DtoMapper {
@@ -32,13 +34,27 @@ public interface DtoMapper {
 
     AccountType map(AccountTypeDto accountTypeDto);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "scheduledPayments", ignore = true)
-    @Mapping(target = "accountNumber", ignore = true)
-    Account map(NewAccountDto newAccountDto);
+    default Account map(NewAccountDto newAccountDto){
+        Account account = new Account();
+        account.setId(Math.abs(UUID.randomUUID().getMostSignificantBits()));
+        account.setAccountNumber(UUID.randomUUID().toString());
+        account.setUserId(newAccountDto.getUserId());
+        account.setMaxSpendingLimit(newAccountDto.getMaxSpendingLimit());
+        account.setType(map(newAccountDto.getType()));
+        account.setCurrency(Currency.getInstance(newAccountDto.getCurrency()));
+        return account;
+    }
 
-    @Mapping(target = "id", ignore = true)
-    User map(NewUserDto newUserDto);
+    default User map(NewUserDto newUserDto){
+        User user = new User();
+        user.setId(Math.abs(UUID.randomUUID().getMostSignificantBits()));
+        user.setEmail(newUserDto.getEmail());
+        user.setPassword(newUserDto.getPassword());
+        user.setFirstName(newUserDto.getFirstName());
+        user.setLastName(newUserDto.getLastName());
+        user.setUserType(map(newUserDto.getUserType()));
+        return user;
+    }
 
     default ScheduledPaymentsDto map(List<ScheduledPayment> scheduledPayments){
         ScheduledPaymentsDto result = new ScheduledPaymentsDto();
@@ -50,9 +66,11 @@ public interface DtoMapper {
     default Account map(AccountDto accountDto){
         Account account = new Account();
         account.setId(accountDto.getId());
+        account.setAccountNumber(UUID.randomUUID().toString());
         account.setUserId(accountDto.getUserId());
         account.setMaxSpendingLimit(accountDto.getMaxSpendingLimit());
         account.setType(map(accountDto.getType()));
+        account.setCurrency(Currency.getInstance(accountDto.getCurrency()));
         return account;
     }
 
@@ -62,6 +80,7 @@ public interface DtoMapper {
         accountDto.setUserId(account.getUserId());
         accountDto.setMaxSpendingLimit(account.getMaxSpendingLimit());
         accountDto.setType(map(account.getType()));
+        accountDto.setCurrency(account.getCurrency().getCurrencyCode());
         return accountDto;
     }
 }

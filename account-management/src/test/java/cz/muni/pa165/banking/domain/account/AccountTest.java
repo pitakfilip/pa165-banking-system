@@ -26,7 +26,6 @@ class AccountTest {
         account.setUserId(userId);
         account.setMaxSpendingLimit(maxSpendingLimit);
         account.setType(type);
-        account.setScheduledPayments(scheduledPayments);
 
         // Assert
         assertEquals(id, account.getId());
@@ -34,7 +33,6 @@ class AccountTest {
         assertEquals(userId, account.getUserId());
         assertEquals(maxSpendingLimit, account.getMaxSpendingLimit());
         assertEquals(type, account.getType());
-        assertEquals(scheduledPayments, account.getScheduledPayments());
     }
 
     @Test
@@ -48,7 +46,6 @@ class AccountTest {
         assertNull(account.getUserId());
         assertNull(account.getMaxSpendingLimit());
         assertNull(account.getType());
-        assertNull(account.getScheduledPayments());
     }
 
 }

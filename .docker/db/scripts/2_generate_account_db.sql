@@ -1,15 +1,15 @@
 SET SEARCH_PATH TO bank_account;
 
 -- INSERT starting data
-INSERT INTO balance VALUES
-                                   (90.00, 'id1'),
-                                   (118.00, 'id2'),
-                                   (243.00, 'id3'),
-                                   (-243.00, 'id4');
 
-INSERT INTO bal_transaction VALUES
-                                       (90.00, 1, TIMESTAMP WITH TIME ZONE '2024-04-15 14:11:00.288446+02', 1, UUID 'b775b79f-52a9-45c4-8ab3-bdb9f0f3d4ae', 'id1'),
-                                       (94.00, 2, TIMESTAMP WITH TIME ZONE '2024-04-15 14:11:42.919109+02', 2, UUID 'c91b6ef6-32ac-4160-bf7f-97979ca84606', 'id2'),
-                                       (24.00, 1, TIMESTAMP WITH TIME ZONE '2024-04-15 14:11:57.480291+02', 3, UUID '6a1fa40e-3ba8-46a8-b005-8bcd63ae44de', 'id2'),
-                                       (243.00, 3, TIMESTAMP WITH TIME ZONE '2024-04-15 14:12:14.949613+02', 4, UUID 'd9974137-7000-4f34-8c64-1d35b0534e31', 'id3'),
-                                       (-243.00, 3, TIMESTAMP WITH TIME ZONE '2024-04-15 14:12:23.109443+02', 5, UUID 'd9974137-7000-4f34-8c64-1d35b0534e31', 'id4');
+INSERT INTO accounts (acc_id, acc_number, user_id, max_spending_limit, acc_type)
+VALUES
+    (1, '111111111', 1, 5000.00, 'SPENDING'),
+    (2, '222222222', 1, 10000.00, 'SAVING'),
+    (3, '333333333', 2, 2000.00, 'CREDIT'),
+    (4, '444444444', 5, 7000.00, 'SPENDING'),
+    (5, '555555555', 5, 15000.00, 'SAVING'),
+    (6, '666666666', 6, 3000.00, 'CREDIT'),
+    (7, '777777777', 3, 13000.00, 'CREDIT'),
+    (8, '888888888', 7, 20000.00, 'CREDIT'),
+    (9, '999999999', 8, 1000.00, 'CREDIT');

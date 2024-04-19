@@ -7,6 +7,8 @@ import cz.muni.pa165.banking.domain.scheduled.repository.ScheduledPaymentReposit
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class AccountService {
@@ -24,20 +26,25 @@ public class AccountService {
         return accountRepository.addAccount(newAccount);
     }
 
-    public Account getAccount(Long accountId) {
-        return accountRepository.getById(accountId);
+    public Account findById(Long accountId) throws Exception{
+        return accountRepository.findById(accountId)
+                .orElseThrow(() -> new Exception("Account with id: " + accountId + " was not found."));
     }
     
-    public Account getAccountByNumber(String accountNumber) {
-        return accountRepository.getByAccountNumber(accountNumber);
+    public Account findByNumber(String accountNumber) throws Exception {
+        return accountRepository.findByNumber(accountNumber)
+                .orElseThrow(() -> new Exception("Account with number: " + accountNumber + " was not found."));
     }
 
     public ScheduledPayment schedulePayment(ScheduledPayment newScheduledPayment) {
         return scheduledPaymentsRepository.addScheduledPayment(newScheduledPayment);
     }
 
-    public List<ScheduledPayment> getScheduledPaymentsOfAccount(Long accountId) {
-        Account senderAccount = accountRepository.getById(accountId);
-        return senderAccount.getScheduledPayments();
+    public List<ScheduledPayment> findScheduledPaymentsById(Long accountId){
+        return accountRepository.findScheduledPaymentsById(accountId);
+    }
+
+    public Map<Long, ScheduledPayment> getAllScheduledPayments(){
+        return scheduledPaymentsRepository.getAllScheduledPayments();
     }
 }

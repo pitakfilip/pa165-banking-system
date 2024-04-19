@@ -10,6 +10,8 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,55 +43,60 @@ class AccountServiceTest {
     }
 
     @Test
-    void getAccount_ValidAccountId_ReturnsAccount() {
+    void getAccount_ValidAccountId_ReturnsAccount() throws Exception {
         // Arrange
         Long accountId = 1L;
         Account account = new Account();
-        when(accountRepository.getById(accountId)).thenReturn(account);
+        when(accountRepository.findById(accountId)).thenReturn(Optional.of(account));
 
         // Act
-        Account result = accountService.getAccount(accountId);
+        Account result = accountService.findById(accountId);
 
         // Assert
         assertEquals(account, result);
-        verify(accountRepository).getById(accountId);
+        verify(accountRepository).findById(accountId);
     }
 
     @Test
-    void getAccount_InvalidAccountId_ReturnsNull() {
+    void getAccountById_InvalidAccountId_ThrowsException() throws Exception {
         // Arrange
         Long accountId = 1L;
-        when(accountRepository.getById(accountId)).thenReturn(null);
+        when(accountRepository.findById(accountId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertNull(accountService.getAccount(accountId));
-        verify(accountRepository).getById(accountId);
+        assertThrows(Exception.class, () -> {
+            accountService.findById(accountId);
+        });
+
+        verify(accountRepository).findById(accountId);
     }
 
     @Test
-    void getAccountByNumber_ValidAccountNumber_ReturnsAccount() {
+    void getAccountByNumber_ValidAccountNumber_ReturnsAccount() throws Exception {
         // Arrange
         String accountNumber = "123456789";
         Account account = new Account();
-        when(accountRepository.getByAccountNumber(accountNumber)).thenReturn(account);
+        when(accountRepository.findByNumber(accountNumber)).thenReturn(Optional.of(account));
 
         // Act
-        Account result = accountService.getAccountByNumber(accountNumber);
+        Account result = accountService.findByNumber(accountNumber);
 
         // Assert
         assertEquals(account, result);
-        verify(accountRepository).getByAccountNumber(accountNumber);
+        verify(accountRepository).findByNumber(accountNumber);
     }
 
     @Test
-    void getAccountByNumber_InvalidAccountNumber_ReturnsNull() {
+    void getAccountByNumber_InvalidAccountNumber_ThrowsException() throws Exception {
         // Arrange
         String accountNumber = "123456789";
-        when(accountRepository.getByAccountNumber(accountNumber)).thenReturn(null);
+        when(accountRepository.findByNumber(accountNumber)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertNull(accountService.getAccountByNumber(accountNumber));
-        verify(accountRepository).getByAccountNumber(accountNumber);
+        assertThrows(Exception.class, () -> {
+            accountService.findByNumber(accountNumber);
+        });
+        verify(accountRepository).findByNumber(accountNumber);
     }
 
     @Test
@@ -123,11 +130,10 @@ class AccountServiceTest {
         Long accountId = 1L;
         Account account = new Account();
         List<ScheduledPayment> scheduledPayments = new ArrayList<>();
-        account.setScheduledPayments(scheduledPayments);
-        when(accountRepository.getById(accountId)).thenReturn(account);
+        when(accountRepository.findById(accountId)).thenReturn(Optional.of(account));
 
         // Act
-        List<ScheduledPayment> result = accountService.getScheduledPaymentsOfAccount(accountId);
+        List<ScheduledPayment> result = accountService.findScheduledPaymentsById(accountId);
 
         // Assert
         assertEquals(scheduledPayments, result);

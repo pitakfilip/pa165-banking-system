@@ -1,6 +1,6 @@
 package cz.muni.pa165.banking.domain.scheduled;
 
-import cz.muni.pa165.banking.application.repository.ScheduledPaymentRepositoryImpl;
+import cz.muni.pa165.banking.domain.scheduled.repository.ScheduledPaymentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,7 +15,7 @@ import static org.mockito.Mockito.*;
 public class ScheduledPaymentProcessorTest {
 
     @Mock
-    private ScheduledPaymentRepositoryImpl scheduledPaymentRepository;
+    private ScheduledPaymentRepository scheduledPaymentRepository;
 
     @InjectMocks
     private ScheduledPaymentProcessor scheduledPaymentProcessor;
@@ -35,13 +35,13 @@ public class ScheduledPaymentProcessorTest {
         scheduledPayment.setAmount(100);
         scheduledPayments.put(1L, scheduledPayment);
 
-        when(scheduledPaymentRepository.getAllPayments()).thenReturn(scheduledPayments);
+        when(scheduledPaymentRepository.getAllScheduledPayments()).thenReturn(scheduledPayments);
 
         // Act
         scheduledPaymentProcessor.executeScheduledPayments();
 
         // Assert
-        verify(scheduledPaymentRepository, times(1)).getAllPayments();
+        verify(scheduledPaymentRepository, times(1)).getAllScheduledPayments();
     }
 }
 

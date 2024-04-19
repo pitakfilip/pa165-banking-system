@@ -1,4 +1,4 @@
-package cz.muni.pa165.banking.application.api;
+package cz.muni.pa165.banking.application.controller;
 
 import cz.muni.pa165.banking.account.management.UserApi;
 import cz.muni.pa165.banking.account.management.dto.NewUserDto;
@@ -23,8 +23,15 @@ public class UserController implements UserApi{
     }
 
     @Override
-    public ResponseEntity<UserDto> getUser(Long userId) {
-        return ResponseEntity.ok(userFacade.getUser(userId));
+    public ResponseEntity<UserDto> findUserById(Long userId) {
+        UserDto user;
+        try{
+            user = userFacade.findById(userId);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(user);
     }    
     
 }

@@ -28,7 +28,6 @@ class UserTest {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setUserType(userType);
-        user.setAccounts(accounts);
 
         // Assert
         assertEquals(id, user.getId());
@@ -37,7 +36,6 @@ class UserTest {
         assertEquals(firstName, user.getFirstName());
         assertEquals(lastName, user.getLastName());
         assertEquals(userType, user.getUserType());
-        assertEquals(accounts, user.getAccounts());
     }
 
     @Test
@@ -52,6 +50,5 @@ class UserTest {
         assertNull(user.getFirstName());
         assertNull(user.getLastName());
         assertNull(user.getUserType());
-        assertNull(user.getAccounts());
     }
 }

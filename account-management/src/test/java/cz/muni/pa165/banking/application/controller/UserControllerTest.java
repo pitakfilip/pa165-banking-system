@@ -1,4 +1,4 @@
-package cz.muni.pa165.banking.application.api;
+package cz.muni.pa165.banking.application.controller;
 
 import cz.muni.pa165.banking.account.management.dto.NewUserDto;
 import cz.muni.pa165.banking.account.management.dto.UserDto;
@@ -7,9 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,31 +37,31 @@ class UserControllerTest {
     }
 
     @Test
-    void getUser_ValidUserId_ReturnsUser() {
+    void getUser_ValidUserId_ReturnsUser() throws Exception {
         // Arrange
         Long userId = 1L;
         UserDto userDto = new UserDto();
-        when(userFacade.getUser(userId)).thenReturn(userDto);
+        when(userFacade.findById(userId)).thenReturn(userDto);
 
         // Act
-        ResponseEntity<UserDto> responseEntity = userController.getUser(userId);
+        ResponseEntity<UserDto> responseEntity = userController.findUserById(userId);
 
         // Assert
         assertNotNull(responseEntity.getBody());
-        verify(userFacade).getUser(userId);
+        verify(userFacade).findById(userId);
     }
 
     @Test
-    void getUser_InvalidUserId_ReturnsNull() {
+    void getUser_InvalidUserId_ReturnsNull() throws Exception {
         // Arrange
         Long userId = 123L;
-        when(userFacade.getUser(userId)).thenReturn(null);
+        when(userFacade.findById(userId)).thenReturn(null);
 
         // Act
-        ResponseEntity<UserDto> responseEntity = userController.getUser(userId);
+        ResponseEntity<UserDto> responseEntity = userController.findUserById(userId);
 
         // Assert
         assertNull(responseEntity.getBody());
-        verify(userFacade).getUser(userId);
+        verify(userFacade).findById(userId);
     }
 }

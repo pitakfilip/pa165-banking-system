@@ -23,8 +23,8 @@ public class UserFacade {
         return mapper.map(newUser);
     }
 
-    public UserDto getUser(Long userId){
-        return mapper.map(userService.getUser(userId));
+    public UserDto findById(Long userId) throws Exception{
+        return mapper.map(userService.findById(userId));
     }
 
 }

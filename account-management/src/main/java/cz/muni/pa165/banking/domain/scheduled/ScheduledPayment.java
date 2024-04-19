@@ -1,10 +1,23 @@
 package cz.muni.pa165.banking.domain.scheduled;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 
+@Entity
+@Table(name = "scheduled_payment")
 public class ScheduledPayment {
+    @Id
+    @NotNull
+    @Column(name = "id")
     private Long id;
+    @Column(name = "sender_account_id")
     private Long senderAccountId;
+    @Column(name = "receiver_account_id")
     private Long receiverAccountId;
+    @Column(name = "amount")
     private Integer amount;
 
     public ScheduledPayment() {

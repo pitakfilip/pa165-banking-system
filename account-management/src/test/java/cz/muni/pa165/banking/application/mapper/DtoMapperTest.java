@@ -13,6 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Currency;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -61,6 +63,7 @@ class DtoMapperTest {
         account.setUserId(2L);
         account.setMaxSpendingLimit(500);
         account.setType(AccountType.SAVING);
+        account.setCurrency(Currency.getInstance("USD"));
 
         // Act
         AccountDto accountDto = mapper.map(account);

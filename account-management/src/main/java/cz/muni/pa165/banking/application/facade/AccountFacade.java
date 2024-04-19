@@ -24,20 +24,17 @@ public class AccountFacade {
         return mapper.map(accountService.createAccount(account));
     }
 
-    public AccountDto getAccount(String accountNumber){
-        return mapper.map(accountService.getAccountByNumber(accountNumber));
+    public AccountDto findById(Long accountId) throws Exception{
+        return mapper.map(accountService.findById(accountId));
     }
 
     public ScheduledPaymentDto schedulePayment(ScheduledPaymentDto scheduledPaymentDto){
         ScheduledPayment newScheduledPayment = mapper.map(scheduledPaymentDto);
         return mapper.map(accountService.schedulePayment(newScheduledPayment));
     }
-    public ScheduledPaymentsDto getScheduledPaymentsOfAccount(String accountNumber){
-        Account account = accountService.getAccountByNumber(accountNumber);
-        if (account == null) {
-            throw new RuntimeException(String.format("Account with account number {%s} not found", accountNumber));
-        }
-        
-        return mapper.map(accountService.getScheduledPaymentsOfAccount(account.getId()));
+
+    public ScheduledPaymentsDto findScheduledPaymentsByNumber(String accountNumber) throws Exception{
+        Account account = accountService.findByNumber(accountNumber);
+        return mapper.map(accountService.findScheduledPaymentsById(account.getId()));
     }
 }

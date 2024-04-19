@@ -1,15 +1,33 @@
 package cz.muni.pa165.banking.domain.user;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
+@Entity
+@Table(name = "user")
 public class User {
+    @Id
+    @NotNull
+    @Column(name = "id")
     private Long id;
+    @Email
+    @Column(name = "email")
     private String email;
+    @Column(name = "password")
     private String password;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
+    @Column(name = "user_type")
     private UserType userType;
-    private List<String> accounts;
+    //private List<String> accounts;
 
     public User() {
     }
@@ -62,11 +80,11 @@ public class User {
         this.userType = userType;
     }
 
-    public List<String> getAccounts() {
+    /*public List<String> getAccounts() {
         return accounts;
     }
 
     public void setAccounts(List<String> accounts) {
         this.accounts = accounts;
-    }
+    }*/
 }

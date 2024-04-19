@@ -52,30 +52,30 @@ class AccountFacadeTest {
     }
 
     @Test
-    void getAccount_ValidAccountNumber_ReturnsAccountDto() {
+    void getAccount_ValidAccountNumber_ReturnsAccountDto() throws Exception {
         // Arrange
-        String accountNumber = "123456789";
+        Long accountId = 123456789L;
         AccountDto accountDto = new AccountDto();
         when(mapper.map(any(Account.class))).thenReturn(accountDto);
-        when(accountService.getAccountByNumber(accountNumber)).thenReturn(new Account());
+        when(accountService.findById(accountId)).thenReturn(new Account());
 
         // Act
-        AccountDto result = accountFacade.getAccount(accountNumber);
+        AccountDto result = accountFacade.findById(accountId);
 
         // Assert
         assertEquals(accountDto, result);
-        verify(accountService).getAccountByNumber(accountNumber);
+        verify(accountService).findById(accountId);
         verify(mapper).map(any(Account.class));
     }
 
     @Test
-    void getAccount_InvalidAccountNumber_ReturnsNull() {
+    void getAccount_InvalidAccountNumber_ReturnsNull() throws Exception {
         // Arrange
-        String invalidAccountNumber = "invalidAccountNumber";
-        when(accountService.getAccountByNumber(invalidAccountNumber)).thenReturn(null);
+        Long invalidId = 123456789L;
+        when(accountService.findById(invalidId)).thenReturn(null);
 
         // Act & Assert
-        assertNull(accountFacade.getAccount(invalidAccountNumber));
+        assertNull(accountFacade.findById(invalidId));
     }
 
     @Test
@@ -109,34 +109,35 @@ class AccountFacadeTest {
     }
 
     @Test
-    void getScheduledPaymentsOfAccount_ValidAccountNumber_ReturnsPayments() {
+    void getScheduledPaymentsOfAccount_ValidAccountNumber_ReturnsPayments() throws Exception {
         // Arrange
         String validAccountNumber = "123456789";
         ScheduledPaymentsDto scheduledPaymentsDto = new ScheduledPaymentsDto();
         List<ScheduledPayment> scheduledPaymentsList = new ArrayList<>();
         Account account = new Account();
         account.setId(1L);
-        when(accountService.getAccountByNumber(validAccountNumber)).thenReturn(account);
-        when(accountService.getScheduledPaymentsOfAccount(any(Long.class))).thenReturn(scheduledPaymentsList);
+        when(accountService.findByNumber(validAccountNumber)).thenReturn(account);
+        when(accountService.findScheduledPaymentsById(any(Long.class))).thenReturn(scheduledPaymentsList);
         when(mapper.map(scheduledPaymentsList)).thenReturn(scheduledPaymentsDto);
 
         // Act
-        ScheduledPaymentsDto result = accountFacade.getScheduledPaymentsOfAccount(validAccountNumber);
+        ScheduledPaymentsDto result = accountFacade.findScheduledPaymentsByNumber(validAccountNumber);
 
         // Assert
         assertNotNull(result);
-        verify(accountService).getScheduledPaymentsOfAccount(eq(1L));
+        verify(accountService).findScheduledPaymentsById(eq(1L));
         verify(mapper).map(scheduledPaymentsList);
     }
 
 
+
     @Test
-    void getScheduledPaymentsOfAccount_InvalidAccountNumber_ThrowsException() {
+    void getScheduledPaymentsOfAccount_InvalidAccountNumber_ThrowsException() throws Exception {
         // Arrange
         String invalidAccountNumber = "invalidAccountNumber";
-        when(accountService.getAccountByNumber(invalidAccountNumber)).thenReturn(null);
+        when(accountService.findByNumber(invalidAccountNumber)).thenReturn(null);
 
         // Act & Assert
-        assertThrows(RuntimeException.class, () -> accountFacade.getScheduledPaymentsOfAccount(invalidAccountNumber));
+        assertThrows(RuntimeException.class, () -> accountFacade.findScheduledPaymentsByNumber(invalidAccountNumber));
     }
 }
