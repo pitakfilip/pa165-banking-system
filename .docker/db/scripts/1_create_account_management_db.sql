@@ -3,7 +3,7 @@ SET SEARCH_PATH TO bank_user;
 
 -- CREATE TABLES
 
-CREATE TABLE IF NOT EXISTS banking_user
+CREATE TABLE IF NOT EXISTS bank_user
 (
     id DECIMAL PRIMARY KEY,
     email VARCHAR(50),

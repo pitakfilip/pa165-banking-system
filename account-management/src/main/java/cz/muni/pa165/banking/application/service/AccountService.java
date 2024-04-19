@@ -7,7 +7,6 @@ import cz.muni.pa165.banking.domain.scheduled.repository.ScheduledPaymentReposit
 import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Currency;
 import java.util.List;
 import java.util.Map;
 
@@ -24,8 +23,7 @@ public class AccountService {
     }
     
     public Account createAccount(Account newAccount){
-        Account acc = accountRepository.addAccount(newAccount);
-        return acc;
+        return accountRepository.save(newAccount);
     }
 
     public Account findById(Long accountId) throws EntityNotFoundException {
@@ -34,7 +32,7 @@ public class AccountService {
     }
     
     public Account findByNumber(String accountNumber) throws EntityNotFoundException {
-        return accountRepository.findByNumber(accountNumber)
+        return accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new EntityNotFoundException("Account with number: " + accountNumber + " was not found."));
     }
 

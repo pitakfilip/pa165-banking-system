@@ -10,7 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Table(name = "user")
+@Table(name = "bank_user")
 public class User {
     @Id
     @NotNull

@@ -1,6 +1,5 @@
 package cz.muni.pa165.banking.domain.account;
 
-import cz.muni.pa165.banking.domain.scheduled.ScheduledPayment;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -8,10 +7,9 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Currency;
-import java.util.List;
 
 @Entity
-@Table(name = "account")
+@Table(name = "bank_account")
 public class Account {
 
     @Id

@@ -32,14 +32,14 @@ class AccountServiceTest {
     void createAccount_ValidAccount_ReturnsAccount() {
         // Arrange
         Account account = new Account();
-        when(accountRepository.addAccount(account)).thenReturn(account);
+        when(accountRepository.save(account)).thenReturn(account);
 
         // Act
         Account result = accountService.createAccount(account);
 
         // Assert
         assertEquals(account, result);
-        verify(accountRepository).addAccount(account);
+        verify(accountRepository).save(account);
     }
 
     @Test
@@ -76,27 +76,27 @@ class AccountServiceTest {
         // Arrange
         String accountNumber = "123456789";
         Account account = new Account();
-        when(accountRepository.findByNumber(accountNumber)).thenReturn(Optional.of(account));
+        when(accountRepository.findByAccountNumber(accountNumber)).thenReturn(Optional.of(account));
 
         // Act
         Account result = accountService.findByNumber(accountNumber);
 
         // Assert
         assertEquals(account, result);
-        verify(accountRepository).findByNumber(accountNumber);
+        verify(accountRepository).findByAccountNumber(accountNumber);
     }
 
     @Test
     void getAccountByNumber_InvalidAccountNumber_ThrowsException() throws Exception {
         // Arrange
         String accountNumber = "123456789";
-        when(accountRepository.findByNumber(accountNumber)).thenReturn(Optional.empty());
+        when(accountRepository.findByAccountNumber(accountNumber)).thenReturn(Optional.empty());
 
         // Act & Assert
         assertThrows(Exception.class, () -> {
             accountService.findByNumber(accountNumber);
         });
-        verify(accountRepository).findByNumber(accountNumber);
+        verify(accountRepository).findByAccountNumber(accountNumber);
     }
 
     @Test
