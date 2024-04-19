@@ -24,14 +24,7 @@ public class AccountController implements AccountApi {
 
     @Override
     public ResponseEntity<AccountDto> findAccountById (Long accountId) {
-        AccountDto account;
-        try{
-            account = accountFacade.findById(accountId);
-        }
-        catch (EntityNotFoundException e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok(account);
+        return ResponseEntity.ok(accountFacade.findById(accountId));
     }
 
     @Override
