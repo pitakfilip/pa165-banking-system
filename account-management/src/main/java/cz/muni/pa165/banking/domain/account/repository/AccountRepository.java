@@ -19,7 +19,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
      * @return newly created account
      */
     default Account addAccount(Account account){
-        return saveAndFlush(account);
+        this.save(account);
+        return account;
     }
 
     /**

@@ -5,6 +5,7 @@ import cz.muni.pa165.banking.application.mapper.DtoMapper;
 import cz.muni.pa165.banking.application.service.AccountService;
 import cz.muni.pa165.banking.domain.account.Account;
 import cz.muni.pa165.banking.domain.scheduled.ScheduledPayment;
+import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import org.springframework.stereotype.Component;
 
 
@@ -24,7 +25,7 @@ public class AccountFacade {
         return mapper.map(accountService.createAccount(account));
     }
 
-    public AccountDto findById(Long accountId) throws Exception{
+    public AccountDto findById(Long accountId) throws EntityNotFoundException {
         return mapper.map(accountService.findById(accountId));
     }
 
@@ -33,7 +34,7 @@ public class AccountFacade {
         return mapper.map(accountService.schedulePayment(newScheduledPayment));
     }
 
-    public ScheduledPaymentsDto findScheduledPaymentsByNumber(String accountNumber) throws Exception{
+    public ScheduledPaymentsDto findScheduledPaymentsByNumber(String accountNumber){
         Account account = accountService.findByNumber(accountNumber);
         return mapper.map(accountService.findScheduledPaymentsById(account.getId()));
     }

@@ -3,6 +3,7 @@ package cz.muni.pa165.banking.application.controller;
 import cz.muni.pa165.banking.account.management.AccountApi;
 import cz.muni.pa165.banking.account.management.dto.*;
 import cz.muni.pa165.banking.application.facade.AccountFacade;
+import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +28,7 @@ public class AccountController implements AccountApi {
         try{
             account = accountFacade.findById(accountId);
         }
-        catch (Exception e){
+        catch (EntityNotFoundException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(account);
@@ -39,7 +40,7 @@ public class AccountController implements AccountApi {
         try{
             payments = accountFacade.findScheduledPaymentsByNumber(accountNumber);
         }
-        catch (Exception e){
+        catch (EntityNotFoundException  e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(payments);
