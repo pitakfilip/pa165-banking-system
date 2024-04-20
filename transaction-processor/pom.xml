@@ -29,6 +29,7 @@
         <spring-cloud.version>2023.0.1</spring-cloud.version>
         <openapi-generator.version>6.6.0</openapi-generator.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+        <jdbc-postgres.version>42.7.3</jdbc-postgres.version>
     </properties>
     
     <dependencyManagement>
@@ -65,9 +66,14 @@
             <version>${banking-infrastructure.version}</version>
         </dependency>
         
+        <!--   Spring     -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -78,15 +84,9 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
-        
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-quartz</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-            <version>${org.mapstruct.version}</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -98,11 +98,20 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+            <version>${jdbc-postgres.version}</version>
             <scope>runtime</scope>
         </dependency>
+        
+        <!--   Technologies     -->
         <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${org.mapstruct.version}</version>
         </dependency>
         
         <!--   Developer tools     -->
@@ -118,6 +127,8 @@
     </dependencies>
     
     <build>
+        <finalName>transactions-processor</finalName>
+
         <plugins>
             <!--    Copy OpenApi resources    -->
             <plugin>
@@ -163,6 +174,22 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--    JAR Build    -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>cz.muni.pa165.banking.ProcessorApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
             <!--    OpenApi generator    -->
             <plugin>
                 <groupId>org.openapitools</groupId>

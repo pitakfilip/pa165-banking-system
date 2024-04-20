@@ -47,7 +47,7 @@ class CrossAccountHandlerTest {
         account1 = new Account("ACC1");
         account2 = new Account("ACC2");
         process = new ProcessMock();
-        processTransaction = new ProcessTransaction(account1, account2, TransactionType.CROSS_ACCOUNT, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
+        processTransaction = new ProcessTransaction(account1, account2, TransactionType.TRANSFER, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
         depositHandler = new CrossAccountHandler();
         processRepository = mock(ProcessRepository.class);
         processTransactionRepository = mock(ProcessTransactionRepository.class);
@@ -90,7 +90,7 @@ class CrossAccountHandlerTest {
     void negativeAmountInTransaction() {
         AccountService accountService = new AccountServiceStub(true, true, null, false);
         Process process = new ProcessMock();
-        ProcessTransaction processTransaction = new ProcessTransaction(account1, account2, TransactionType.CROSS_ACCOUNT, new Money(BigDecimal.ONE.negate(), Currency.getInstance("EUR")), "", process.uuid());
+        ProcessTransaction processTransaction = new ProcessTransaction(account1, account2, TransactionType.TRANSFER, new Money(BigDecimal.ONE.negate(), Currency.getInstance("EUR")), "", process.uuid());
 
         when(processRepository.findById(process.uuid())).thenReturn(process);
         when(processTransactionRepository.findTransactionByProcessId(process.uuid())).thenReturn(processTransaction);
@@ -106,7 +106,7 @@ class CrossAccountHandlerTest {
     void zeroAmountInTransaction() {
         AccountService accountService = new AccountServiceStub(true, true, null, false);
         Process process = new ProcessMock();
-        ProcessTransaction  processTransaction = new ProcessTransaction(account1, account2, TransactionType.CROSS_ACCOUNT, new Money(BigDecimal.ZERO, Currency.getInstance("EUR")), "", process.uuid());
+        ProcessTransaction  processTransaction = new ProcessTransaction(account1, account2, TransactionType.TRANSFER, new Money(BigDecimal.ZERO, Currency.getInstance("EUR")), "", process.uuid());
         
         when(processRepository.findById(process.uuid())).thenReturn(process);
         when(processTransactionRepository.findTransactionByProcessId(process.uuid())).thenReturn(processTransaction);
@@ -122,7 +122,7 @@ class CrossAccountHandlerTest {
     void insufficientBalanceForTransaction() {
         AccountService accountService = new AccountServiceStub(true, true, null, false);
         Process process = new ProcessMock();
-        ProcessTransaction  processTransaction = new ProcessTransaction(account1, account2, TransactionType.CROSS_ACCOUNT, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
+        ProcessTransaction  processTransaction = new ProcessTransaction(account1, account2, TransactionType.TRANSFER, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
 
         when(processRepository.findById(process.uuid())).thenReturn(process);
         when(processTransactionRepository.findTransactionByProcessId(process.uuid())).thenReturn(processTransaction);
@@ -138,7 +138,7 @@ class CrossAccountHandlerTest {
     void crossAccountTransactionSuccessful() {
         AccountService accountService = new AccountServiceStub(true, true, null, true);
         Process process = new ProcessMock();
-        ProcessTransaction  processTransaction = new ProcessTransaction(account1, account2, TransactionType.CROSS_ACCOUNT, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
+        ProcessTransaction  processTransaction = new ProcessTransaction(account1, account2, TransactionType.TRANSFER, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
 
         when(processRepository.findById(process.uuid())).thenReturn(process);
         when(processTransactionRepository.findTransactionByProcessId(process.uuid())).thenReturn(processTransaction);

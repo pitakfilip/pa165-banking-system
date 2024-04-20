@@ -18,3 +18,8 @@ services:
     image: account-management
     ports:
       - "8080:8080"
+
+  transaction-processor:
+    image: "transaction-processor"
+    ports:
+      - "8080:8082"
