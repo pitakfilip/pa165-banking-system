@@ -1,8 +1,6 @@
 db:
   hostname: localhost
-spring:
-  application:
-    name: Transaction-Processor
+
 banking:
   apps:
     management:
@@ -13,7 +11,10 @@ banking:
       host: localhost
       port: 8081
       url: ${banking.apps.query.host}:${banking.apps.query.port}
-    
+
+spring:
+  application:
+    name: Transaction-Processor  
   datasource:
     url: jdbc:postgresql://${db.hostname}:5432/banking
     driver-class-name: org.postgresql.Driver
