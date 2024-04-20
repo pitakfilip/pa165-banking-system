@@ -14,7 +14,7 @@ services:
     volumes:
       - ./.docker/db/scripts:/docker-entrypoint-initdb.d
     
-  account-query:
-    image: account-query
+  account-management:
+    image: account-management
     ports:
-      - "8081:8081"
+      - "8080:8080"

@@ -1,11 +1,18 @@
 package cz.muni.pa165.banking.application.facade;
 
-import cz.muni.pa165.banking.account.management.dto.*;
+import cz.muni.pa165.banking.account.management.dto.AccountDto;
+import cz.muni.pa165.banking.account.management.dto.NewAccountDto;
+import cz.muni.pa165.banking.account.management.dto.ScheduledPaymentDto;
+import cz.muni.pa165.banking.account.management.dto.ScheduledPaymentsDto;
 import cz.muni.pa165.banking.application.mapper.DtoMapper;
 import cz.muni.pa165.banking.application.service.AccountService;
 import cz.muni.pa165.banking.domain.account.Account;
 import cz.muni.pa165.banking.domain.scheduled.ScheduledPayment;
+import cz.muni.pa165.banking.exception.EntityNotFoundException;
+import cz.muni.pa165.banking.exception.UnexpectedValueException;
 import org.springframework.stereotype.Component;
+
+import java.util.Currency;
 
 
 @Component
@@ -20,24 +27,33 @@ public class AccountFacade {
     }
     
     public AccountDto createAccount(NewAccountDto newAccountDto){
+        String currencyCode = newAccountDto.getCurrency();
+        try {
+            Currency.getInstance(currencyCode);
+        } catch (IllegalArgumentException e) {
+            throw new UnexpectedValueException("Unsupported currency code '" + currencyCode + "'");
+        }
+        
         Account account = mapper.map(newAccountDto);
         return mapper.map(accountService.createAccount(account));
     }
 
-    public AccountDto getAccount(String accountNumber){
-        return mapper.map(accountService.getAccountByNumber(accountNumber));
+    public AccountDto findById(Long accountId) throws EntityNotFoundException {
+        return mapper.map(accountService.findById(accountId));
     }
 
     public ScheduledPaymentDto schedulePayment(ScheduledPaymentDto scheduledPaymentDto){
-        ScheduledPayment newScheduledPayment = mapper.map(scheduledPaymentDto);
-        return mapper.map(accountService.schedulePayment(newScheduledPayment));
+        ScheduledPayment newScheduledPayment = accountService.createNewScheduledPayment(
+                scheduledPaymentDto.getSenderAccount(),
+                scheduledPaymentDto.getReceiverAccount(),
+                scheduledPaymentDto.getAmount(),
+                mapper.map(scheduledPaymentDto.getType()),
+                scheduledPaymentDto.getDay()
+        );
+        return mapper.mapScheduledPayment(newScheduledPayment, scheduledPaymentDto.getSenderAccount(), scheduledPaymentDto.getReceiverAccount());
     }
-    public ScheduledPaymentsDto getScheduledPaymentsOfAccount(String accountNumber){
-        Account account = accountService.getAccountByNumber(accountNumber);
-        if (account == null) {
-            throw new RuntimeException(String.format("Account with account number {%s} not found", accountNumber));
-        }
-        
-        return mapper.map(accountService.getScheduledPaymentsOfAccount(account.getId()));
+
+    public ScheduledPaymentsDto findScheduledPaymentsByNumber(String accountNumber){
+        return mapper.map(accountService.findScheduledPaymentsByAccount(accountNumber));
     }
 }

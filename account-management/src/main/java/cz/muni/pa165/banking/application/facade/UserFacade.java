@@ -5,6 +5,7 @@ import cz.muni.pa165.banking.account.management.dto.UserDto;
 import cz.muni.pa165.banking.application.mapper.DtoMapper;
 import cz.muni.pa165.banking.application.service.UserService;
 import cz.muni.pa165.banking.domain.user.User;
+import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,8 +24,8 @@ public class UserFacade {
         return mapper.map(newUser);
     }
 
-    public UserDto getUser(Long userId){
-        return mapper.map(userService.getUser(userId));
+    public UserDto findById(Long userId) throws EntityNotFoundException {
+        return mapper.map(userService.findById(userId));
     }
 
 }

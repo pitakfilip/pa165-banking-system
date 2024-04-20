@@ -1,29 +1,17 @@
 package cz.muni.pa165.banking.domain.scheduled.repository;
 
 import cz.muni.pa165.banking.domain.scheduled.ScheduledPayment;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.Map;
+import java.util.List;
 
-public interface ScheduledPaymentRepository {
-    /**
-     * Adds a new account to the repository.
-     *
-     * @param scheduledPayment the scheduled payment to add
-     */
-    ScheduledPayment addScheduledPayment(ScheduledPayment scheduledPayment);
+@Repository
+public interface ScheduledPaymentRepository extends JpaRepository<ScheduledPayment, Long> {
 
-    /**
-     * Retrieves an account by its ID.
-     *
-     * @param id the ID of the scheduled payment to retrieve
-     * @return the scheduled payment with the specified ID, or null if no such scheduled payment exists
-     */
-    ScheduledPayment getById(Long id);
-
-    /**
-     * Retrieves the map of all the scheduled payments.
-     *
-     * @return the map of all the scheduled payments
-     */
-    Map<Long, ScheduledPayment> getAllPayments();
+    List<ScheduledPayment> findAll(Specification<ScheduledPayment> spec);
+    
+    List<ScheduledPayment> findBySourceAccountId(Long accountId);
+    
 }

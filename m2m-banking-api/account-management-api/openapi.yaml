@@ -44,12 +44,7 @@ components:
           description: user's last name
         userType:
           $ref: '#/components/schemas/UserTypeDto'
-        accounts:
-          type: array
-          items:
-            type: string
-          description: id of every account owned by the user
-        
+
     UserDto:
       title: Bank user
       description: A object representing a bank user
@@ -81,17 +76,11 @@ components:
           description: user's last name
         userType:
           $ref: '#/components/schemas/UserTypeDto'
-        accounts:
-          type: array
-          items:
-            type: string
-          description: id of every account owned by the user
 
-    
     AccountTypeDto:
       type: string
       enum: [ SPENDING, SAVING, CREDIT ]
-    
+
     NewAccountDto:
       title: An account
       description: Bank account of registered bank user
@@ -104,7 +93,10 @@ components:
         maxSpendingLimit:
           type: integer
           description: max limit of one transaction from this account
-          
+        currency:
+          type: string
+          description: account money currency
+
     AccountDto:
       title: An account
       description: Bank account of registered bank user
@@ -120,41 +112,49 @@ components:
         maxSpendingLimit:
           type: integer
           description: max limit of one transaction from this account
+        currency:
+          type: string
+          description: account money currency
+
+    ScheduledPaymentType:
+      type: string
+      enum:
+        - WEEKLY
+        - MONTHLY
 
     ScheduledPaymentDto:
       title: Scheduled payment
       description: Scheduled payment
       required:
-        - id
-        - senderAccountId
-        - receiverAccountId
+        - senderAccountNumber
+        - receiverAccountNumber
         - amount
+        - type
+        - day
       properties:
-        id:
-          type: integer
-          format: int64
-          description: unique id of this scheduled payment
-        senderAccountId:
-          type: integer
-          format: int64
-          description: unique id of the sender account
-        receiverAccountId:
-          type: integer
-          format: int64
-          description: unique id of the receiver account
+        senderAccount:
+          type: string
+        receiverAccount:
+          type: string
         amount:
-          type: integer
+          type: number
+          format: decimal
           description: amount of money to send
+        type:
+          $ref: '#/components/schemas/ScheduledPaymentType'
+        day:
+          type: integer
+          format: int32
 
     ScheduledPaymentsDto:
       title: List of Scheduled payments
       description: List of Scheduled payments
-      properties: 
+      properties:
         scheduledPayments:
           type: array
           items:
             $ref: '#/components/schemas/ScheduledPaymentDto'
-
+    
 paths:
 
   /user:
@@ -162,12 +162,12 @@ paths:
       tags:
         - User
       summary: find a user with given id
-      operationId: getUser
+      operationId: findUserById
       parameters:
         - name: userId
           in: query
           required: true
-          schema: 
+          schema:
             type: integer
             format: int64
       responses:
@@ -179,7 +179,7 @@ paths:
                 $ref: '#/components/schemas/UserDto'
         "400":
           description: NOK
-          
+
     post:
       tags:
         - User
@@ -200,20 +200,21 @@ paths:
                 $ref: '#/components/schemas/UserDto'
         "400":
           description: NOK
-          
-  
+
+
   /account:
     get:
       tags:
         - Account
       summary: get an account with given id
-      operationId: getAccount
+      operationId: findAccountById
       parameters:
-        - name: accountNumber
-          in: header
+        - name: accountId
+          in: query
           required: true
           schema:
-            type: string
+            type: integer
+            format: int64
       responses:
         "200":
           description: OK
@@ -252,7 +253,7 @@ paths:
       operationId: getScheduledPayments
       parameters:
         - name: accountNumber
-          in: header
+          in: query
           required: true
           schema:
             type: string
@@ -275,6 +276,7 @@ paths:
         content:
           application/json:
             schema:
+              
               $ref: '#/components/schemas/ScheduledPaymentDto'
       responses:
         "201":

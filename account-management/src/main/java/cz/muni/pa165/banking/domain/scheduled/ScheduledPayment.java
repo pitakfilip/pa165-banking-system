@@ -1,11 +1,34 @@
 package cz.muni.pa165.banking.domain.scheduled;
 
+import cz.muni.pa165.banking.domain.scheduled.recurrence.Recurrence;
+import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
+@Entity
+@Table(name = "scheduled_payment")
 public class ScheduledPayment {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id")
     private Long id;
-    private Long senderAccountId;
-    private Long receiverAccountId;
-    private Integer amount;
+
+    @Column(name = "source_account_id")
+    private Long sourceAccountId;
+
+    @Column(name = "target_account_id")
+    private Long targetAccountId;
+    
+    private BigDecimal amount;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "type", column = @Column(name = "recurrence_type")),
+            @AttributeOverride(name = "paymentDay", column = @Column(name = "recurrence_payment_day"))
+    })
+    private Recurrence recurrence;
+    
 
     public ScheduledPayment() {
     }
@@ -18,28 +41,35 @@ public class ScheduledPayment {
         this.id = id;
     }
 
-    public Long getSenderAccountId() {
-        return senderAccountId;
+    public Long getSourceAccountId() {
+        return sourceAccountId;
     }
 
-    public void setSenderAccountId(Long senderAccountId) {
-        this.senderAccountId = senderAccountId;
+    public void setSourceAccountId(Long sourceAccountId) {
+        this.sourceAccountId = sourceAccountId;
     }
 
-    public Long getReceiverAccountId() {
-        return receiverAccountId;
+    public Long getTargetAccountId() {
+        return targetAccountId;
     }
 
-    public void setReceiverAccountId(Long receiverAccountId) {
-        this.receiverAccountId = receiverAccountId;
+    public void setTargetAccountId(Long targetAccountId) {
+        this.targetAccountId = targetAccountId;
     }
 
-    public Integer getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
+    public Recurrence getRecurrence() {
+        return recurrence;
+    }
+
+    public void setRecurrence(Recurrence recurrence) {
+        this.recurrence = recurrence;
+    }
 }
