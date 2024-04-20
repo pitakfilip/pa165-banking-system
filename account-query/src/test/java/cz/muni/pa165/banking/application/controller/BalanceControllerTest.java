@@ -2,8 +2,6 @@ package cz.muni.pa165.banking.application.controller;
 
 import cz.muni.pa165.banking.account.query.dto.Transaction;
 import cz.muni.pa165.banking.account.query.dto.TransactionType;
-import cz.muni.pa165.banking.application.exception.NotFoundAccountException;
-import cz.muni.pa165.banking.application.exception.RestApiExceptionHandler;
 import cz.muni.pa165.banking.application.facade.BalanceFacade;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

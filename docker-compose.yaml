@@ -14,6 +14,11 @@ services:
     volumes:
       - ./.docker/db/scripts:/docker-entrypoint-initdb.d
     
+  account-management:
+    image: account-management
+    ports:
+      - "8080:8080"
+
   transaction-processor:
     image: "transaction-processor"
     ports:

@@ -1,0 +1,36 @@
+stages:
+  - build
+  - test
+
+image: maven:latest
+
+variables:
+  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -Dmaven.test.skip=true"
+
+
+build:
+   tags:
+     - shared-fi
+   stage: build
+   script:
+      - echo "We are building your project, $GITLAB_USER_LOGIN"
+      - mvn -f ./infrastructure clean install $MAVEN_CLI_OPTS
+      - mvn -f ./m2m-banking-api clean install $MAVEN_CLI_OPTS
+      - mvn -f ./account-query clean install $MAVEN_CLI_OPTS
+      - mvn -f ./account-management clean install $MAVEN_CLI_OPTS
+      - mvn -f ./transaction-processor clean install $MAVEN_CLI_OPTS
+   artifacts:
+      expire_in: 10 min
+      paths:
+          - "*/target/*.jar"
+
+test:
+   tags:
+     - shared-fi
+   stage: test
+   script:
+    - mvn -f ./infrastructure clean install $MAVEN_CLI_OPTS
+    - mvn -f ./m2m-banking-api clean install $MAVEN_CLI_OPTS
+    - mvn -f ./account-management clean verify
+    - mvn -f ./account-query clean verify
+    - mvn -f ./transaction-processor clean verify

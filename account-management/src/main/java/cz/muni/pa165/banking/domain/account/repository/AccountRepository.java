@@ -1,24 +1,14 @@
 package cz.muni.pa165.banking.domain.account.repository;
 
 import cz.muni.pa165.banking.domain.account.Account;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface AccountRepository {
+import java.util.Optional;
+
+@Repository
+public interface AccountRepository extends JpaRepository<Account, Long> {
     
-    /**
-     * Adds a new account to the repository.
-     *
-     * @param account the account to add
-     */
-    Account addAccount(Account account);
+    Optional<Account> findByAccountNumber(String accountNumber);
 
-    /**
-     * Retrieves an account by its ID.
-     *
-     * @param id the ID of the account to retrieve
-     * @return the account with the specified ID, or null if no such account exists
-     */
-    Account getById(Long id);
-
-    Account getByAccountNumber(String accountNumber);
-    
 }

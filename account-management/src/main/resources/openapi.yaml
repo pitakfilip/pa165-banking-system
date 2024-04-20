@@ -44,11 +44,6 @@ components:
           description: user's last name
         userType:
           $ref: '#/components/schemas/UserTypeDto'
-        accounts:
-          type: array
-          items:
-            type: string
-          description: id of every account owned by the user
         
     UserDto:
       title: Bank user
@@ -81,12 +76,6 @@ components:
           description: user's last name
         userType:
           $ref: '#/components/schemas/UserTypeDto'
-        accounts:
-          type: array
-          items:
-            type: string
-          description: id of every account owned by the user
-
     
     AccountTypeDto:
       type: string
@@ -104,6 +93,9 @@ components:
         maxSpendingLimit:
           type: integer
           description: max limit of one transaction from this account
+        currency:
+          type: string
+          description: account money currency
           
     AccountDto:
       title: An account
@@ -120,6 +112,9 @@ components:
         maxSpendingLimit:
           type: integer
           description: max limit of one transaction from this account
+        currency:
+          type: string
+          description: account money currency
 
     ScheduledPaymentDto:
       title: Scheduled payment
@@ -162,7 +157,7 @@ paths:
       tags:
         - User
       summary: find a user with given id
-      operationId: getUser
+      operationId: findUserById
       parameters:
         - name: userId
           in: query
@@ -207,13 +202,14 @@ paths:
       tags:
         - Account
       summary: get an account with given id
-      operationId: getAccount
+      operationId: findAccountById
       parameters:
-        - name: accountNumber
+        - name: accountId
           in: header
           required: true
           schema:
-            type: string
+            type: integer
+            format: int64
       responses:
         "200":
           description: OK

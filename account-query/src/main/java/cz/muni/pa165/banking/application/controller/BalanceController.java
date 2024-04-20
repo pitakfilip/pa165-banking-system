@@ -49,4 +49,10 @@ public class BalanceController implements CustomerServiceApi, SystemServiceApi {
         balanceFacade.createNewBalance(id);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @Override
+    public ResponseEntity<Void> deleteBalance(String id) {
+        balanceFacade.deleteBalance(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
