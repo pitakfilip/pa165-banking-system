@@ -6,7 +6,10 @@ import cz.muni.pa165.banking.application.service.AccountService;
 import cz.muni.pa165.banking.domain.account.Account;
 import cz.muni.pa165.banking.domain.scheduled.ScheduledPayment;
 import cz.muni.pa165.banking.exception.EntityNotFoundException;
+import cz.muni.pa165.banking.exception.UnexpectedValueException;
 import org.springframework.stereotype.Component;
+
+import java.util.Currency;
 
 
 @Component
@@ -21,6 +24,13 @@ public class AccountFacade {
     }
     
     public AccountDto createAccount(NewAccountDto newAccountDto){
+        String currencyCode = newAccountDto.getCurrency();
+        try {
+            Currency.getInstance(currencyCode);
+        } catch (IllegalArgumentException e) {
+            throw new UnexpectedValueException("Unsupported currency code '" + currencyCode + "'");
+        }
+        
         Account account = mapper.map(newAccountDto);
         return mapper.map(accountService.createAccount(account));
     }

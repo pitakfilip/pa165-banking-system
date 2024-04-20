@@ -1,19 +1,13 @@
 package cz.muni.pa165.banking.domain.user;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-
-import java.util.List;
 
 @Entity
 @Table(name = "bank_user")
 public class User {
     @Id
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     private Long id;
     @Email
@@ -27,7 +21,6 @@ public class User {
     private String lastName;
     @Column(name = "user_type")
     private UserType userType;
-    //private List<String> accounts;
 
     public User() {
     }
@@ -80,11 +73,4 @@ public class User {
         this.userType = userType;
     }
 
-    /*public List<String> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(List<String> accounts) {
-        this.accounts = accounts;
-    }*/
 }

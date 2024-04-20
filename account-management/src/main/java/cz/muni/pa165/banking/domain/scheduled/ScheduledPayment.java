@@ -2,15 +2,15 @@ package cz.muni.pa165.banking.domain.scheduled;
 
 import cz.muni.pa165.banking.domain.scheduled.recurrence.Recurrence;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "scheduled_payment")
 public class ScheduledPayment {
     
     @Id
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     private Long id;
 

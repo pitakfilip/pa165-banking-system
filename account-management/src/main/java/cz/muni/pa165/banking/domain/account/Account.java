@@ -1,10 +1,6 @@
 package cz.muni.pa165.banking.domain.account;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.*;
 
 import java.util.Currency;
 
@@ -13,7 +9,7 @@ import java.util.Currency;
 public class Account {
 
     @Id
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     private Long id;
     @Column(name = "number")
@@ -26,7 +22,6 @@ public class Account {
     private AccountType type;
     @Column(name = "currency")
     private Currency currency;
-    //private List<ScheduledPayment> scheduledPayments;
 
     public Account(){}
 
@@ -78,11 +73,4 @@ public class Account {
         return currency;
     }
 
-    /*public List<ScheduledPayment> getScheduledPayments() {
-        return scheduledPayments;
-    }
-
-    public void setScheduledPayments(List<ScheduledPayment> scheduledPayments) {
-        this.scheduledPayments = scheduledPayments;
-    }*/
 }

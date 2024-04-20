@@ -210,7 +210,7 @@ paths:
       operationId: findAccountById
       parameters:
         - name: accountId
-          in: header
+          in: query
           required: true
           schema:
             type: integer
@@ -253,7 +253,7 @@ paths:
       operationId: getScheduledPayments
       parameters:
         - name: accountNumber
-          in: header
+          in: query
           required: true
           schema:
             type: string

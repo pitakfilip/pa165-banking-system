@@ -40,6 +40,7 @@ class AccountFacadeTest {
     void createAccount_ValidRequest_ReturnsAccountDto() {
         // Arrange
         NewAccountDto newAccountDto = new NewAccountDto();
+        newAccountDto.setCurrency("CZK");
         AccountDto accountDto = new AccountDto();
         when(mapper.map(any(Account.class))).thenReturn(accountDto);
         when(mapper.map(newAccountDto)).thenReturn(new Account());
@@ -52,6 +53,14 @@ class AccountFacadeTest {
         assertEquals(accountDto, result);
         verify(accountService).createAccount(any());
         verify(mapper).map(any(Account.class));
+    }
+    
+    @Test
+    void createAccount_InvalidCurrencyType() {
+        NewAccountDto newAccountDto = new NewAccountDto();
+        newAccountDto.setCurrency("ABCABC");
+
+        assertThrows(Exception.class, () -> accountFacade.createAccount(newAccountDto));
     }
 
     @Test
