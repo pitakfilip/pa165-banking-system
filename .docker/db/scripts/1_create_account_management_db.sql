@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS bank_user
     last_name VARCHAR(50),
     user_type VARCHAR(50)
 );
-CREATE SEQUENCE bank_user_seq START 1 INCREMENT 1;
+CREATE SEQUENCE bank_user_seq START 1 INCREMENT 50;
 
 CREATE TABLE IF NOT EXISTS bank_account
 (
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS bank_account
     type               VARCHAR(50),
     currency           VARCHAR(50)
 );
-CREATE SEQUENCE bank_account_seq START 1 INCREMENT 1;
+CREATE SEQUENCE bank_account_seq START 1 INCREMENT 50;
 
 CREATE TABLE IF NOT EXISTS scheduled_payment
 (
@@ -34,4 +34,4 @@ CREATE TABLE IF NOT EXISTS scheduled_payment
     recurrence_type        VARCHAR(50),
     recurrence_payment_day INTEGER
 );
-CREATE SEQUENCE scheduled_payment_seq START 1 INCREMENT 1;
+CREATE SEQUENCE scheduled_payment_seq START 1 INCREMENT 50;

@@ -1,5 +1,6 @@
 package cz.muni.pa165.banking.application.service;
 
+import cz.muni.pa165.banking.account.query.SystemServiceApi;
 import cz.muni.pa165.banking.domain.account.Account;
 import cz.muni.pa165.banking.domain.account.repository.AccountRepository;
 import cz.muni.pa165.banking.domain.scheduled.ScheduledPayment;
@@ -19,11 +20,14 @@ import java.util.stream.Collectors;
 @Service
 public class AccountService {
     
+    private final SystemServiceApi balanceApi;
+    
     private final AccountRepository accountRepository;
     
     private final ScheduledPaymentRepository scheduledPaymentsRepository;
 
-    public AccountService(AccountRepository accountRepository, ScheduledPaymentRepository scheduledPaymentsRepository){
+    public AccountService(SystemServiceApi balanceApi, AccountRepository accountRepository, ScheduledPaymentRepository scheduledPaymentsRepository){
+        this.balanceApi = balanceApi;
         this.accountRepository = accountRepository;
         this.scheduledPaymentsRepository = scheduledPaymentsRepository;
     }

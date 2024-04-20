@@ -4,10 +4,13 @@ server:
 db:
   hostname: localhost
 
-scheduled:
-  cron:
-    expression: "0 0 0 * * MON" # Execute every Monday at midnight
-    
+banking:
+  apps:
+    query:
+      host: localhost
+      port: 8081
+      url: ${banking.apps.query.host}:${banking.apps.query.port}
+
 spring:
   application:
     name: account-management
@@ -16,11 +19,6 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: ACC_USER
     password: userAccPasswd
-    logging:
-      level:
-        org:
-          hibernate:
-            SQL: DEBUG
   jpa:
     show-sql: true
               
