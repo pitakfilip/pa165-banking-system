@@ -4,6 +4,8 @@
 account-management/.idea/
 account-query/.idea/
 transaction-processor/.idea/
+infrastructure/.idea/
+m2m-banking-api/.idea/
 
 ### Account management ###
 account-management/target/
@@ -22,3 +24,14 @@ transaction-processor/target/
 transaction-processor/!.mvn/wrapper/maven-wrapper.jar
 transaction-processor/!**/src/main/**/target/
 transaction-processor/!**/src/test/**/target/
+
+### Infrastructure ###
+infrastructure/target/
+infrastructure/!.mvn/wrapper/maven-wrapper.jar
+infrastructure/!**/src/main/**/target/
+infrastructure/!**/src/test/**/target/
+
+### API ###
+m2m-banking-api/account-management-api/target
+m2m-banking-api/account-query-api/target
+m2m-banking-api/transaction-api/target

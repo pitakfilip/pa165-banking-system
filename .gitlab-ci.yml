@@ -19,10 +19,6 @@ build:
       - mvn -f ./account-query clean install $MAVEN_CLI_OPTS
       - mvn -f ./account-management clean install $MAVEN_CLI_OPTS
       - mvn -f ./transaction-processor clean install $MAVEN_CLI_OPTS
-   artifacts:
-      expire_in: 10 min
-      paths:
-          - "*/target/*.jar"
 
 test:
    tags:
