@@ -8,10 +8,12 @@ import cz.muni.pa165.banking.application.mapper.DtoMapper;
 import cz.muni.pa165.banking.application.service.AccountService;
 import cz.muni.pa165.banking.domain.account.Account;
 import cz.muni.pa165.banking.domain.scheduled.ScheduledPayment;
+import cz.muni.pa165.banking.domain.scheduled.ScheduledPaymentProjection;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +24,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class AccountFacadeTest {
-
+    
     @Mock
     private AccountService accountService;
 
@@ -40,6 +42,7 @@ class AccountFacadeTest {
         NewAccountDto newAccountDto = new NewAccountDto();
         AccountDto accountDto = new AccountDto();
         when(mapper.map(any(Account.class))).thenReturn(accountDto);
+        when(mapper.map(newAccountDto)).thenReturn(new Account());
         when(accountService.createAccount(any())).thenReturn(new Account());
 
         // Act
@@ -82,30 +85,15 @@ class AccountFacadeTest {
     void schedulePayment_ValidRequest_ReturnsScheduledPaymentDto() {
         // Arrange
         ScheduledPaymentDto scheduledPaymentDto = new ScheduledPaymentDto();
-        when(mapper.map(any(ScheduledPayment.class))).thenReturn(scheduledPaymentDto);
-        when(accountService.schedulePayment(any())).thenReturn(new ScheduledPayment());
+        when(mapper.mapScheduledPayment(any(ScheduledPayment.class), any(), any())).thenReturn(scheduledPaymentDto);
+        when(accountService.createNewScheduledPayment(any(), any(), any(), any(), any())).thenReturn(new ScheduledPayment());
 
         // Act
         ScheduledPaymentDto result = accountFacade.schedulePayment(scheduledPaymentDto);
 
         // Assert
         assertEquals(scheduledPaymentDto, result);
-        verify(accountService).schedulePayment(any());
-        verify(mapper).map(any(ScheduledPayment.class));
-    }
-
-    @Test
-    void schedulePayment_InvalidRequest_ReturnsNull() {
-        // Arrange
-        ScheduledPaymentDto scheduledPaymentDto = new ScheduledPaymentDto();
-        when(accountService.schedulePayment(any())).thenReturn(null);
-
-        // Act
-        ScheduledPaymentDto result = accountFacade.schedulePayment(scheduledPaymentDto);
-
-        // Assert
-        assertNull(result);
-        verify(accountService).schedulePayment(any());
+        verify(accountService).createNewScheduledPayment(any(), any(), any(), any(), any());
     }
 
     @Test
@@ -113,11 +101,8 @@ class AccountFacadeTest {
         // Arrange
         String validAccountNumber = "123456789";
         ScheduledPaymentsDto scheduledPaymentsDto = new ScheduledPaymentsDto();
-        List<ScheduledPayment> scheduledPaymentsList = new ArrayList<>();
-        Account account = new Account();
-        account.setId(1L);
-        when(accountService.findByNumber(validAccountNumber)).thenReturn(account);
-        when(accountService.findScheduledPaymentsById(any(Long.class))).thenReturn(scheduledPaymentsList);
+        List<ScheduledPaymentProjection> scheduledPaymentsList = new ArrayList<>();
+        when(accountService.findScheduledPaymentsByAccount(any(String.class))).thenReturn(scheduledPaymentsList);
         when(mapper.map(scheduledPaymentsList)).thenReturn(scheduledPaymentsDto);
 
         // Act
@@ -125,19 +110,8 @@ class AccountFacadeTest {
 
         // Assert
         assertNotNull(result);
-        verify(accountService).findScheduledPaymentsById(eq(1L));
+        verify(accountService).findScheduledPaymentsByAccount(eq(validAccountNumber));
         verify(mapper).map(scheduledPaymentsList);
     }
 
-
-
-    @Test
-    void getScheduledPaymentsOfAccount_InvalidAccountNumber_ThrowsException() throws Exception {
-        // Arrange
-        String invalidAccountNumber = "invalidAccountNumber";
-        when(accountService.findByNumber(invalidAccountNumber)).thenReturn(null);
-
-        // Act & Assert
-        assertThrows(RuntimeException.class, () -> accountFacade.findScheduledPaymentsByNumber(invalidAccountNumber));
-    }
 }

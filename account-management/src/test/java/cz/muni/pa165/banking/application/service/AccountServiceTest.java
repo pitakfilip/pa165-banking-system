@@ -3,11 +3,13 @@ package cz.muni.pa165.banking.application.service;
 import cz.muni.pa165.banking.domain.account.Account;
 import cz.muni.pa165.banking.domain.account.repository.AccountRepository;
 import cz.muni.pa165.banking.domain.scheduled.ScheduledPayment;
+import cz.muni.pa165.banking.domain.scheduled.ScheduledPaymentProjection;
 import cz.muni.pa165.banking.domain.scheduled.repository.ScheduledPaymentRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class AccountServiceTest {
 
     @Mock
@@ -103,37 +105,37 @@ class AccountServiceTest {
     void schedulePayment_ValidScheduledPayment_ReturnsScheduledPayment() {
         // Arrange
         ScheduledPayment scheduledPayment = new ScheduledPayment();
-        when(scheduledPaymentRepository.addScheduledPayment(scheduledPayment)).thenReturn(scheduledPayment);
+        when(scheduledPaymentRepository.save(scheduledPayment)).thenReturn(scheduledPayment);
 
         // Act
         ScheduledPayment result = accountService.schedulePayment(scheduledPayment);
 
         // Assert
         assertEquals(scheduledPayment, result);
-        verify(scheduledPaymentRepository).addScheduledPayment(scheduledPayment);
+        verify(scheduledPaymentRepository).save(scheduledPayment);
     }
 
     @Test
     void schedulePayment_InvalidScheduledPayment_ReturnsNull() {
         // Arrange
         ScheduledPayment scheduledPayment = new ScheduledPayment();
-        when(scheduledPaymentRepository.addScheduledPayment(scheduledPayment)).thenReturn(null);
+        when(scheduledPaymentRepository.save(scheduledPayment)).thenReturn(null);
 
         // Act & Assert
         assertNull(accountService.schedulePayment(scheduledPayment));
-        verify(scheduledPaymentRepository).addScheduledPayment(scheduledPayment);
+        verify(scheduledPaymentRepository).save(scheduledPayment);
     }
 
     @Test
     void getScheduledPaymentsOfAccount_ValidAccountId_ReturnsScheduledPayments() {
         // Arrange
-        Long accountId = 1L;
+        String accountNumber = "123123123";
         Account account = new Account();
         List<ScheduledPayment> scheduledPayments = new ArrayList<>();
-        when(accountRepository.findById(accountId)).thenReturn(Optional.of(account));
+        when(accountRepository.findByAccountNumber(accountNumber)).thenReturn(Optional.of(account));
 
         // Act
-        List<ScheduledPayment> result = accountService.findScheduledPaymentsById(accountId);
+        List<ScheduledPaymentProjection> result = accountService.findScheduledPaymentsByAccount(accountNumber);
 
         // Assert
         assertEquals(scheduledPayments, result);

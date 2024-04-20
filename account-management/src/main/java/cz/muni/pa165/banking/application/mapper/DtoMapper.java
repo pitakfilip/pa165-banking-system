@@ -3,12 +3,13 @@ package cz.muni.pa165.banking.application.mapper;
 import cz.muni.pa165.banking.account.management.dto.*;
 import cz.muni.pa165.banking.domain.account.Account;
 import cz.muni.pa165.banking.domain.account.AccountType;
+import cz.muni.pa165.banking.domain.scheduled.ScheduledPaymentProjection;
+import cz.muni.pa165.banking.domain.scheduled.recurrence.RecurrenceType;
 import cz.muni.pa165.banking.domain.user.User;
 import cz.muni.pa165.banking.domain.scheduled.ScheduledPayment;
 import cz.muni.pa165.banking.domain.user.UserType;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 
 import java.util.Currency;
@@ -22,9 +23,31 @@ public interface DtoMapper {
 
     UserTypeDto map(UserType userType);
 
-    ScheduledPayment map(ScheduledPaymentDto scheduledPaymentDto);
+    default ScheduledPaymentDto mapScheduledPayment(ScheduledPaymentProjection scheduledPayment) {
+        ScheduledPaymentDto dto = new ScheduledPaymentDto();
+        dto.setSenderAccount(scheduledPayment.senderAccount());
+        dto.setReceiverAccount(scheduledPayment.receiverAccount());
+        dto.setAmount(scheduledPayment.amount());
+        dto.setType(map(scheduledPayment.type()));
+        dto.setDay(scheduledPayment.day());
+        
+        return dto;
+    }
 
-    ScheduledPaymentDto map(ScheduledPayment scheduledPayment);
+    default ScheduledPaymentDto mapScheduledPayment(ScheduledPayment scheduledPayment, String sender, String receiver) {
+        ScheduledPaymentDto result = new ScheduledPaymentDto();
+        result.setSenderAccount(sender);
+        result.setReceiverAccount(receiver);
+        result.setAmount(scheduledPayment.getAmount());
+        result.setType(map(scheduledPayment.getRecurrence().getType()));
+        result.setDay(scheduledPayment.getRecurrence().getPaymentDay());
+        
+        return result;
+    }
+    
+    ScheduledPaymentType map(RecurrenceType type);
+
+    RecurrenceType map(ScheduledPaymentType type);
 
     User map(UserDto userDto);
 
@@ -56,10 +79,10 @@ public interface DtoMapper {
         return user;
     }
 
-    default ScheduledPaymentsDto map(List<ScheduledPayment> scheduledPayments){
+    default ScheduledPaymentsDto map(List<ScheduledPaymentProjection> scheduledPayments){
         ScheduledPaymentsDto result = new ScheduledPaymentsDto();
         result.setScheduledPayments(scheduledPayments.stream()
-                .map(this::map).toList());
+                .map(this::mapScheduledPayment).toList());
         return result;
     }
 

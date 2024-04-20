@@ -30,12 +30,17 @@ public class AccountFacade {
     }
 
     public ScheduledPaymentDto schedulePayment(ScheduledPaymentDto scheduledPaymentDto){
-        ScheduledPayment newScheduledPayment = mapper.map(scheduledPaymentDto);
-        return mapper.map(accountService.schedulePayment(newScheduledPayment));
+        ScheduledPayment newScheduledPayment = accountService.createNewScheduledPayment(
+                scheduledPaymentDto.getSenderAccount(),
+                scheduledPaymentDto.getReceiverAccount(),
+                scheduledPaymentDto.getAmount(),
+                mapper.map(scheduledPaymentDto.getType()),
+                scheduledPaymentDto.getDay()
+        );
+        return mapper.mapScheduledPayment(newScheduledPayment, scheduledPaymentDto.getSenderAccount(), scheduledPaymentDto.getReceiverAccount());
     }
 
     public ScheduledPaymentsDto findScheduledPaymentsByNumber(String accountNumber){
-        Account account = accountService.findByNumber(accountNumber);
-        return mapper.map(accountService.findScheduledPaymentsById(account.getId()));
+        return mapper.map(accountService.findScheduledPaymentsByAccount(accountNumber));
     }
 }

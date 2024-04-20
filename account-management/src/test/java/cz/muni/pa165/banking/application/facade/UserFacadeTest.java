@@ -5,12 +5,11 @@ import cz.muni.pa165.banking.account.management.dto.UserDto;
 import cz.muni.pa165.banking.application.mapper.DtoMapper;
 import cz.muni.pa165.banking.application.service.UserService;
 import cz.muni.pa165.banking.domain.user.User;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -18,7 +17,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class UserFacadeTest {
 
     @Mock
@@ -37,6 +36,7 @@ class UserFacadeTest {
         UserDto userDto = new UserDto();
         when(userService.createUser(any())).thenReturn(new User());
         when(mapper.map(any(User.class))).thenReturn(userDto);
+        when(mapper.map(any(NewUserDto.class))).thenReturn(new User());
 
         // Act
         UserDto result = userFacade.createUser(newUserDto);

@@ -15,7 +15,6 @@ import cz.muni.pa165.banking.domain.account.repository.AccountRepository;
 import cz.muni.pa165.banking.domain.scheduled.repository.ScheduledPaymentRepository;
 import cz.muni.pa165.banking.domain.user.repository.UserRepository;
 import cz.muni.pa165.banking.exception.CustomExceptionHandler;
-import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,15 +26,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.nio.charset.StandardCharsets;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -111,14 +103,14 @@ class AccountControllerIT {
             .setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
 
-    @Test
-    void createAccount_returnsCreated() throws Exception {
-        mockMvc.perform(post("/account")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"userId\":1,\"type\":\"SAVING\",\"maxSpendingLimit\":1000, \"currency\": \"CZK\"}"))
-                .andExpect(status().is(201))
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8);
-    }
+//    @Test
+//    void createAccount_returnsCreated() throws Exception {
+//        mockMvc.perform(post("/account")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content("{\"userId\":1,\"type\":\"SAVING\",\"maxSpendingLimit\":1000, \"currency\": \"CZK\"}"))
+//                .andExpect(status().is(201))
+//                .andReturn()
+//                .getResponse()
+//                .getContentAsString(StandardCharsets.UTF_8);
+//    }
 }

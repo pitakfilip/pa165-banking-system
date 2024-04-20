@@ -116,30 +116,35 @@ components:
           type: string
           description: account money currency
 
+    ScheduledPaymentType:
+      type: string
+      enum:
+        - WEEKLY
+        - MONTHLY
+
     ScheduledPaymentDto:
       title: Scheduled payment
       description: Scheduled payment
       required:
-        - id
-        - senderAccountId
-        - receiverAccountId
+        - senderAccountNumber
+        - receiverAccountNumber
         - amount
+        - type
+        - day
       properties:
-        id:
-          type: integer
-          format: int64
-          description: unique id of this scheduled payment
-        senderAccountId:
-          type: integer
-          format: int64
-          description: unique id of the sender account
-        receiverAccountId:
-          type: integer
-          format: int64
-          description: unique id of the receiver account
+        senderAccount:
+          type: string
+        receiverAccount:
+          type: string
         amount:
-          type: integer
+          type: number
+          format: decimal
           description: amount of money to send
+        type:
+          $ref: '#/components/schemas/ScheduledPaymentType'
+        day:
+          type: integer
+          format: int32
 
     ScheduledPaymentsDto:
       title: List of Scheduled payments
@@ -149,7 +154,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ScheduledPaymentDto'
-
+    
 paths:
 
   /user:
@@ -271,6 +276,7 @@ paths:
         content:
           application/json:
             schema:
+              
               $ref: '#/components/schemas/ScheduledPaymentDto'
       responses:
         "201":

@@ -16,4 +16,11 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: ACC_USER
     password: userAccPasswd
-    
+    logging:
+      level:
+        org:
+          hibernate:
+            SQL: DEBUG
+  jpa:
+    show-sql: true
+              
