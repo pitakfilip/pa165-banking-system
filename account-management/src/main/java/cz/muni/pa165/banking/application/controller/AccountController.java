@@ -1,7 +1,10 @@
 package cz.muni.pa165.banking.application.controller;
 
 import cz.muni.pa165.banking.account.management.AccountApi;
-import cz.muni.pa165.banking.account.management.dto.*;
+import cz.muni.pa165.banking.account.management.dto.AccountDto;
+import cz.muni.pa165.banking.account.management.dto.NewAccountDto;
+import cz.muni.pa165.banking.account.management.dto.ScheduledPaymentDto;
+import cz.muni.pa165.banking.account.management.dto.ScheduledPaymentsDto;
 import cz.muni.pa165.banking.application.facade.AccountFacade;
 import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import org.springframework.http.HttpStatus;

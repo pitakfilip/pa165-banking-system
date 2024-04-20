@@ -22,13 +22,80 @@
 
         <!--    External project artifact versions    -->
         <account-management-api.version>1.0-SNAPSHOT</account-management-api.version>
+        <account-query-api.version>1.0-SNAPSHOT</account-query-api.version>
         <banking-infrastructure.version>1.0-SNAPSHOT</banking-infrastructure.version>
 
-        <spring.version>3.2.4</spring.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+        <swagger-ui.version>2.3.0</swagger-ui.version>
         <jdbc-postgres.version>42.7.3</jdbc-postgres.version>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>cz.muni.pa165.banking</groupId>
+            <artifactId>account-management-api</artifactId>
+            <version>${account-management-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cz.muni.pa165.banking</groupId>
+            <artifactId>account-query-api</artifactId>
+            <version>${account-query-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cz.muni.pa165.banking</groupId>
+            <artifactId>infrastructure</artifactId>
+            <version>${banking-infrastructure.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${swagger-ui.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${jdbc-postgres.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--   Test Utils    -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
     <build>
         <plugins>
             <!--    Copy OpenApi resources    -->
@@ -36,9 +103,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>${maven-dependency-plugin.version}</version>
+
                 <executions>
                     <execution>
-                        <id>unpack</id>
+                        <id>unpack-management-api</id>
                         <phase>validate</phase>
                         <goals>
                             <goal>unpack-dependencies</goal>
@@ -46,7 +114,19 @@
                         <configuration>
                             <includeArtifactIds>account-management-api</includeArtifactIds>
                             <includes>**/openapi.yaml</includes>
-                            <outputDirectory>${project.build.directory}/account-management-api</outputDirectory>
+                            <outputDirectory>${project.build.directory}/openapi/account-management-api</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-query-api</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>account-query-api</includeArtifactIds>
+                            <includes>**/openapi.yaml</includes>
+                            <outputDirectory>${project.build.directory}/openapi/account-query-api</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -56,55 +136,47 @@
                 <groupId>org.openapitools</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
                 <version>7.4.0</version>
+                <configuration>
+                    <generatorName>spring</generatorName>
+                    <library>spring-boot</library>
+                    <configOptions>
+                        <useTags>true</useTags>
+                        <interfaceOnly>true</interfaceOnly>
+                        <skipDefaultInterface>true</skipDefaultInterface>
+                        <openApiNullable>false</openApiNullable>
+                        <documentationProvider>none</documentationProvider>
+                        <useSpringBoot3>true</useSpringBoot3>
+                    </configOptions>
+                </configuration>
+                
                 <executions>
                     <execution>
+                        <id>generate-account-management</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.build.directory}/account-management-api/openapi.yaml</inputSpec>
-                            <generatorName>spring</generatorName>
+                            <inputSpec>${project.build.directory}/openapi/account-management-api/openapi.yaml</inputSpec>
                             <apiPackage>cz.muni.pa165.banking.account.management</apiPackage>
                             <modelPackage>cz.muni.pa165.banking.account.management.dto</modelPackage>
-                            <library>spring-boot</library>
-                            <configOptions>
-                                <useTags>true</useTags>
-                                <interfaceOnly>true</interfaceOnly>
-                                <skipDefaultInterface>true</skipDefaultInterface>
-                                <openApiNullable>false</openApiNullable>
-                                <documentationProvider>none</documentationProvider>
-                                <useSpringBoot3>true</useSpringBoot3>
-                            </configOptions>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-account-query</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.build.directory}/openapi/account-query-api/openapi.yaml</inputSpec>
+                            <apiPackage>cz.muni.pa165.banking.account.query</apiPackage>
+                            <modelPackage>cz.muni.pa165.banking.account.query.dto</modelPackage>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.springdoc</groupId>
-                <artifactId>springdoc-openapi-maven-plugin</artifactId>
-                <version>1.4</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.mapstruct</groupId>
-                            <artifactId>mapstruct-processor</artifactId>
-                            <version>${org.mapstruct.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                    <showWarnings>true</showWarnings>
-                    <compilerArgs>
-                        <arg>-Amapstruct.unmappedTargetPolicy=ERROR</arg>
-                        <arg>-Amapstruct.unmappedSourcePolicy=ERROR</arg>
-                        <arg>-Amapstruct.verbose=true</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
+            <!-- packaging for docker image -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -119,73 +191,5 @@
             </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>cz.muni.pa165.banking</groupId>
-            <artifactId>account-management-api</artifactId>
-            <version>${account-management-api.version}</version>
-    </dependency>
-
-    <dependency>
-        <groupId>cz.muni.pa165.banking</groupId>
-        <artifactId>infrastructure</artifactId>
-        <version>${banking-infrastructure.version}</version>
-    </dependency>
-
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-test</artifactId>
-        <scope>test</scope>
-    </dependency>
-
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-quartz</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-data-jpa</artifactId>
-    </dependency>
-    <!--   DB     -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${jdbc-postgres.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-            <version>${org.mapstruct.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openapitools</groupId>
-            <artifactId>jackson-databind-nullable</artifactId>
-            <version>0.2.6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>6.1.5</version>
-        </dependency>
-    </dependencies>
 
 </project>
