@@ -1,10 +1,8 @@
-server:
-  port: 8082
-  
+db:
+  hostname: localhost
 spring:
   application:
     name: Transaction-Processor
-
 banking:
   apps:
     management:
@@ -16,3 +14,10 @@ banking:
       port: 8081
       url: ${banking.apps.query.host}:${banking.apps.query.port}
     
+  datasource:
+    url: jdbc:postgresql://${db.hostname}:5432/banking
+    driver-class-name: org.postgresql.Driver
+    username: ACC_TRANSACTION
+    password: transactionAccPasswd
+  jpa:
+    mapping-resources: hibernate/Transaction.hbm.xml

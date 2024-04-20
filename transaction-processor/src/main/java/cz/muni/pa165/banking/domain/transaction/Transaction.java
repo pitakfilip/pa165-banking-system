@@ -5,21 +5,26 @@ import cz.muni.pa165.banking.domain.money.Money;
 
 public class Transaction {
     
-    private final Account source;
+    private Account source;
     
-    private final Account target;
+    private Account target;
     
-    private final TransactionType type;
+    private TransactionType type;
     
-    private final Money amount;
+    private Money money;
     
-    private final String detail;
+    private String detail;
 
+    @Deprecated
+    public Transaction() {
+        // Hibernate
+    }
+    
     public Transaction(Account source, Account target, TransactionType type, Money amount, String detail) {
         this.source = source;
         this.target = target;
         this.type = type;
-        this.amount = amount;
+        this.money = amount;
         this.detail = detail;
     }
 
@@ -36,11 +41,36 @@ public class Transaction {
     }
 
     public Money getMoney() {
-        return amount;
+        return money;
     }
 
     public String getDetail() {
         return detail;
+    }
+
+    @Deprecated // hibernate
+    public void setSource(Account source) {
+        this.source = source;
+    }
+
+    @Deprecated // hibernate
+    public void setTarget(Account target) {
+        this.target = target;
+    }
+
+    @Deprecated // hibernate
+    public void setType(TransactionType type) {
+        this.type = type;
+    }
+
+    @Deprecated // hibernate
+    public void setMoney(Money amount) {
+        this.money = amount;
+    }
+
+    @Deprecated // hibernate
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
 }

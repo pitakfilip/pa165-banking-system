@@ -44,7 +44,7 @@ class WithdrawHandlerTest {
     static void init() {
         account = new Account("ACC");
         process = new ProcessMock();
-        processTransaction = new ProcessTransaction(account, null, TransactionType.WITHDRAW, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
+        processTransaction = new ProcessTransaction(account, null, TransactionType.WITHDRAWAL, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
         depositHandler = new WithdrawHandler();
         processRepository = mock(ProcessRepository.class);
         processTransactionRepository = mock(ProcessTransactionRepository.class);

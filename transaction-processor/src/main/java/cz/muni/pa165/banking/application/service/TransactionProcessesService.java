@@ -69,7 +69,7 @@ public class TransactionProcessesService {
         
         ProcessTransaction processTransaction = processTransactionRepository.findTransactionByProcessId(uuid);
         
-        if (!processTransaction.getType().equals(TransactionType.CROSS_ACCOUNT) || processTransaction.getType().equals(TransactionType.SCHEDULED)) {
+        if (!processTransaction.getType().equals(TransactionType.TRANSFER) || processTransaction.getType().equals(TransactionType.SCHEDULED)) {
             LOGGER.error("[Revert Process] Process " + uuid + " not of type CROSS_ACCOUNT/SCHEDULED, unable to revert");
             throw new UnexpectedValueException("Unable to revert transaction not type of CROSS_ACCOUNT or SCHEDULED!");
         }
