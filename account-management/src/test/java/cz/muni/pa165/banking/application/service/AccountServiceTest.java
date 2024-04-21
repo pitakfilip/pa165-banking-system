@@ -1,5 +1,6 @@
 package cz.muni.pa165.banking.application.service;
 
+import cz.muni.pa165.banking.account.query.SystemServiceApi;
 import cz.muni.pa165.banking.domain.account.Account;
 import cz.muni.pa165.banking.domain.account.repository.AccountRepository;
 import cz.muni.pa165.banking.domain.scheduled.ScheduledPayment;
@@ -32,6 +33,9 @@ class AccountServiceTest {
 
     @Mock
     private ScheduledPaymentRepository scheduledPaymentRepository;
+
+    @Mock
+    private SystemServiceApi balanceApi;
 
     @InjectMocks
     private AccountService accountService;

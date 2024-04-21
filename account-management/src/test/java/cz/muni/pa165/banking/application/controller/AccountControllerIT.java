@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import cz.muni.pa165.banking.account.query.SystemServiceApi;
+import cz.muni.pa165.banking.application.service.AccountService;
 import cz.muni.pa165.banking.domain.account.Account;
 import cz.muni.pa165.banking.domain.account.AccountType;
 import cz.muni.pa165.banking.domain.account.repository.AccountRepository;
@@ -15,15 +17,19 @@ import cz.muni.pa165.banking.domain.user.User;
 import cz.muni.pa165.banking.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Currency;
 
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,7 +48,10 @@ class AccountControllerIT {
     @Autowired
     private AccountRepository accountRepository;
 
-    
+    @MockBean
+    private SystemServiceApi balanceApi;
+
+
     @BeforeAll
     public static void initDb(
             @Autowired UserRepository userRepository,
@@ -83,14 +92,19 @@ class AccountControllerIT {
 
     @Test
     void createAccount_userExists_returnsCreated() throws Exception {
+        when(balanceApi.createBalance(anyString())).thenReturn(ResponseEntity.ok().build());
+
         mockMvc.perform(post("/account")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"userId\":1,\"type\":\"SAVING\",\"maxSpendingLimit\":1000, \"currency\": \"CZK\"}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"userId\":1,\"type\":\"SAVING\",\"maxSpendingLimit\":1000, \"currency\": \"CZK\"}"))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(StandardCharsets.UTF_8);
+
+        verify(balanceApi).createBalance(anyString());
     }
+
 
     @Test
     void createAccount_userNotExist_returnsNotFound() throws Exception {
@@ -147,7 +161,7 @@ class AccountControllerIT {
     void schedulePayment_accountFound_returnsCreated() throws Exception {
         mockMvc.perform(post("/account/scheduled")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":1,\"senderAccountId\":1, \"receiverAccountId\":2, \"amount\":1}"))
+                        .content("{\"senderAccount\":1, \"receiverAccount\":2, \"amount\":1, \"type\":\"WEEKLY\", \"day\":1}"))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
@@ -158,7 +172,7 @@ class AccountControllerIT {
     void schedulePayment_accountNotFound_returnsNotFound() throws Exception {
         mockMvc.perform(post("/account/scheduled")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":1,\"senderAccountId\":1, \"receiverAccountId\":3, \"amount\":1}"))
+                        .content("{\"senderAccount\":1, \"receiverAccount\":3, \"amount\":1, \"type\":\"WEEKLY\", \"day\":1}"))
                 .andExpect(status().isNotFound())
                 .andReturn()
                 .getResponse()
