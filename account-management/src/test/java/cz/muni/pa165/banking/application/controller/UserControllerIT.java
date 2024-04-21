@@ -1,16 +1,6 @@
 package cz.muni.pa165.banking.application.controller;
 
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
-import cz.muni.pa165.banking.domain.account.Account;
-import cz.muni.pa165.banking.domain.account.AccountType;
-import cz.muni.pa165.banking.domain.account.repository.AccountRepository;
-import cz.muni.pa165.banking.domain.scheduled.repository.ScheduledPaymentRepository;
 import cz.muni.pa165.banking.domain.user.User;
 import cz.muni.pa165.banking.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Currency;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -35,9 +24,6 @@ class UserControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @BeforeAll
     public static void initDb(
