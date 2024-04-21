@@ -1,23 +1,14 @@
 package cz.muni.pa165.banking.application.controller;
 
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import cz.muni.pa165.banking.account.query.SystemServiceApi;
-import cz.muni.pa165.banking.application.service.AccountService;
 import cz.muni.pa165.banking.domain.account.Account;
 import cz.muni.pa165.banking.domain.account.AccountType;
 import cz.muni.pa165.banking.domain.account.repository.AccountRepository;
-import cz.muni.pa165.banking.domain.scheduled.repository.ScheduledPaymentRepository;
 import cz.muni.pa165.banking.domain.user.User;
 import cz.muni.pa165.banking.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,12 +32,6 @@ class AccountControllerIT {
     
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private UserRepository userRepository;
-    
-    @Autowired
-    private AccountRepository accountRepository;
 
     @MockBean
     private SystemServiceApi balanceApi;
@@ -76,7 +61,7 @@ class AccountControllerIT {
         Account account = new Account();
         account.setId(1L);
         account.setUserId(1L);
-        account.setAccountNumber("1");
+        account.setAccountNumber("abc");
         account.setType(AccountType.CREDIT);
         account.setCurrency(Currency.getInstance("CZK"));
         accountRepository.save(account);
@@ -84,7 +69,7 @@ class AccountControllerIT {
         Account account2 = new Account();
         account2.setId(2L);
         account2.setUserId(2L);
-        account2.setAccountNumber("2");
+        account2.setAccountNumber("abcd");
         account2.setType(AccountType.CREDIT);
         account2.setCurrency(Currency.getInstance("CZK"));
         accountRepository.save(account2);
@@ -137,9 +122,30 @@ class AccountControllerIT {
                 .getContentAsString(StandardCharsets.UTF_8);
     }
 
+
+    @Test
+    void findAccountByAccountNumber_accountFound_returnsOk() throws Exception {
+        mockMvc.perform(get("/account/number?accountNumber=abc")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(StandardCharsets.UTF_8);
+    }
+
+    @Test
+    void findAccountByAccountNumber_accountNotFound_returnsNotFound() throws Exception {
+        mockMvc.perform(get("/account/number?accountNumber=abcde")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(StandardCharsets.UTF_8);
+    }
+
     @Test
     void getScheduledPayments_accountFound_returnsOk() throws Exception {
-        mockMvc.perform(get("/account/scheduled?accountNumber=1")
+        mockMvc.perform(get("/account/scheduled?accountNumber=abc")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -161,7 +167,7 @@ class AccountControllerIT {
     void schedulePayment_accountFound_returnsCreated() throws Exception {
         mockMvc.perform(post("/account/scheduled")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"senderAccount\":1, \"receiverAccount\":2, \"amount\":1, \"type\":\"WEEKLY\", \"day\":1}"))
+                        .content("{\"senderAccount\":\"abc\", \"receiverAccount\":\"abcd\", \"amount\":1, \"type\":\"WEEKLY\", \"day\":1}"))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
@@ -172,7 +178,7 @@ class AccountControllerIT {
     void schedulePayment_accountNotFound_returnsNotFound() throws Exception {
         mockMvc.perform(post("/account/scheduled")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"senderAccount\":1, \"receiverAccount\":3, \"amount\":1, \"type\":\"WEEKLY\", \"day\":1}"))
+                        .content("{\"senderAccount\":\"abc\", \"receiverAccount\":\"abcde\", \"amount\":1, \"type\":\"WEEKLY\", \"day\":1}"))
                 .andExpect(status().isNotFound())
                 .andReturn()
                 .getResponse()
