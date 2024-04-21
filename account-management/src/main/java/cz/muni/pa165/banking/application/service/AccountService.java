@@ -8,7 +8,9 @@ import cz.muni.pa165.banking.domain.scheduled.ScheduledPaymentProjection;
 import cz.muni.pa165.banking.domain.scheduled.recurrence.Recurrence;
 import cz.muni.pa165.banking.domain.scheduled.recurrence.RecurrenceType;
 import cz.muni.pa165.banking.domain.scheduled.repository.ScheduledPaymentRepository;
+import cz.muni.pa165.banking.domain.user.repository.UserRepository;
 import cz.muni.pa165.banking.exception.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,34 +21,47 @@ import java.util.stream.Collectors;
 
 @Service
 public class AccountService {
-    
+
     private final SystemServiceApi balanceApi;
-    
+
     private final AccountRepository accountRepository;
-    
+
+    private final UserRepository userRepository;
+
     private final ScheduledPaymentRepository scheduledPaymentsRepository;
 
-    public AccountService(SystemServiceApi balanceApi, AccountRepository accountRepository, ScheduledPaymentRepository scheduledPaymentsRepository){
+    public AccountService(SystemServiceApi balanceApi, AccountRepository accountRepository, UserRepository userRepository, ScheduledPaymentRepository scheduledPaymentsRepository){
         this.balanceApi = balanceApi;
         this.accountRepository = accountRepository;
+        this.userRepository = userRepository;
         this.scheduledPaymentsRepository = scheduledPaymentsRepository;
     }
-    
-    public Account createAccount(Account newAccount){
+
+    public Account createAccount(Account newAccount) {
+        if (!userRepository.existsById(newAccount.getUserId())) {
+            throw new EntityNotFoundException("User with id: " + newAccount.getUserId() + " was not found.");
+        }
+        balanceApi.createBalance(newAccount.getAccountNumber());
         return accountRepository.save(newAccount);
     }
 
-    public Account findById(Long accountId) throws EntityNotFoundException {
+    public Account findById(Long accountId){
         return accountRepository.findById(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Account with id: " + accountId + " was not found."));
     }
     
-    public Account findByNumber(String accountNumber) throws EntityNotFoundException {
+    public Account findByNumber(String accountNumber){
         return accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new EntityNotFoundException("Account with number: " + accountNumber + " was not found."));
     }
 
     public ScheduledPayment schedulePayment(ScheduledPayment newScheduledPayment) {
+        if (!accountRepository.existsById(newScheduledPayment.getSourceAccountId())){
+            throw new EntityNotFoundException("Account with id: " + newScheduledPayment.getSourceAccountId() + " was not found." +" id1: "+ newScheduledPayment.getId());
+        }
+        if (!accountRepository.existsById(newScheduledPayment.getTargetAccountId())){
+            throw new EntityNotFoundException("Account with id: " + newScheduledPayment.getTargetAccountId() + " was not found." +" id2: "+ newScheduledPayment.getId());
+        }
         return scheduledPaymentsRepository.save(newScheduledPayment);
     }
 

@@ -64,7 +64,7 @@ class AccountFacadeTest {
     }
 
     @Test
-    void getAccount_ValidAccountNumber_ReturnsAccountDto() throws Exception {
+    void getAccount_ValidAccountNumber_ReturnsAccountDto(){
         // Arrange
         Long accountId = 123456789L;
         AccountDto accountDto = new AccountDto();
@@ -81,7 +81,7 @@ class AccountFacadeTest {
     }
 
     @Test
-    void getAccount_InvalidAccountNumber_ReturnsNull() throws Exception {
+    void getAccount_InvalidAccountNumber_ReturnsNull(){
         // Arrange
         Long invalidId = 123456789L;
         when(accountService.findById(invalidId)).thenReturn(null);
@@ -106,7 +106,7 @@ class AccountFacadeTest {
     }
 
     @Test
-    void getScheduledPaymentsOfAccount_ValidAccountNumber_ReturnsPayments() throws Exception {
+    void getScheduledPaymentsOfAccount_ValidAccountNumber_ReturnsPayments() {
         // Arrange
         String validAccountNumber = "123456789";
         ScheduledPaymentsDto scheduledPaymentsDto = new ScheduledPaymentsDto();

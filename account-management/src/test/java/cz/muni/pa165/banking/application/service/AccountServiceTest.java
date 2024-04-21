@@ -1,10 +1,13 @@
 package cz.muni.pa165.banking.application.service;
 
+import cz.muni.pa165.banking.account.query.SystemServiceApi;
 import cz.muni.pa165.banking.domain.account.Account;
 import cz.muni.pa165.banking.domain.account.repository.AccountRepository;
 import cz.muni.pa165.banking.domain.scheduled.ScheduledPayment;
 import cz.muni.pa165.banking.domain.scheduled.ScheduledPaymentProjection;
 import cz.muni.pa165.banking.domain.scheduled.repository.ScheduledPaymentRepository;
+import cz.muni.pa165.banking.domain.user.repository.UserRepository;
+import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,8 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AccountServiceTest {
@@ -25,7 +27,13 @@ class AccountServiceTest {
     private AccountRepository accountRepository;
 
     @Mock
+    private UserRepository userRepository;
+
+    @Mock
     private ScheduledPaymentRepository scheduledPaymentRepository;
+
+    @Mock
+    private SystemServiceApi balanceApi;
 
     @InjectMocks
     private AccountService accountService;
@@ -34,6 +42,11 @@ class AccountServiceTest {
     void createAccount_ValidAccount_ReturnsAccount() {
         // Arrange
         Account account = new Account();
+        account.setId(1L);
+        account.setAccountNumber("123");
+        account.setUserId(1L);
+
+        when(userRepository.existsById(anyLong())).thenReturn(true);
         when(accountRepository.save(account)).thenReturn(account);
 
         // Act
@@ -45,7 +58,7 @@ class AccountServiceTest {
     }
 
     @Test
-    void getAccount_ValidAccountId_ReturnsAccount() throws Exception {
+    void getAccount_ValidAccountId_ReturnsAccount(){
         // Arrange
         Long accountId = 1L;
         Account account = new Account();
@@ -60,13 +73,13 @@ class AccountServiceTest {
     }
 
     @Test
-    void getAccountById_InvalidAccountId_ThrowsException() throws Exception {
+    void getAccountById_InvalidAccountId_ThrowsException(){
         // Arrange
         Long accountId = 1L;
         when(accountRepository.findById(accountId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(Exception.class, () -> {
+        assertThrows(EntityNotFoundException.class, () -> {
             accountService.findById(accountId);
         });
 
@@ -74,7 +87,7 @@ class AccountServiceTest {
     }
 
     @Test
-    void getAccountByNumber_ValidAccountNumber_ReturnsAccount() throws Exception {
+    void getAccountByNumber_ValidAccountNumber_ReturnsAccount(){
         // Arrange
         String accountNumber = "123456789";
         Account account = new Account();
@@ -89,13 +102,13 @@ class AccountServiceTest {
     }
 
     @Test
-    void getAccountByNumber_InvalidAccountNumber_ThrowsException() throws Exception {
+    void getAccountByNumber_InvalidAccountNumber_ThrowsException(){
         // Arrange
         String accountNumber = "123456789";
         when(accountRepository.findByAccountNumber(accountNumber)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(Exception.class, () -> {
+        assertThrows(EntityNotFoundException.class, () -> {
             accountService.findByNumber(accountNumber);
         });
         verify(accountRepository).findByAccountNumber(accountNumber);
@@ -105,6 +118,11 @@ class AccountServiceTest {
     void schedulePayment_ValidScheduledPayment_ReturnsScheduledPayment() {
         // Arrange
         ScheduledPayment scheduledPayment = new ScheduledPayment();
+        scheduledPayment.setId(1L);
+        scheduledPayment.setSourceAccountId(1L);
+        scheduledPayment.setTargetAccountId(2L);
+
+        when(accountRepository.existsById(anyLong())).thenReturn(true);
         when(scheduledPaymentRepository.save(scheduledPayment)).thenReturn(scheduledPayment);
 
         // Act
@@ -116,14 +134,14 @@ class AccountServiceTest {
     }
 
     @Test
-    void schedulePayment_InvalidScheduledPayment_ReturnsNull() {
+    void schedulePayment_InvalidScheduledPayment_ThrowsException(){
         // Arrange
         ScheduledPayment scheduledPayment = new ScheduledPayment();
-        when(scheduledPaymentRepository.save(scheduledPayment)).thenReturn(null);
 
         // Act & Assert
-        assertNull(accountService.schedulePayment(scheduledPayment));
-        verify(scheduledPaymentRepository).save(scheduledPayment);
+        assertThrows(EntityNotFoundException.class, () -> {
+            accountService.schedulePayment(scheduledPayment);
+        });
     }
 
     @Test
