@@ -56,4 +56,8 @@ public class AccountFacade {
     public ScheduledPaymentsDto findScheduledPaymentsByNumber(String accountNumber){
         return mapper.map(accountService.findScheduledPaymentsByAccount(accountNumber));
     }
+
+    public AccountDto findByAccountNumber(String accountNumber) {
+        return mapper.map(accountService.findByNumber(accountNumber));
+    }
 }
