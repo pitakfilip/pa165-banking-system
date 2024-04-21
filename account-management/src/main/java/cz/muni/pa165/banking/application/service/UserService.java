@@ -15,7 +15,7 @@ public class UserService {
     }
 
     public User createUser(User user){
-        return userRepository.addUser(user);
+        return userRepository.save(user);
     }
 
     public User findById(Long userId) throws EntityNotFoundException {

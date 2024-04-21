@@ -40,7 +40,7 @@ class AccountControllerTest {
     }
 
     @Test
-    void getAccount_ValidAccountNumber_ReturnsAccount() throws Exception {
+    void getAccount_ValidAccountNumber_ReturnsAccount(){
         // Arrange
         Long accountId = 123456789L;
         AccountDto accountDto = new AccountDto();
@@ -55,7 +55,7 @@ class AccountControllerTest {
     }
 
     @Test
-    void getAccount_InvalidAccountNumber_ReturnsNull() throws Exception {
+    void getAccount_InvalidAccountNumber_ReturnsNull() {
         // Arrange
         Long invalidId = 123456789L;
         when(accountFacade.findById(invalidId)).thenReturn(null);
@@ -69,7 +69,7 @@ class AccountControllerTest {
     }
 
     @Test
-    void getScheduledPayments_ValidAccountNumber_ReturnsPayments() throws Exception {
+    void getScheduledPayments_ValidAccountNumber_ReturnsPayments(){
         // Arrange
         String accountNumber = "123456789";
         ScheduledPaymentsDto scheduledPaymentsDto = new ScheduledPaymentsDto();
@@ -84,7 +84,7 @@ class AccountControllerTest {
     }
 
     @Test
-    void getScheduledPayments_InvalidAccountNumber_ReturnsNull() throws Exception {
+    void getScheduledPayments_InvalidAccountNumber_ReturnsNull(){
         // Arrange
         String invalidAccountNumber = "123456789";
         when(accountFacade.findScheduledPaymentsByNumber(invalidAccountNumber)).thenReturn(null);
