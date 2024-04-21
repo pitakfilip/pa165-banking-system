@@ -11,6 +11,11 @@ banking:
       host: localhost
       port: 8081
       url: ${banking.apps.query.host}:${banking.apps.query.port}
+    rates:
+      api-key: 5f40db3a892e886bda8a6967
+      url: https://v6.exchangerate-api.com/v6/${banking.apps.rates.api-key}
+      initial:
+        currencies: CZK, EUR, USD
 
 spring:
   application:

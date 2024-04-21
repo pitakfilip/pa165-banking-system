@@ -3,13 +3,10 @@ package cz.muni.pa165.banking.application.messaging;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.muni.pa165.banking.domain.messaging.MessageProducer;
 import cz.muni.pa165.banking.domain.messaging.ProcessRequest;
-import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import cz.muni.pa165.banking.exception.ServerError;
-import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class ProcessProducer implements MessageProducer {
@@ -21,12 +18,6 @@ public class ProcessProducer implements MessageProducer {
     public ProcessProducer(MessagingService messagingService, ObjectMapper mapper) {
         this.messagingService = messagingService;
         this.mapper = mapper;
-    }
-
-    @PostConstruct
-    void testing() {
-        ProcessRequest data = new ProcessRequest(UUID.randomUUID(), TransactionType.DEPOSIT);
-        send(data);
     }
     
     @Override
