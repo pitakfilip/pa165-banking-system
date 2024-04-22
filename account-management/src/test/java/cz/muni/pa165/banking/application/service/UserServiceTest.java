@@ -27,18 +27,18 @@ class UserServiceTest {
     void createUser_ValidUser_ReturnsUser() {
         // Arrange
         User user = new User();
-        when(userRepository.addUser(user)).thenReturn(user);
+        when(userRepository.save(user)).thenReturn(user);
 
         // Act
         User result = userService.createUser(user);
 
         // Assert
         assertEquals(user, result);
-        verify(userRepository).addUser(user);
+        verify(userRepository).save(user);
     }
 
     @Test
-    void getUser_ValidUserId_ReturnsUser() throws Exception {
+    void getUser_ValidUserId_ReturnsUser(){
         // Arrange
         Long userId = 1L;
         User user = new User();

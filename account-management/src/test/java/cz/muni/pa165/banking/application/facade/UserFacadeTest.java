@@ -48,7 +48,7 @@ class UserFacadeTest {
     }
 
     @Test
-    void getUser_ValidUserId_ReturnsUserDto() throws Exception {
+    void getUser_ValidUserId_ReturnsUserDto(){
         // Arrange
         Long userId = 1L;
         UserDto userDto = new UserDto();
@@ -65,7 +65,7 @@ class UserFacadeTest {
     }
 
     @Test
-    void getUser_InvalidUserId_ReturnsNull() throws Exception {
+    void getUser_InvalidUserId_ReturnsNull(){
         // Arrange
         Long invalidUserId = 123L;
         when(userService.findById(invalidUserId)).thenReturn(null);

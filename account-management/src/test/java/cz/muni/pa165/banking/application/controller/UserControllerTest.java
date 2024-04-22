@@ -37,7 +37,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getUser_ValidUserId_ReturnsUser() throws Exception {
+    void getUser_ValidUserId_ReturnsUser(){
         // Arrange
         Long userId = 1L;
         UserDto userDto = new UserDto();
@@ -52,7 +52,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getUser_InvalidUserId_ReturnsNull() throws Exception {
+    void getUser_InvalidUserId_ReturnsNull() {
         // Arrange
         Long userId = 123L;
         when(userFacade.findById(userId)).thenReturn(null);

@@ -202,7 +202,7 @@ paths:
           description: NOK
 
 
-  /account:
+  /account: 
     get:
       tags:
         - Account
@@ -245,6 +245,28 @@ paths:
         "400":
           description: NOK
 
+  /account/number:
+    get:
+      tags:
+        - Account
+      summary: Find Account by account number
+      operationId: findByAccountNumber
+      parameters:
+        - name: accountNumber
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+        "400":
+          description: NOK
+          
   /account/scheduled:
     get:
       tags:

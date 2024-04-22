@@ -31,6 +31,11 @@ public class AccountController implements AccountApi {
     }
 
     @Override
+    public ResponseEntity<AccountDto> findByAccountNumber(String accountNumber) {
+        return ResponseEntity.ok(accountFacade.findByAccountNumber(accountNumber));
+    }
+
+    @Override
     public ResponseEntity<ScheduledPaymentsDto> getScheduledPayments(String accountNumber) {
         ScheduledPaymentsDto payments;
         try{
