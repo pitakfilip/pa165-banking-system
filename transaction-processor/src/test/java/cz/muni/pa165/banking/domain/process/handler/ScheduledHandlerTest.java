@@ -51,14 +51,14 @@ class ScheduledHandlerTest {
     void nonexistingFirstAccountValidation() {
         AccountService accountService = new AccountServiceStub(false, false,null, false);
         Process process = new ProcessMock();
-        ProcessTransaction processTransaction = new ProcessTransaction(account1, account2, TransactionType.TRANSFER, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
+        ProcessTransaction processTransaction = new ProcessTransaction(account1, account2, TransactionType.TRANSFER, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.getUuid());
 
-        when(processRepository.findById(process.uuid())).thenReturn(process);
-        when(processTransactionRepository.findTransactionByProcessId(process.uuid())).thenReturn(processTransaction);
+        when(processRepository.findById(process.getUuid())).thenReturn(process);
+        when(processTransactionRepository.findTransactionByProcessId(process.getUuid())).thenReturn(processTransaction);
         
         assertThrows(
                 EntityNotFoundException.class,
-                () -> depositHandler.handle(process.uuid(), processRepository, processTransactionRepository, accountService, converter)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -67,14 +67,14 @@ class ScheduledHandlerTest {
     void twoSameAccountsValidation() {
         AccountService accountService = new AccountServiceStub(true, false,null, false);
         Process process = new ProcessMock();
-        ProcessTransaction processTransaction = new ProcessTransaction(account1, account1, TransactionType.TRANSFER, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
+        ProcessTransaction processTransaction = new ProcessTransaction(account1, account1, TransactionType.TRANSFER, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.getUuid());
 
-        when(processRepository.findById(process.uuid())).thenReturn(process);
-        when(processTransactionRepository.findTransactionByProcessId(process.uuid())).thenReturn(processTransaction);
+        when(processRepository.findById(process.getUuid())).thenReturn(process);
+        when(processTransactionRepository.findTransactionByProcessId(process.getUuid())).thenReturn(processTransaction);
 
         assertThrows(
                 UnexpectedValueException.class,
-                () -> depositHandler.handle(process.uuid(), processRepository, processTransactionRepository, accountService, converter)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -83,14 +83,14 @@ class ScheduledHandlerTest {
     void nonexistingSecondAccountValidation() {
         AccountService accountService = new AccountServiceStub(true, false,null, false);
         Process process = new ProcessMock();
-        ProcessTransaction processTransaction = new ProcessTransaction(account1, account2, TransactionType.TRANSFER, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
+        ProcessTransaction processTransaction = new ProcessTransaction(account1, account2, TransactionType.TRANSFER, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.getUuid());
 
-        when(processRepository.findById(process.uuid())).thenReturn(process);
-        when(processTransactionRepository.findTransactionByProcessId(process.uuid())).thenReturn(processTransaction);
+        when(processRepository.findById(process.getUuid())).thenReturn(process);
+        when(processTransactionRepository.findTransactionByProcessId(process.getUuid())).thenReturn(processTransaction);
         
         assertThrows(
                 EntityNotFoundException.class,
-                () -> depositHandler.handle(process.uuid(), processRepository, processTransactionRepository, accountService, converter)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -99,12 +99,12 @@ class ScheduledHandlerTest {
     void crossAccountTransactionSuccessful() {
         AccountService accountService = new AccountServiceStub(true, true, null, true);
         Process process = new ProcessMock();
-        ProcessTransaction  processTransaction = new ProcessTransaction(account1, account2, TransactionType.TRANSFER, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
+        ProcessTransaction  processTransaction = new ProcessTransaction(account1, account2, TransactionType.TRANSFER, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.getUuid());
 
-        when(processRepository.findById(process.uuid())).thenReturn(process);
-        when(processTransactionRepository.findTransactionByProcessId(process.uuid())).thenReturn(processTransaction);
+        when(processRepository.findById(process.getUuid())).thenReturn(process);
+        when(processTransactionRepository.findTransactionByProcessId(process.getUuid())).thenReturn(processTransaction);
 
-        depositHandler.handle(process.uuid(), processRepository, processTransactionRepository, accountService, converter);
+        depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter);
 
         assertEquals(Status.PROCESSED, process.getStatus());
         assertTrue(published1);
@@ -157,7 +157,7 @@ class ScheduledHandlerTest {
         }
 
         @Override
-        public void publishAccountChange(UUID processUuid, TransactionType transactionType, BigDecimal amount, Account account, String information) {
+        public void publishAccountChange(UUID processUuid, TransactionType transactionType, BigDecimal amount, Account account) {
             if (account.equals(account1)) {
                 published1 = true;
             } else {

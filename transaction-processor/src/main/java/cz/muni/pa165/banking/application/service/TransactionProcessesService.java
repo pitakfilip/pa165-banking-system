@@ -1,7 +1,6 @@
 package cz.muni.pa165.banking.application.service;
 
 import cz.muni.pa165.banking.application.messaging.ProcessProducer;
-import cz.muni.pa165.banking.domain.money.Money;
 import cz.muni.pa165.banking.domain.process.Process;
 import cz.muni.pa165.banking.domain.process.ProcessFactory;
 import cz.muni.pa165.banking.domain.process.ProcessTransaction;
@@ -40,7 +39,7 @@ public class TransactionProcessesService {
         ProcessFactory factory = new ProcessFactory(processTransactionRepository, processRepository);
         Process process = factory.create(newTransaction, processProducer);
         
-        LOGGER.info("[Create Process] %s" + process.uuid());
+        LOGGER.info("[Create Process] %s" + process.getUuid());
         
         return process;
     }
@@ -74,20 +73,18 @@ public class TransactionProcessesService {
             throw new UnexpectedValueException("Unable to revert transaction not type of CROSS_ACCOUNT or SCHEDULED!");
         }
 
-        Money original = processTransaction.getMoney();
-        Money reverted = new Money(original.getAmount().negate(), original.getCurrency());
         Transaction revertingTransaction = new Transaction(
                 processTransaction.getTarget(),
                 processTransaction.getSource(),
-                processTransaction.getType(),
-                reverted,
+                TransactionType.REFUND,
+                processTransaction.getMoney(),
                 String.format("Admin reversal of executed %s transaction {%s}", processTransaction.getType(), uuid)
         );
         
         ProcessFactory factory = new ProcessFactory(processTransactionRepository, processRepository);
         Process revertingProcess = factory.create(revertingTransaction, processProducer);
 
-        LOGGER.info(String.format("[Revert Process] Created new process {%s} in order to revert process {%s}", revertingProcess.uuid(), uuid));   
+        LOGGER.info(String.format("[Revert Process] Created new process {%s} in order to revert process {%s}", revertingProcess.getUuid(), uuid));   
         
         return revertingProcess;
     }

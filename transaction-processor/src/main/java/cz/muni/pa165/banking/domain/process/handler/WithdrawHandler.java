@@ -40,7 +40,7 @@ public class WithdrawHandler extends ProcessHandler {
 
         BigDecimal calculatedAmount = money.getAmount().multiply(BigDecimal.valueOf(-1L));
 
-        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.WITHDRAWAL, calculatedAmount, account, processTransaction.getDetail());
+        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.WITHDRAWAL, calculatedAmount, account);
     }
 
 }

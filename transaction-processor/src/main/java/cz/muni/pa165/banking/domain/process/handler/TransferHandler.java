@@ -17,7 +17,7 @@ import java.util.Currency;
  * not have to be the same. The amount of money is calculated via ${@link cz.muni.pa165.banking.domain.money.CurrencyConverter}
  * using the target account's currency.
  */
-public class CrossAccountHandler extends ProcessHandler {
+public class TransferHandler extends ProcessHandler {
     
     @Override
     void evaluate(ProcessTransaction processTransaction, AccountService accountService, CurrencyConverter currencyConverter) {
@@ -55,8 +55,8 @@ public class CrossAccountHandler extends ProcessHandler {
             targetAmount = currencyConverter.convertTo(currency, targetAccountCurrency, targetAmount);
         }
         
-        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.TRANSFER, sourceAmount, source, processTransaction.getDetail());
-        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.TRANSFER, targetAmount, target, processTransaction.getDetail());
+        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.TRANSFER, sourceAmount, source);
+        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.TRANSFER, targetAmount, target);
     }
 
 }

@@ -8,6 +8,8 @@ public enum TransactionType {
 
     TRANSFER,
     
-    SCHEDULED
+    SCHEDULED,
+    
+    REFUND
     
 }
