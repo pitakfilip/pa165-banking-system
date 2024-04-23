@@ -95,7 +95,7 @@ class ProcessFactoryTest {
         verify(processTransactionRepository).save(argumentCaptor.capture());
         ProcessTransaction captured = argumentCaptor.getValue();
 
-        assertEquals(createdProcess.uuid(), captured.getUuid());
+        assertEquals(createdProcess.getUuid(), captured.getUuid());
     }
 
 
@@ -111,7 +111,7 @@ class ProcessFactoryTest {
         UUID sentUuid = WhiteboxImpl.getInternalState(messageProducer, "receivedUuid");
         TransactionType sentType = WhiteboxImpl.getInternalState(messageProducer, "receivedType");
 
-        assertEquals(createdProcess.uuid(), sentUuid);
+        assertEquals(createdProcess.getUuid(), sentUuid);
         assertEquals(TransactionType.DEPOSIT, sentType);
     }
 

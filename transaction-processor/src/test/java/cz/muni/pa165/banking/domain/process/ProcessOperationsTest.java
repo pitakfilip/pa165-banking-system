@@ -22,8 +22,8 @@ class ProcessOperationsTest {
         
         ProcessOperations.changeState(process, newStatus);
         
-        assertEquals(newStatus.when(), process.getWhen());
-        assertEquals(newStatus.status(), process.getStatus());
-        assertEquals(newStatus.information(), process.getStatusInformation());
+        assertEquals(newStatus.getWhen(), process.getWhen());
+        assertEquals(newStatus.getStatus(), process.getStatus());
+        assertEquals(newStatus.getInformation(), process.getInformation());
     }
 }

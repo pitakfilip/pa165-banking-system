@@ -2,11 +2,12 @@ package cz.muni.pa165.banking.domain.process;
 
 import cz.muni.pa165.banking.domain.process.status.Status;
 import cz.muni.pa165.banking.domain.process.status.StatusInformation;
+import jakarta.persistence.Entity;
 
 import java.time.Instant;
 import java.util.UUID;
 
-// @Entity
+@Entity
 public class Process {
     
     private final UUID uuid;
@@ -21,22 +22,27 @@ public class Process {
     /**
      * Return a copy of Process UUID, ensuring the UUID is not modified or replaced. 
      */
-    public UUID uuid() {
+    public UUID getUuid() {
         return UUID.fromString(uuid.toString());
     }
     
     public Instant getWhen() {
-        return currentStatus.when();
+        return currentStatus.getWhen();
     }
     
     public Status getStatus() {
-        return currentStatus.status();
+        return currentStatus.getStatus();
     }
     
-    public String getStatusInformation() {
-        return currentStatus.information();
+    public String getInformation() {
+        return currentStatus.getInformation();
     }
-    
+
+    @Deprecated // hibernate
+    public StatusInformation getCurrentStatus() {
+        return currentStatus;
+    }
+    @Deprecated // hibernate
     void setCurrentStatus(StatusInformation information) {
         currentStatus = information;
     }

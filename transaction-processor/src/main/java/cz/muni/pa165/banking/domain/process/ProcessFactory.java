@@ -32,11 +32,11 @@ public class ProcessFactory {
                 transaction.getType(),
                 transaction.getMoney(),
                 transaction.getDetail(),
-                newProcess.uuid()
+                newProcess.getUuid()
         );
         processTransactionRepository.save(assignedTransaction);
         
-        messageProducer.send(new ProcessRequest(newProcess.uuid(), transaction.getType()));
+        messageProducer.send(new ProcessRequest(newProcess.getUuid(), transaction.getType()));
         
         return newProcess;
     }

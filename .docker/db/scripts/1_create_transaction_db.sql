@@ -5,7 +5,7 @@ SET SEARCH_PATH TO bank_transaction;
 
 CREATE TABLE IF NOT EXISTS proc_transaction
 (
-    proc_uuid  UUID PRIMARY KEY,
+    trans_uuid UUID PRIMARY KEY,
     acc_source VARCHAR(255),
     acc_target VARCHAR(255),
     type       VARCHAR(255),
@@ -14,3 +14,10 @@ CREATE TABLE IF NOT EXISTS proc_transaction
     detail_msg VARCHAR(255)
 );
 
+CREATE TABLE proc
+(
+    proc_uuid   UUID PRIMARY KEY,
+    status_when TIMESTAMP,
+    status      VARCHAR(255),
+    status_info VARCHAR(255)
+);

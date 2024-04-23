@@ -24,8 +24,9 @@ public class ProcessHandlerGateway {
         ProcessHandler handler = switch (type) {
             case WITHDRAWAL -> new WithdrawHandler();
             case DEPOSIT -> new DepositHandler();
-            case TRANSFER -> new CrossAccountHandler();
+            case TRANSFER -> new TransferHandler();
             case SCHEDULED -> new ScheduledHandler();
+            case REFUND -> new RefundHandler();
         };
         
         handler.handle(processUuid, processRepository, processTransactionRepository, accountService, currencyConverter);

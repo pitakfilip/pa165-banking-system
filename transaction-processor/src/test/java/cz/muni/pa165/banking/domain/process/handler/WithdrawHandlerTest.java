@@ -44,14 +44,14 @@ class WithdrawHandlerTest {
     static void init() {
         account = new Account("ACC");
         process = new ProcessMock();
-        processTransaction = new ProcessTransaction(account, null, TransactionType.WITHDRAWAL, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
+        processTransaction = new ProcessTransaction(account, null, TransactionType.WITHDRAWAL, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.getUuid());
         depositHandler = new WithdrawHandler();
         processRepository = mock(ProcessRepository.class);
         processTransactionRepository = mock(ProcessTransactionRepository.class);
         converter = new CurrencyConverterStub(null);
 
-        when(processRepository.findById(process.uuid())).thenReturn(process);
-        when(processTransactionRepository.findTransactionByProcessId(process.uuid())).thenReturn(processTransaction);
+        when(processRepository.findById(process.getUuid())).thenReturn(process);
+        when(processTransactionRepository.findTransactionByProcessId(process.getUuid())).thenReturn(processTransaction);
     }
 
     @BeforeEach
@@ -65,7 +65,7 @@ class WithdrawHandlerTest {
 
         assertThrows(
                 EntityNotFoundException.class,
-                () -> depositHandler.handle(process.uuid(), processRepository, processTransactionRepository, accountService, converter)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -76,7 +76,7 @@ class WithdrawHandlerTest {
 
         assertThrows(
                 UnexpectedValueException.class,
-                () -> depositHandler.handle(process.uuid(), processRepository, processTransactionRepository, accountService, converter)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -87,7 +87,7 @@ class WithdrawHandlerTest {
 
         assertThrows(
                 UnexpectedValueException.class,
-                () -> depositHandler.handle(process.uuid(), processRepository, processTransactionRepository, accountService, converter)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -96,7 +96,7 @@ class WithdrawHandlerTest {
     void withdrawTransactionSuccessful() {
         AccountService accountService = new AccountServiceStub(true, Currency.getInstance("EUR"), true);
         
-        depositHandler.handle(process.uuid(), processRepository, processTransactionRepository, accountService, converter);
+        depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter);
         
         assertEquals(Status.PROCESSED, process.getStatus());
         assertTrue(published);
@@ -143,7 +143,7 @@ class WithdrawHandlerTest {
         }
 
         @Override
-        public void publishAccountChange(UUID processUuid, TransactionType transactionType, BigDecimal amount, Account account, String information) {
+        public void publishAccountChange(UUID processUuid, TransactionType transactionType, BigDecimal amount, Account account) {
             published = true;
         }
     }

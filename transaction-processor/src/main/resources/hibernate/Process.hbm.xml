@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="cz.muni.pa165.banking.domain.process.Process" table="proc">
+
+        <cache usage="read-write"/>
+
+        <id name="uuid"
+            column="proc_uuid"
+            type="java.util.UUID"/>
+
+        <component
+                name="currentStatus"
+                class="StatusInformation"
+        >
+            <property
+                    name="when"
+                    column="status_when"
+                    type="timestamp"
+            />
+            <property
+                    name="status"
+                    column="status">
+                <type name="org.hibernate.type.EnumType">
+                    <param name="enumClass">cz.muni.pa165.banking.domain.process.status.Status</param>
+                    <param name="useNamed">true</param>
+                </type>
+            </property>
+
+            <property
+                    name="information"
+                    column="status_info"
+                    type="string"
+            />
+        </component>
+
+    </class>
+
+</hibernate-mapping>
