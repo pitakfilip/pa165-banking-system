@@ -129,6 +129,7 @@ components:
         - senderAccountNumber
         - receiverAccountNumber
         - amount
+        - currencyCode
         - type
         - day
       properties:
@@ -140,6 +141,8 @@ components:
           type: number
           format: decimal
           description: amount of money to send
+        currencyCode:
+          type: string
         type:
           $ref: '#/components/schemas/ScheduledPaymentType'
         day:
@@ -309,3 +312,25 @@ paths:
                 $ref: '#/components/schemas/ScheduledPaymentDto'
         "400":
           description: NOK
+  
+  /scheduled:
+    get:
+      tags:
+        - Account
+      summary: Scheduled payments of a day
+      operationId: getScheduledPaymentsOf
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+              format: date
+              nullable: false
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledPaymentsDto'

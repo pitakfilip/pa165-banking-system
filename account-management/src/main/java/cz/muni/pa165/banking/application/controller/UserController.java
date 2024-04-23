@@ -25,13 +25,7 @@ public class UserController implements UserApi{
 
     @Override
     public ResponseEntity<UserDto> findUserById(Long userId) {
-        UserDto user;
-        try{
-            user = userFacade.findById(userId);
-        }
-        catch (EntityNotFoundException e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        UserDto user = userFacade.findById(userId);
         return ResponseEntity.ok(user);
     }    
     
