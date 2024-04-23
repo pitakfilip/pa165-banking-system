@@ -17,7 +17,7 @@ components:
   schemas:
     TransactionType:
       type: string
-      enum: [ WITHDRAW, DEPOSIT, CREDIT, CROSS_ACCOUNT_PAYMENT, REFUND ]
+      enum: [ WITHDRAW, DEPOSIT, CREDIT, TRANSFER, REFUND ]
       description: type of transaction
     Transaction:
       title: A transaction
