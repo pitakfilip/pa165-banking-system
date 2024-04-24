@@ -32,4 +32,4 @@ spring:
     username: ACC_TRANSACTION
     password: transactionAccPasswd
   jpa:
-    mapping-resources: hibernate/Transaction.hbm.xml
+    mapping-resources: hibernate/Transaction.hbm.xml, hibernate/Process.hbm.xml

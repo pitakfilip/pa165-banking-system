@@ -32,6 +32,11 @@ public class Process {
     public UUID getUuid() {
         return UUID.fromString(uuid.toString());
     }
+
+    @Deprecated // hibernate
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
     
     public Instant getWhen() {
         return currentStatus.getWhen();

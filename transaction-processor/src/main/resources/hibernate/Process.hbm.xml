@@ -14,12 +14,12 @@
 
         <component
                 name="currentStatus"
-                class="StatusInformation"
+                class="cz.muni.pa165.banking.domain.process.status.StatusInformation"
         >
             <property
                     name="when"
                     column="status_when"
-                    type="timestamp"
+                    type="java.time.Instant"
             />
             <property
                     name="status"
@@ -33,7 +33,7 @@
             <property
                     name="information"
                     column="status_info"
-                    type="string"
+                    type="java.lang.String"
             />
         </component>
 

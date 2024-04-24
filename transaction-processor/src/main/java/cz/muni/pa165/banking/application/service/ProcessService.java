@@ -5,6 +5,7 @@ import cz.muni.pa165.banking.domain.process.ProcessOperations;
 import cz.muni.pa165.banking.domain.process.repository.ProcessRepository;
 import cz.muni.pa165.banking.domain.process.status.Status;
 import cz.muni.pa165.banking.domain.process.status.StatusInformation;
+import cz.muni.pa165.banking.exception.UnexpectedValueException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,11 @@ public class ProcessService {
     
     @Transactional
     public List<UUID> resolveProcesses(LocalDate localDate) {
+        LocalDate now = LocalDate.now();
+        if (!localDate.isBefore(now)) {
+            throw new UnexpectedValueException("Threshold should be atleast one day ago. Cannot resolve processes from today or the future");
+        }
+        
         List<Process> staleProcesses = new ArrayList<>();
         staleProcesses.addAll(processRepository.findProcessesOfStatusUptoDate(Status.CREATED, localDate));
         staleProcesses.addAll(processRepository.findProcessesOfStatusUptoDate(Status.PENDING, localDate));
