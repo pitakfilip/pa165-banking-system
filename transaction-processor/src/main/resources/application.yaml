@@ -3,7 +3,10 @@ db:
 scheduled-payments:
   cron:
     expression: "00 7 * * *"
-  
+process:
+  resolution:
+    threshold: 7
+
 banking:
   apps:
     management:
