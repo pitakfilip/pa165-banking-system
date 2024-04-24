@@ -4,7 +4,6 @@ import cz.muni.pa165.banking.account.query.dto.Transaction;
 import cz.muni.pa165.banking.account.query.dto.TransactionType;
 import cz.muni.pa165.banking.account.query.dto.TransactionsReport;
 import cz.muni.pa165.banking.application.facade.BalanceFacade;
-import cz.muni.pa165.banking.domain.report.StatisticalReport;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -5,7 +5,7 @@ import cz.muni.pa165.banking.domain.balance.repository.BalancesRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import cz.muni.pa165.banking.domain.balance.repository.TransactionRepository;
+import cz.muni.pa165.banking.domain.transaction.repository.TransactionRepository;
 import cz.muni.pa165.banking.domain.report.StatisticalReport;
 import cz.muni.pa165.banking.domain.transaction.Transaction;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -84,13 +83,13 @@ class BalanceServiceImplTest {
     void addNewBalance_createsBalance() {
         // Arrange
         String id = "id";
-        Mockito.doNothing().when(balanceRepository).addBalance(id);
+        Mockito.when(balanceRepository.save(new Balance(id))).thenReturn(new Balance(id));
 
         // Act
         balanceService.addNewBalance(id);
 
         // Assert
-        Mockito.verify(balanceRepository, Mockito.times(1)).addBalance(id);
+        Mockito.verify(balanceRepository, Mockito.times(1)).save(new Balance(id));
     }
 
     @Test

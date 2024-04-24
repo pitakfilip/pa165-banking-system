@@ -11,7 +11,7 @@ import cz.muni.pa165.banking.application.mapper.BalanceMapperImpl;
 import cz.muni.pa165.banking.application.service.BalanceServiceImpl;
 import cz.muni.pa165.banking.domain.balance.Balance;
 import cz.muni.pa165.banking.domain.balance.repository.BalancesRepository;
-import cz.muni.pa165.banking.domain.balance.repository.TransactionRepository;
+import cz.muni.pa165.banking.domain.transaction.repository.TransactionRepository;
 import cz.muni.pa165.banking.domain.balance.service.BalanceService;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import cz.muni.pa165.banking.exception.CustomExceptionHandler;
