@@ -1,7 +1,6 @@
 package cz.muni.pa165.banking.application.service;
 
-import cz.muni.pa165.banking.application.messaging.ProcessProducer;
-import cz.muni.pa165.banking.domain.money.Money;
+import cz.muni.pa165.banking.domain.messaging.MessageProducer;
 import cz.muni.pa165.banking.domain.process.Process;
 import cz.muni.pa165.banking.domain.process.ProcessFactory;
 import cz.muni.pa165.banking.domain.process.ProcessTransaction;
@@ -27,20 +26,21 @@ public class TransactionProcessesService {
 
     private final ProcessRepository processRepository;
     
-    private final ProcessProducer processProducer;
+    private final MessageProducer processProducer;
 
-    public TransactionProcessesService(ProcessTransactionRepository processTransactionRepository, ProcessRepository processRepository, ProcessProducer processProducer) {
+    public TransactionProcessesService(ProcessTransactionRepository processTransactionRepository,
+                                       ProcessRepository processRepository,
+                                       MessageProducer processProducer) {
         this.processTransactionRepository = processTransactionRepository;
         this.processRepository = processRepository;
         this.processProducer = processProducer;
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public Process createProcessForTransaction(Transaction newTransaction) {
         ProcessFactory factory = new ProcessFactory(processTransactionRepository, processRepository);
         Process process = factory.create(newTransaction, processProducer);
         
-        LOGGER.info("[Create Process] %s" + process.uuid());
+        LOGGER.info("[Create Process] %s" + process.getUuid());
         
         return process;
     }
@@ -69,25 +69,23 @@ public class TransactionProcessesService {
         
         ProcessTransaction processTransaction = processTransactionRepository.findTransactionByProcessId(uuid);
         
-        if (!processTransaction.getType().equals(TransactionType.CROSS_ACCOUNT) || processTransaction.getType().equals(TransactionType.SCHEDULED)) {
-            LOGGER.error("[Revert Process] Process " + uuid + " not of type CROSS_ACCOUNT/SCHEDULED, unable to revert");
-            throw new UnexpectedValueException("Unable to revert transaction not type of CROSS_ACCOUNT or SCHEDULED!");
+        if (!processTransaction.getType().equals(TransactionType.TRANSFER) || processTransaction.getType().equals(TransactionType.SCHEDULED)) {
+            LOGGER.error("[Revert Process] Process " + uuid + " not of type TRANSFER/SCHEDULED, unable to revert");
+            throw new UnexpectedValueException("Unable to revert transaction not type of TRANSFER or SCHEDULED!");
         }
 
-        Money original = processTransaction.getMoney();
-        Money reverted = new Money(original.getAmount().negate(), original.getCurrency());
         Transaction revertingTransaction = new Transaction(
                 processTransaction.getTarget(),
                 processTransaction.getSource(),
-                processTransaction.getType(),
-                reverted,
+                TransactionType.REFUND,
+                processTransaction.getMoney(),
                 String.format("Admin reversal of executed %s transaction {%s}", processTransaction.getType(), uuid)
         );
         
         ProcessFactory factory = new ProcessFactory(processTransactionRepository, processRepository);
         Process revertingProcess = factory.create(revertingTransaction, processProducer);
 
-        LOGGER.info(String.format("[Revert Process] Created new process {%s} in order to revert process {%s}", revertingProcess.uuid(), uuid));   
+        LOGGER.info(String.format("[Revert Process] Created new process {%s} in order to revert process {%s}", revertingProcess.getUuid(), uuid));   
         
         return revertingProcess;
     }

@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class StatisticalReportTest {
     StatisticalReport report;
@@ -22,7 +21,7 @@ class StatisticalReportTest {
         Transaction tr3 = new Transaction(TransactionType.WITHDRAW, BigDecimal.ONE, OffsetDateTime.now(), new UUID(2, 2));
         Transaction tr5 = new Transaction(TransactionType.REFUND, BigDecimal.ONE, OffsetDateTime.now(), new UUID(2, 2));
         Transaction tr6 = new Transaction(TransactionType.DEPOSIT, BigDecimal.ONE, OffsetDateTime.now(), new UUID(2, 2));
-        Transaction tr7 = new Transaction(TransactionType.CROSS_ACCOUNT_PAYMENT, BigDecimal.ONE, OffsetDateTime.now(), new UUID(2, 2));
+        Transaction tr7 = new Transaction(TransactionType.TRANSFER, BigDecimal.ONE, OffsetDateTime.now(), new UUID(2, 2));
         report = new StatisticalReport(List.of(tr1, tr2, tr3, tr5, tr6, tr7));
     }
     @Test
@@ -60,7 +59,7 @@ class StatisticalReportTest {
         //Act
         TransactionStatistics statistics = report.getCrossAccountAmount();
         //Assert
-        assertThat(statistics.getType()).isEqualTo(TransactionType.CROSS_ACCOUNT_PAYMENT);
+        assertThat(statistics.getType()).isEqualTo(TransactionType.TRANSFER);
     }
     @Test
     public void whenGetAllStatsThenStatsOfAllTypesReturned(){

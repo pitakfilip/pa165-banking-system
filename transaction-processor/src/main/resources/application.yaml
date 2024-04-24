@@ -1,6 +1,37 @@
 server:
   port: 8082
-  
+db:
+  hostname: localhost
+scheduled-payments:
+  cron:
+    expression: "00 7 * * *"
+process:
+  resolution:
+    threshold: 7
+
+banking:
+  apps:
+    management:
+      host: localhost
+      port: 8080
+      url: ${banking.apps.management.host}:${banking.apps.management.port}
+    query:
+      host: localhost
+      port: 8081
+      url: ${banking.apps.query.host}:${banking.apps.query.port}
+    rates:
+      api-key: 5f40db3a892e886bda8a6967
+      url: https://v6.exchangerate-api.com/v6/${banking.apps.rates.api-key}
+      initial:
+        currencies: CZK, EUR, USD
+
 spring:
   application:
-    name: Transaction-Processor
+    name: Transaction-Processor  
+  datasource:
+    url: jdbc:postgresql://${db.hostname}:5432/banking
+    driver-class-name: org.postgresql.Driver
+    username: ACC_TRANSACTION
+    password: transactionAccPasswd
+  jpa:
+    mapping-resources: hibernate/Transaction.hbm.xml, hibernate/Process.hbm.xml

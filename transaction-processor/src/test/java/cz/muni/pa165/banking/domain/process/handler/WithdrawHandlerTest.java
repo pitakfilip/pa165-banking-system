@@ -19,6 +19,7 @@ import cz.muni.pa165.banking.exception.UnexpectedValueException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -32,26 +33,26 @@ class WithdrawHandlerTest {
 
     private boolean published = false;
 
-    private static Account account;
     private static Process process;
-    private static ProcessTransaction processTransaction;
     private static ProcessRepository processRepository;
     private static ProcessTransactionRepository processTransactionRepository;
     private static ProcessHandler depositHandler;
     private static CurrencyConverter converter;
+    private static TransactionTemplate transactionTemplate;
 
     @BeforeAll
     static void init() {
-        account = new Account("ACC");
+        Account account = new Account("ACC");
         process = new ProcessMock();
-        processTransaction = new ProcessTransaction(account, null, TransactionType.WITHDRAW, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
+        ProcessTransaction processTransaction = new ProcessTransaction(account, null, TransactionType.WITHDRAWAL, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.getUuid());
         depositHandler = new WithdrawHandler();
         processRepository = mock(ProcessRepository.class);
         processTransactionRepository = mock(ProcessTransactionRepository.class);
         converter = new CurrencyConverterStub(null);
-
-        when(processRepository.findById(process.uuid())).thenReturn(process);
-        when(processTransactionRepository.findTransactionByProcessId(process.uuid())).thenReturn(processTransaction);
+        transactionTemplate = mock(TransactionTemplate.class);
+        
+        when(processRepository.findById(process.getUuid())).thenReturn(process);
+        when(processTransactionRepository.findTransactionByProcessId(process.getUuid())).thenReturn(processTransaction);
     }
 
     @BeforeEach
@@ -65,7 +66,7 @@ class WithdrawHandlerTest {
 
         assertThrows(
                 EntityNotFoundException.class,
-                () -> depositHandler.handle(process.uuid(), processRepository, processTransactionRepository, accountService, converter)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, transactionTemplate)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -76,7 +77,7 @@ class WithdrawHandlerTest {
 
         assertThrows(
                 UnexpectedValueException.class,
-                () -> depositHandler.handle(process.uuid(), processRepository, processTransactionRepository, accountService, converter)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, transactionTemplate)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -87,7 +88,7 @@ class WithdrawHandlerTest {
 
         assertThrows(
                 UnexpectedValueException.class,
-                () -> depositHandler.handle(process.uuid(), processRepository, processTransactionRepository, accountService, converter)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, transactionTemplate)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -96,7 +97,7 @@ class WithdrawHandlerTest {
     void withdrawTransactionSuccessful() {
         AccountService accountService = new AccountServiceStub(true, Currency.getInstance("EUR"), true);
         
-        depositHandler.handle(process.uuid(), processRepository, processTransactionRepository, accountService, converter);
+        depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, transactionTemplate);
         
         assertEquals(Status.PROCESSED, process.getStatus());
         assertTrue(published);
@@ -143,7 +144,7 @@ class WithdrawHandlerTest {
         }
 
         @Override
-        public void publishAccountChange(UUID processUuid, TransactionType transactionType, BigDecimal amount, Account account, String information) {
+        public void publishAccountChange(UUID processUuid, TransactionType transactionType, BigDecimal amount, Account account) {
             published = true;
         }
     }

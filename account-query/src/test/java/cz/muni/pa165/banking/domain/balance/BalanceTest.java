@@ -6,8 +6,6 @@ import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;

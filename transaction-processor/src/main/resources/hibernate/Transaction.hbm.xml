@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="cz.muni.pa165.banking.domain.process.ProcessTransaction" table="proc_transaction">
+
+        <cache usage="read-write"/>
+
+        <id name="uuid"
+            column="trans_uuid"
+            type="java.util.UUID"/>
+        
+        <component
+                name="source"
+                class="cz.muni.pa165.banking.domain.account.Account"
+        >
+            <property 
+                    name="accountNumber"
+                    column="acc_source"
+                    type="java.lang.String"
+            />
+        </component>
+
+        <component
+                name="target"
+                class="cz.muni.pa165.banking.domain.account.Account"
+        >
+            <property
+                    name="accountNumber"
+                    column="acc_target"
+                    type="java.lang.String"
+            />
+        </component>
+
+        <property 
+                name="type"
+                column="type">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">cz.muni.pa165.banking.domain.transaction.TransactionType</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
+
+        <component 
+                name="money"
+                class="cz.muni.pa165.banking.domain.money.Money"
+        >
+            <property 
+                    name="amount"
+                    column="amount"
+                    type="big_decimal"
+            />
+            <property 
+                    name="currency"
+                    column="curr_code"
+                    type="string"
+            />
+        </component>
+        
+        <property
+                name="detail"
+                type="java.lang.String"
+                column="detail_msg"
+        />
+
+    </class>
+
+</hibernate-mapping>

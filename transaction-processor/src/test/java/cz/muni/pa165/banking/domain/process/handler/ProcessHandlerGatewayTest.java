@@ -30,7 +30,7 @@ class ProcessHandlerGatewayTest {
         ProcessRepository processRepository = mock(ProcessRepository.class);
         assertThrows(
                 EntityNotFoundException.class,
-                () -> ProcessHandlerGateway.handle(UUID.randomUUID(), null, processRepository, null, null, null)
+                () -> ProcessHandlerGateway.handle(UUID.randomUUID(), null, processRepository, null, null, null, null)
         );
     }
 
@@ -38,7 +38,7 @@ class ProcessHandlerGatewayTest {
     void nullTransactionType() {
         assertThrows(
                 UnexpectedValueException.class,
-                () -> ProcessHandlerGateway.handle(uuid, null, processRepository, null, null, null)
+                () -> ProcessHandlerGateway.handle(uuid, null, processRepository, null, null, null, null)
         );
     }
     

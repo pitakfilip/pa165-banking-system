@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  * The response body is evaluated as a JSON object, containing defined information such as the status code, 
  * exception type, message, cause and an optional detail regarding the exception.
  */
+@ControllerAdvice
 public class CustomExceptionHandler {
 
     @ExceptionHandler(CustomException.class)

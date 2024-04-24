@@ -1,7 +1,6 @@
 package cz.muni.pa165.banking.application.facade;
 
 import static cz.muni.pa165.banking.domain.transaction.TransactionType.CREDIT;
-import static org.junit.jupiter.api.Assertions.*;
 
 import cz.muni.pa165.banking.application.mapper.BalanceMapper;
 import cz.muni.pa165.banking.application.service.BalanceServiceImpl;

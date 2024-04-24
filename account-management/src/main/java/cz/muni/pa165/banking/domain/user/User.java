@@ -1,15 +1,29 @@
 package cz.muni.pa165.banking.domain.user;
 
-import java.util.List;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 
+import java.util.Objects;
+
+@Entity
+@Table(name = "bank_user")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id")
     private Long id;
+
+    @Email
+    @Column(name = "email")
     private String email;
+    @Column(name = "password")
     private String password;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
+    @Column(name = "user_type")
     private UserType userType;
-    private List<String> accounts;
 
     public User() {
     }
@@ -62,11 +76,28 @@ public class User {
         this.userType = userType;
     }
 
-    public List<String> getAccounts() {
-        return accounts;
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", userType=" + userType +
+                '}';
     }
 
-    public void setAccounts(List<String> accounts) {
-        this.accounts = accounts;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && userType == user.userType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, password, firstName, lastName, userType);
     }
 }

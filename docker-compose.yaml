@@ -1,2 +1,30 @@
-version: "3.8"
+version: "3.9"
+name: online-banking
 
+services:
+
+  banking-db:
+    image: "postgres:16.2"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=passwd
+      - POSTGRES_DB=banking
+    volumes:
+      - ./.docker/db/scripts:/docker-entrypoint-initdb.d
+    
+  account-management:
+    image: account-management
+    ports:
+      - "8080:8080"
+    
+  account-query:
+    image: account-query
+    ports:
+      - "8081:8081"
+
+  transaction-processor:
+    image: "transaction-processor"
+    ports:
+      - "8082:8082"

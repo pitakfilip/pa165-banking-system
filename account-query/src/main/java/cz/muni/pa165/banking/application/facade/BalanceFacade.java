@@ -3,10 +3,9 @@ package cz.muni.pa165.banking.application.facade;
 import cz.muni.pa165.banking.account.query.dto.Transaction;
 import cz.muni.pa165.banking.account.query.dto.TransactionType;
 import cz.muni.pa165.banking.account.query.dto.TransactionsReport;
-import cz.muni.pa165.banking.application.exception.NotFoundAccountException;
 import cz.muni.pa165.banking.application.mapper.BalanceMapper;
 import cz.muni.pa165.banking.domain.balance.service.BalanceService;
-import org.springframework.beans.factory.annotation.Autowired;
+import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -31,7 +30,7 @@ public class BalanceFacade {
         this.balanceMapper = balanceMapper;
     }
 
-    public void createNewBalance(String id) throws NotFoundAccountException {
+    public void createNewBalance(String id) throws EntityNotFoundException {
         balanceService.addNewBalance(id);
     }
 
@@ -39,7 +38,7 @@ public class BalanceFacade {
         balanceService.addToBalance(id, value, processId, balanceMapper.mapTypeOut(type));
     }
 
-    public BigDecimal getBalance(String id) throws NotFoundAccountException {
+    public BigDecimal getBalance(String id) throws EntityNotFoundException {
         return balanceService.getBalance(id);
     }
 
@@ -65,4 +64,7 @@ public class BalanceFacade {
         return toReturn.stream().map(balanceMapper::mapTransactionIn).toList();
     }
 
+    public void deleteBalance(String id) throws EntityNotFoundException {
+        balanceService.deleteBalance(id);
+    }
 }

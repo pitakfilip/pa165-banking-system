@@ -1,13 +1,8 @@
 package cz.muni.pa165.banking.application.mapper;
 
-import cz.muni.pa165.banking.account.query.dto.Transaction;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 
 class BalanceMapperTest {
     BalanceMapper balanceMapper = new BalanceMapperImpl();

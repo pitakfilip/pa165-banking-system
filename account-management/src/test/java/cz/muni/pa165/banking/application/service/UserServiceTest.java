@@ -3,16 +3,17 @@ package cz.muni.pa165.banking.application.service;
 import cz.muni.pa165.banking.domain.user.User;
 import cz.muni.pa165.banking.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.util.Optional;
 
-@SpringBootTest
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
     @Mock
@@ -25,40 +26,44 @@ class UserServiceTest {
     void createUser_ValidUser_ReturnsUser() {
         // Arrange
         User user = new User();
-        when(userRepository.addUser(user)).thenReturn(user);
+        user.setId(1L);
+        when(userRepository.save(user)).thenReturn(user);
 
         // Act
         User result = userService.createUser(user);
 
         // Assert
         assertEquals(user, result);
-        verify(userRepository).addUser(user);
+        verify(userRepository).save(user);
     }
 
     @Test
-    void getUser_ValidUserId_ReturnsUser() {
+    void getUser_ValidUserId_ReturnsUser(){
         // Arrange
         Long userId = 1L;
         User user = new User();
-        when(userRepository.getById(userId)).thenReturn(user);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         // Act
-        User result = userService.getUser(userId);
+        User result = userService.findById(userId);
 
         // Assert
         assertEquals(user, result);
-        verify(userRepository).getById(userId);
+        verify(userRepository).findById(userId);
     }
 
     @Test
-    void getUser_InvalidUserId_ReturnsNull() {
+    void getUser_InvalidUserId_ThrowsException() {
         // Arrange
         Long userId = 1L;
-        when(userRepository.getById(userId)).thenReturn(null);
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertNull(userService.getUser(userId));
-        verify(userRepository).getById(userId);
+        assertThrows(Exception.class, () -> {
+            userService.findById(userId);
+        });
+
+        verify(userRepository).findById(userId);
     }
 }
 

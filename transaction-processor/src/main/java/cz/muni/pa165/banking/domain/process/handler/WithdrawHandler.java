@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.util.Currency;
 
 /**
- * Handler for transaction of type ${@link cz.muni.pa165.banking.domain.transaction.TransactionType#WITHDRAW}.
+ * Handler for transaction of type ${@link cz.muni.pa165.banking.domain.transaction.TransactionType#WITHDRAWAL}.
  * Customer may withdraw a specified amount of money of the account's currency.
  */
 public class WithdrawHandler extends ProcessHandler {
@@ -40,7 +40,7 @@ public class WithdrawHandler extends ProcessHandler {
 
         BigDecimal calculatedAmount = money.getAmount().multiply(BigDecimal.valueOf(-1L));
 
-        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.WITHDRAW, calculatedAmount, account, processTransaction.getDetail());
+        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.WITHDRAWAL, calculatedAmount, account);
     }
 
 }

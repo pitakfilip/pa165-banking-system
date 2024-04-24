@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.muni.pa165.banking.domain.messaging.MessageProducer;
 import cz.muni.pa165.banking.domain.messaging.ProcessRequest;
 import cz.muni.pa165.banking.exception.ServerError;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -12,18 +11,14 @@ import java.util.Map;
 @Service
 public class ProcessProducer implements MessageProducer {
     
-    // TODO Milestone-2/3, add messaging RabbitMq dependencies
-//    private final RabbitTemplate template;
+    private final MessagingService messagingService;
     
     private final ObjectMapper mapper;
     
-    @Value("${messaging.exchange:process-request}")
-    private String EXCHANGE_NAME;
-
-    public ProcessProducer(ObjectMapper mapper) {
+    public ProcessProducer(MessagingService messagingService, ObjectMapper mapper) {
+        this.messagingService = messagingService;
         this.mapper = mapper;
     }
-
     
     @Override
     public void send(ProcessRequest data) {
@@ -39,7 +34,7 @@ public class ProcessProducer implements MessageProducer {
                     )
             );
         }
-//        template.convertAndSend(EXCHANGE_NAME, "", dataAsJsonString); 
+        messagingService.addToQueue(dataAsJsonString);
     }
     
 }

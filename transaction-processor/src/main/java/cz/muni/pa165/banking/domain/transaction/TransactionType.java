@@ -1,13 +1,15 @@
 package cz.muni.pa165.banking.domain.transaction;
 
 public enum TransactionType {
-    
-    WITHDRAW,
+
+    WITHDRAWAL,
     
     DEPOSIT,
 
-    CROSS_ACCOUNT,
+    TRANSFER,
     
-    SCHEDULED
+    SCHEDULED,
+    
+    REFUND
     
 }

@@ -2,43 +2,81 @@ package cz.muni.pa165.banking.domain.process;
 
 import cz.muni.pa165.banking.domain.process.status.Status;
 import cz.muni.pa165.banking.domain.process.status.StatusInformation;
+import jakarta.persistence.Entity;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
-// @Entity
+@Entity
 public class Process {
     
-    private final UUID uuid;
+    private UUID uuid;
     
     private StatusInformation currentStatus;
     
-    Process() {
-        uuid = UUID.randomUUID();
-        currentStatus = new StatusInformation(Instant.now(), Status.CREATED, "Process created, waiting for processing.");
+    public static Process createNew() {
+        Process process = new Process();
+        process.uuid = UUID.randomUUID();
+        process.currentStatus = new StatusInformation(Instant.now(), Status.CREATED, "Process created, waiting for processing.");
+        
+        return process;
     }
+
+    @Deprecated // hibernate
+    public Process() {}
 
     /**
      * Return a copy of Process UUID, ensuring the UUID is not modified or replaced. 
      */
-    public UUID uuid() {
+    public UUID getUuid() {
         return UUID.fromString(uuid.toString());
+    }
+
+    @Deprecated // hibernate
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
     
     public Instant getWhen() {
-        return currentStatus.when();
+        return currentStatus.getWhen();
     }
     
     public Status getStatus() {
-        return currentStatus.status();
+        return currentStatus.getStatus();
     }
     
-    public String getStatusInformation() {
-        return currentStatus.information();
+    public String getInformation() {
+        return currentStatus.getInformation();
     }
-    
+
+    @Deprecated // hibernate
+    public StatusInformation getCurrentStatus() {
+        return currentStatus;
+    }
+    @Deprecated // hibernate
     void setCurrentStatus(StatusInformation information) {
         currentStatus = information;
     }
-    
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Process process = (Process) o;
+        return Objects.equals(getUuid(), process.getUuid()) && Objects.equals(getCurrentStatus(), process.getCurrentStatus());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUuid(), getCurrentStatus());
+    }
+
+    @Override
+    public String toString() {
+        return "Process{" +
+                "uuid=" + uuid +
+                ", currentStatus=" + currentStatus +
+                '}';
+    }
 }

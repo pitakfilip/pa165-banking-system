@@ -10,8 +10,10 @@ import cz.muni.pa165.banking.domain.process.repository.ProcessTransactionReposit
 import cz.muni.pa165.banking.domain.process.status.Status;
 import cz.muni.pa165.banking.domain.process.status.StatusInformation;
 import cz.muni.pa165.banking.domain.remote.AccountService;
+import cz.muni.pa165.banking.exception.CustomException;
 import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import cz.muni.pa165.banking.exception.UnexpectedValueException;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -25,7 +27,7 @@ abstract class ProcessHandler {
                       ProcessRepository processRepository,
                       ProcessTransactionRepository processTransactionRepository,
                       AccountService accountService,
-                      CurrencyConverter currencyConverter) {
+                      CurrencyConverter currencyConverter, TransactionTemplate transactionTemplate) {
         
         Process process = processRepository.findById(processUuid);
         validateProcess(process);
@@ -40,14 +42,19 @@ abstract class ProcessHandler {
         RuntimeException thrownException = null;
         try {
             evaluate(processTransaction, accountService, currencyConverter);
-        } catch (RuntimeException e) {
+        } catch (CustomException e) {
             newStatus = Status.FAILED;
             message = e.getMessage();
             thrownException = e;
         }
-        
-        ProcessOperations.changeState(process, new StatusInformation(Instant.now(), newStatus, message));
-        processRepository.save(process);
+
+        Status finalNewStatus = newStatus;
+        String finalMessage = message;
+        ProcessOperations.changeState(process, new StatusInformation(Instant.now(), finalNewStatus, finalMessage));
+        transactionTemplate.execute(status -> {
+            processRepository.save(process);  
+            return null;
+        });
 
         if (thrownException != null) {
             throw thrownException;
@@ -58,11 +65,11 @@ abstract class ProcessHandler {
         if (process.getStatus().equals(Status.FAILED)) {
             throw new UnexpectedValueException(
                     "Process already closed, ended with failure",
-                    "Failure information: " + process.getStatusInformation()
+                    "Failure information: " + process.getInformation()
             );
         }
         if (process.getStatus().equals(Status.PROCESSED)) {
-            throw new UnexpectedValueException("Process already finalized, ended successfully", process.getStatusInformation());
+            throw new UnexpectedValueException("Process already finalized, ended successfully", process.getInformation());
         }
     }
 

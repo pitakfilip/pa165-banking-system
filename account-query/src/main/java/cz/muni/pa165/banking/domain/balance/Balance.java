@@ -6,32 +6,44 @@ import cz.muni.pa165.banking.domain.transaction.TransactionType;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Martin Mojzis
  */
+@Entity
+@Table(name = "balance")
 public class Balance {
 
-    private final String accountId;
+    @Id
+    @NotNull
+    @Column(name = "balance_id")
+    private String accountId;
 
+    @Column(name = "amount")
     private BigDecimal amount;
 
-    private final List<Transaction> transactionList;
+    @OneToMany(mappedBy = "balance")
+    private List<Transaction> transactionList = new ArrayList<>();
 
-    public Balance(String userId) {
+    public Balance(String accountId) {
         this.amount = new BigDecimal(0);
-        this.transactionList = new ArrayList<>();
-        this.accountId = userId;
+        this.accountId = accountId;
+    }
+    public Balance() {
     }
 
-    public void addTransaction(BigDecimal amount, TransactionType type, UUID processId) {
-        transactionList.add(new Transaction(type, amount,
-                OffsetDateTime.now(), processId));
+    @Transactional
+    public Transaction addTransaction(BigDecimal amount, TransactionType type, UUID processId) {
         this.amount = this.amount.add(amount);
+        Transaction tr = new Transaction(type, amount,
+                OffsetDateTime.now(), processId, this);
+        transactionList.add(tr);
+        return tr;
     }
 
     public BigDecimal getAmount() {
@@ -39,7 +51,7 @@ public class Balance {
     }
 
     public List<Transaction> getTransactions() {
-        return transactionList;
+        return transactionList.stream().toList();
     }
 
     public Transaction getTransaction(UUID pid) throws RuntimeException {
@@ -55,14 +67,17 @@ public class Balance {
         return !result.isEmpty();
     }
 
+    @Transactional
     public StatisticalReport getReport(OffsetDateTime after, OffsetDateTime before) {
         return new StatisticalReport(this.getData(after, before));
     }
 
+    @Transactional
     public List<Transaction> getData(OffsetDateTime after, OffsetDateTime before) {
         return transactionList.stream().filter(a -> a.getDate().isAfter(after) && a.getDate().isBefore(before)).toList();
     }
 
+    @Transactional
     public List<Transaction> getData(OffsetDateTime after, OffsetDateTime before, BigDecimal amountMin, BigDecimal amountMax, TransactionType type) {
         List<Transaction> result = this.getData(after, before);
         return result.stream()
@@ -70,6 +85,7 @@ public class Balance {
                 .toList();
     }
 
+    @Transactional
     public List<Transaction> getData(OffsetDateTime after, OffsetDateTime before, BigDecimal amountMin, BigDecimal amountMax) {
         List<Transaction> result = this.getData(after, before);
         return result.stream()
@@ -80,10 +96,35 @@ public class Balance {
         return accountId;
     }
 
+    @Transactional
     public List<Transaction> getData(OffsetDateTime from, OffsetDateTime to, TransactionType type) {
         List<Transaction> result = this.getData(from, to);
         return result.stream()
                 .filter(a -> a.getType() == type)
                 .toList();
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Balance balance)) return false;
+        return Objects.equals(accountId, balance.accountId) && Objects.equals(amount, balance.amount);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(accountId, amount);
+    }
+
+    @Override
+    public String toString() {
+        return "Balance{" +
+                "accountId='" + accountId + '\'' +
+                ", amount=" + amount +
+                '}';
     }
 }

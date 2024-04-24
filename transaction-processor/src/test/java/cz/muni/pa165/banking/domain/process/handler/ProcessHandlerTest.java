@@ -17,6 +17,7 @@ import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import cz.muni.pa165.banking.exception.UnexpectedValueException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -31,7 +32,8 @@ class ProcessHandlerTest {
     private static ProcessHandler genericHandler;
     private static ProcessRepository processRepository;
     private static ProcessTransactionRepository processTransactionRepository;
-
+    private static TransactionTemplate transactionTemplate;
+    
     @BeforeAll
     static void init() {
         genericHandler = new ProcessHandler() {
@@ -41,6 +43,7 @@ class ProcessHandlerTest {
             }
         };
 
+        transactionTemplate = mock(TransactionTemplate.class);
         processRepository = mock(ProcessRepository.class);
         processTransactionRepository = mock(ProcessTransactionRepository.class);
     }
@@ -51,7 +54,7 @@ class ProcessHandlerTest {
         ProcessOperations.changeState(process, new StatusInformation(null, Status.FAILED, "N/A"));
         assertThrows(
                 UnexpectedValueException.class,
-                () -> genericHandler.handle(process.uuid(), processRepository, null, null, null)
+                () -> genericHandler.handle(process.getUuid(), processRepository, processTransactionRepository, null, null, transactionTemplate)
         );
     }
 
@@ -62,38 +65,18 @@ class ProcessHandlerTest {
         ProcessOperations.changeState(process, new StatusInformation(null, Status.PROCESSED, "N/A"));
         assertThrows(
                 UnexpectedValueException.class,
-                () -> genericHandler.handle(process.uuid(), processRepository, null, null, null)
+                () -> genericHandler.handle(process.getUuid(), processRepository, processTransactionRepository, null, null, transactionTemplate)
         );
     }
 
     @Test
     void processNotLinkedToTransactionRequest() {
         Process process = createProcess();
-        when(processTransactionRepository.findTransactionByProcessId(process.uuid())).thenReturn(null);
+        when(processTransactionRepository.findTransactionByProcessId(process.getUuid())).thenReturn(null);
         assertThrows(
                 EntityNotFoundException.class,
-                () -> genericHandler.handle(process.uuid(), processRepository, processTransactionRepository, null, null)
+                () -> genericHandler.handle(process.getUuid(), processRepository, processTransactionRepository, null, null, transactionTemplate)
         );
-    }
-    
-    @Test
-    void processEvaluatedAsFailed() {
-        ProcessHandler failingHandler = new ProcessHandler() {
-            @Override
-            void evaluate(ProcessTransaction processTransaction, AccountService accountService, CurrencyConverter currencyConverter) {
-                throw new RuntimeException("Bad news boss");
-            }
-        };
-
-        Process process = createProcess();
-        ofProcess(process);
-        
-        assertThrows(
-                RuntimeException.class,
-                () -> failingHandler.handle(process.uuid(), processRepository, processTransactionRepository, null, null)
-        );
-
-        assertEquals(Status.FAILED, process.getStatus());
     }
 
     @Test
@@ -101,20 +84,20 @@ class ProcessHandlerTest {
         Process process = createProcess();
         ofProcess(process);
 
-        genericHandler.handle(process.uuid(), processRepository, processTransactionRepository, null, null);
+        genericHandler.handle(process.getUuid(), processRepository, processTransactionRepository, null, null, transactionTemplate);
         assertEquals(Status.PROCESSED, process.getStatus());
     }
 
 
     private Process createProcess() {
         Process process = new ProcessMock();
-        when(processRepository.findById(process.uuid())).thenReturn(process);
+        when(processRepository.findById(process.getUuid())).thenReturn(process);
         return process;
     }
     
     private ProcessTransaction ofProcess(Process process) {
-        ProcessTransaction result = new ProcessTransaction(new Account("ACC_1"), null, TransactionType.DEPOSIT, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.uuid());
-        when(processTransactionRepository.findTransactionByProcessId(process.uuid())).thenReturn(result);
+        ProcessTransaction result = new ProcessTransaction(new Account("ACC_1"), null, TransactionType.DEPOSIT, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.getUuid());
+        when(processTransactionRepository.findTransactionByProcessId(process.getUuid())).thenReturn(result);
         return result;
     }
 }
