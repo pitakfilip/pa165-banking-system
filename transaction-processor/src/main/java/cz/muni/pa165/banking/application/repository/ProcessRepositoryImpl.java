@@ -1,7 +1,6 @@
 package cz.muni.pa165.banking.application.repository;
 
 import cz.muni.pa165.banking.domain.process.Process;
-import cz.muni.pa165.banking.domain.process.ProcessOperations;
 import cz.muni.pa165.banking.domain.process.repository.ProcessRepository;
 import cz.muni.pa165.banking.domain.process.status.Status;
 import cz.muni.pa165.banking.exception.EntityNotFoundException;

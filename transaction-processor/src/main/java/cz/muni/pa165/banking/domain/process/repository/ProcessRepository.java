@@ -3,7 +3,6 @@ package cz.muni.pa165.banking.domain.process.repository;
 import cz.muni.pa165.banking.domain.process.Process;
 import cz.muni.pa165.banking.domain.process.status.Status;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
