@@ -1,4 +1,4 @@
-# PA165 Banking System
+ # PA165 Banking System
 
 <p>
 The Bank Management System is an application that offers a solution for managing bank accounts, transactions, and customer information. 
@@ -9,6 +9,16 @@ the system will automatically exchange the currencies. The system also provides 
 customer accounts and monitor all customers bank transactions. The system also provides a statistical module for employees, 
 which can report total and average (per account) transactions (deposits, withdrawals, outgoing and incoming payments) in a selected date range.
 </p>
+
+## Run Apps
+In order to start the applications please follow the following instructions:
+1. Run `./.scripts/build_artifacts.sh`
+2. Run `./.scripts/build_images.sh`
+3. Run `docker-compose up -d` 
+
+This builds all the required maven artifacts in the correct order, creates images on your local machine and then runs the specified
+docker-compose file.
+
 
 ## Use case diagram
 <img src="./.documentation/useCaseDiagram.png" width="800">
