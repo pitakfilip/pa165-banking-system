@@ -36,18 +36,18 @@ public interface DtoMapper {
     default ProcessDto map(Process source) {
         ProcessDto dto = new ProcessDto();
         
-        dto.setIdentifier(source.uuid());
+        dto.setIdentifier(source.getUuid());
         dto.setStatus(map(source.getStatus()));
-        dto.setInfo(source.getStatusInformation());
+        dto.setInfo(source.getInformation());
         
         return dto;
     }
     
     default ProcessDetailDto map(Process process, Transaction transaction) {
         ProcessDetailDto dto = new ProcessDetailDto();
-        dto.identifier(process.uuid());
+        dto.identifier(process.getUuid());
         dto.status(map(process.getStatus()));
-        dto.info(process.getStatusInformation());
+        dto.info(process.getInformation());
         dto.source(map(transaction.getSource()));
         
         if (transaction.getTarget() != null) {

@@ -23,7 +23,7 @@ public class ProcessFactory {
 
 
     public Process create(Transaction transaction, MessageProducer messageProducer) {
-        Process newProcess = new Process();
+        Process newProcess = Process.createNew();
         processRepository.save(newProcess);
 
         ProcessTransaction assignedTransaction = new ProcessTransaction(
@@ -32,11 +32,11 @@ public class ProcessFactory {
                 transaction.getType(),
                 transaction.getMoney(),
                 transaction.getDetail(),
-                newProcess.uuid()
+                newProcess.getUuid()
         );
         processTransactionRepository.save(assignedTransaction);
         
-        messageProducer.send(new ProcessRequest(newProcess.uuid(), transaction.getType()));
+        messageProducer.send(new ProcessRequest(newProcess.getUuid(), transaction.getType()));
         
         return newProcess;
     }

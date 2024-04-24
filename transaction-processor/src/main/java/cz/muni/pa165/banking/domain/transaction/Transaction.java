@@ -3,6 +3,8 @@ package cz.muni.pa165.banking.domain.transaction;
 import cz.muni.pa165.banking.domain.account.Account;
 import cz.muni.pa165.banking.domain.money.Money;
 
+import java.util.Objects;
+
 public class Transaction {
     
     private Account source;
@@ -20,7 +22,8 @@ public class Transaction {
         // Hibernate
     }
     
-    public Transaction(Account source, Account target, TransactionType type, Money amount, String detail) {
+    public Transaction(Account source, Account target,
+                       TransactionType type, Money amount, String detail) {
         this.source = source;
         this.target = target;
         this.type = type;
@@ -73,4 +76,26 @@ public class Transaction {
         this.detail = detail;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Transaction that)) return false;
+        return Objects.equals(getSource(), that.getSource()) && Objects.equals(getTarget(), that.getTarget()) && getType() == that.getType() && Objects.equals(getMoney(), that.getMoney()) && Objects.equals(getDetail(), that.getDetail());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSource(), getTarget(), getType(), getMoney(), getDetail());
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "source=" + source +
+                ", target=" + target +
+                ", type=" + type +
+                ", money=" + money +
+                ", detail='" + detail + '\'' +
+                '}';
+    }
 }

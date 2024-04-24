@@ -1,7 +1,10 @@
 package cz.muni.pa165.banking.domain.process.repository;
 
 import cz.muni.pa165.banking.domain.process.Process;
+import cz.muni.pa165.banking.domain.process.status.Status;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 public interface ProcessRepository {
@@ -11,5 +14,9 @@ public interface ProcessRepository {
     Process findById(UUID uuid);
     
     void save(Process process);
+    
+    List<Process> findProcessOfStatus(Status status);
+    
+    List<Process> findProcessesOfStatusUptoDate(Status status, LocalDate localDate);
     
 }

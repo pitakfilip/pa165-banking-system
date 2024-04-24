@@ -6,15 +6,16 @@ import cz.muni.pa165.banking.domain.account.repository.AccountRepository;
 import cz.muni.pa165.banking.domain.scheduled.ScheduledPayment;
 import cz.muni.pa165.banking.domain.scheduled.ScheduledPaymentProjection;
 import cz.muni.pa165.banking.domain.scheduled.recurrence.Recurrence;
+import cz.muni.pa165.banking.domain.scheduled.recurrence.RecurrenceQuerySpecificationBuilder;
 import cz.muni.pa165.banking.domain.scheduled.recurrence.RecurrenceType;
 import cz.muni.pa165.banking.domain.scheduled.repository.ScheduledPaymentRepository;
 import cz.muni.pa165.banking.domain.user.repository.UserRepository;
 import cz.muni.pa165.banking.exception.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -74,6 +75,7 @@ public class AccountService {
         newScheduledPayment.setSourceAccountId(senderAccount.getId());
         newScheduledPayment.setTargetAccountId(receiverAccount.getId());
         newScheduledPayment.setAmount(amount);
+        newScheduledPayment.setCurrencyCode(senderAccount.getCurrency().getCurrencyCode());
 
         Recurrence recurrence = new Recurrence();
         recurrence.setType(recurrenceType);
@@ -109,4 +111,7 @@ public class AccountService {
                 .toList();
     }
 
+    public List<ScheduledPayment> scheduledPaymentsOfDay(LocalDate date) {
+        return scheduledPaymentsRepository.findAll(RecurrenceQuerySpecificationBuilder.forDay(date));
+    }
 }

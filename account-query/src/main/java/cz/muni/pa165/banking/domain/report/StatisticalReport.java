@@ -19,7 +19,7 @@ public class StatisticalReport {
 
     private final TransactionStatistics withdrawalAmount = new TransactionStatistics(TransactionType.WITHDRAW);
 
-    private final TransactionStatistics crossAccountAmount = new TransactionStatistics(TransactionType.CROSS_ACCOUNT_PAYMENT);
+    private final TransactionStatistics crossAccountAmount = new TransactionStatistics(TransactionType.TRANSFER);
 
     private final TransactionStatistics creditAmount = new TransactionStatistics(TransactionType.CREDIT);
 
@@ -49,7 +49,7 @@ public class StatisticalReport {
             case REFUND -> refundAmount.AddAmount(transaction.getAmount());
             case DEPOSIT -> depositAmount.AddAmount(transaction.getAmount());
             case WITHDRAW -> withdrawalAmount.AddAmount(transaction.getAmount());
-            case CROSS_ACCOUNT_PAYMENT -> crossAccountAmount.AddAmount(transaction.getAmount());
+            case TRANSFER -> crossAccountAmount.AddAmount(transaction.getAmount());
         }
     }
 

@@ -20,10 +20,10 @@ VALUES (3656018305580485508, 'a5dc3241-71c9-4594-8a07-083c9c2b7b1c', 1, 1000, 0,
        (994, 'ACC4', 1, 1000, 1, 'CZK');
 
 
-INSERT INTO scheduled_payment (id, source_account_id, target_account_id, amount, recurrence_type, recurrence_payment_day)
+INSERT INTO scheduled_payment (id, source_account_id, target_account_id, amount, currency_code, recurrence_type, recurrence_payment_day)
 VALUES
-    (991, 2, 3, 100, 0, 2),
-    (992, 2, 3, 200, 0, 3),
-    (993, 3, 2, 1200, 1, 15);
+    (991, 2, 3, 100, 'EUR', 0, 2),
+    (992, 2, 3, 200, 'EUR', 0, 3),
+    (993, 3, 2, 1200, 'EUR', 1, 15);
 
 

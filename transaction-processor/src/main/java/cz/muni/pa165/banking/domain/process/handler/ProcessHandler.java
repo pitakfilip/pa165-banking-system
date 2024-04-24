@@ -58,11 +58,11 @@ abstract class ProcessHandler {
         if (process.getStatus().equals(Status.FAILED)) {
             throw new UnexpectedValueException(
                     "Process already closed, ended with failure",
-                    "Failure information: " + process.getStatusInformation()
+                    "Failure information: " + process.getInformation()
             );
         }
         if (process.getStatus().equals(Status.PROCESSED)) {
-            throw new UnexpectedValueException("Process already finalized, ended successfully", process.getStatusInformation());
+            throw new UnexpectedValueException("Process already finalized, ended successfully", process.getInformation());
         }
     }
 

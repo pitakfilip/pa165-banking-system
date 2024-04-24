@@ -6,6 +6,7 @@ import cz.muni.pa165.banking.domain.transaction.Transaction;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import jakarta.persistence.Entity;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -35,5 +36,24 @@ public class ProcessTransaction extends Transaction {
     @Deprecated // hibernate
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ProcessTransaction that)) return false;
+        return Objects.equals(getUuid(), that.getUuid());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUuid());
+    }
+
+    @Override
+    public String toString() {
+        return "ProcessTransaction{" +
+                "uuid=" + uuid +
+                "} " + super.toString();
     }
 }

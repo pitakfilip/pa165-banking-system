@@ -45,6 +45,8 @@ public interface DtoMapper {
         return result;
     }
     
+    ScheduledPaymentDto map(ScheduledPayment scheduledPayment);
+    
     ScheduledPaymentType map(RecurrenceType type);
 
     RecurrenceType map(ScheduledPaymentType type);

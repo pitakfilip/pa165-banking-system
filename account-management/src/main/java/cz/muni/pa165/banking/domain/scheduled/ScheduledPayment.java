@@ -22,6 +22,9 @@ public class ScheduledPayment {
     
     private BigDecimal amount;
 
+    @Column(name = "currency_code")
+    private String currencyCode;
+    
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "type", column = @Column(name = "recurrence_type")),
@@ -63,6 +66,14 @@ public class ScheduledPayment {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
+
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
     }
 
     public Recurrence getRecurrence() {

@@ -14,7 +14,7 @@ import java.util.Currency;
 /**
  * Handler for transaction of type ${@link cz.muni.pa165.banking.domain.transaction.TransactionType#SCHEDULED}.
  * Customer may send a specified amount of money to a foreign account automatically by setting a scheduled payment.
- * The implementation resembles ${@link CrossAccountHandler#evaluate} with minor variations.
+ * The implementation resembles ${@link TransferHandler#evaluate} with minor variations.
  */
 public class ScheduledHandler extends ProcessHandler {
     
@@ -46,8 +46,8 @@ public class ScheduledHandler extends ProcessHandler {
             targetAmount = currencyConverter.convertTo(currency, targetAccountCurrency, targetAmount);
         }
 
-        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.SCHEDULED, sourceAmount, source, processTransaction.getDetail());
-        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.SCHEDULED, targetAmount, target, processTransaction.getDetail());
+        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.SCHEDULED, sourceAmount, source);
+        accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.SCHEDULED, targetAmount, target);
     }
 
 }

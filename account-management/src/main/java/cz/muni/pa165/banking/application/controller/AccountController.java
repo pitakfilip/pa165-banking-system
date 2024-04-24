@@ -1,15 +1,13 @@
 package cz.muni.pa165.banking.application.controller;
 
 import cz.muni.pa165.banking.account.management.AccountApi;
-import cz.muni.pa165.banking.account.management.dto.AccountDto;
-import cz.muni.pa165.banking.account.management.dto.NewAccountDto;
-import cz.muni.pa165.banking.account.management.dto.ScheduledPaymentDto;
-import cz.muni.pa165.banking.account.management.dto.ScheduledPaymentsDto;
+import cz.muni.pa165.banking.account.management.dto.*;
 import cz.muni.pa165.banking.application.facade.AccountFacade;
-import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDate;
 
 @RestController
 public class AccountController implements AccountApi {
@@ -37,13 +35,13 @@ public class AccountController implements AccountApi {
 
     @Override
     public ResponseEntity<ScheduledPaymentsDto> getScheduledPayments(String accountNumber) {
-        ScheduledPaymentsDto payments;
-        try{
-            payments = accountFacade.findScheduledPaymentsByNumber(accountNumber);
-        }
-        catch (EntityNotFoundException  e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        ScheduledPaymentsDto payments = accountFacade.findScheduledPaymentsByNumber(accountNumber);
+        return ResponseEntity.ok(payments);
+    }
+
+    @Override
+    public ResponseEntity<ScheduledPaymentsDto> getScheduledPaymentsOf(LocalDate date) {
+        ScheduledPaymentsDto payments = accountFacade.scheduledPaymentsOfDay(date);
         return ResponseEntity.ok(payments);
     }
 

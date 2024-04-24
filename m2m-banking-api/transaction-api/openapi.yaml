@@ -62,6 +62,28 @@ paths:
         '404':
           description: Resource or process by UUID not found
 
+  /transaction/v1/scheduled/trigger:
+    post:
+      tags:
+        - Transaction
+      operationId: executeSchedulePayments
+      summary: Trigger scheduled payments
+      description: |
+        Manual execution of scheduled payments for a given date.
+        The input date is optional, if none is provided then the current day is used.
+      parameters:
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+          required: false
+      responses: 
+        '200':
+          description: Executed
+        '500':
+          description: Failure
+
   /transaction/v1/revert:
     post:
       tags:
@@ -89,6 +111,119 @@ paths:
           description: Process found by UUID but not in expected state (PROCESSED)
         '404':
           description: Resource or process by UUID not found
+  
+  /process/v1/{uuid}/status:
+    get:
+      tags:
+        - Process
+      operationId: getProcessStatus
+      summary: Process Status
+      description: |
+        Method finds an existing process for a transaction request, returning all information about it's state
+        and further information regarding errors.
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessStatusDto'
+        '404':
+          description: Process by UUID not found
+  
+  /processes/v1/{status}:
+    get:
+      tags: 
+        - Process
+      operationId: getProcessesOfState
+      summary: Processes in a state
+      description: Find a collection of Processes in a defined state
+      parameters:
+        - in: path
+          name: status
+          required: true
+          schema:
+            $ref: '#/components/schemas/StatusDto'
+      responses:
+        '200':
+          description: OK
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessStatusListDto'
+  
+  /processes/v1/resolve/threshold:
+    get:
+      tags:
+        - Process
+      operationId: getDefaultThreshold
+      summary: Process resolution date threshold
+      description: Get the default threshold used by the system to mark unresolved processes as failed
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ThresholdDto'
+  
+  /processes/v1/resolve:
+    get:
+      tags:
+        - Process
+      operationId: getUnresolvedProcesses
+      summary: Unresolved processes
+      description: | 
+        Get a collection of unresolved processes to a given date. If no date is provided, the default threshold is used. 
+      parameters:
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+          required: false
+      responses: 
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessStatusListDto'
+    patch:
+      tags:
+        - Process
+      operationId: resolveProcesses
+      summary: Fail unresolved processes
+      description: |
+        Mark unresolved processes as failed. The input date marks as the threshold below which processes
+        in the state CREATED or PENDING shall be marked as resolved by failure. The provided date must be
+        before the current day. If no date is provided, the default threshold is used.
+        Method returns a collection of Process UUID's, which have been resolved.
+      parameters:
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+          required: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: string
+                  format: uuid
+
 
 components: 
   schemas: 
@@ -99,6 +234,7 @@ components:
         - DEPOSIT
         - TRANSFER
         - SCHEDULED
+        - REFUND
       description: Enumaration defining a type for a transaction. Each type may have different certain implementations and validations.
       
     AccountDto:
@@ -156,4 +292,43 @@ components:
       allOf:
         - $ref: '#/components/schemas/ProcessDto'
         - $ref: '#/components/schemas/TransactionDto'
-        
+    
+    StatusDetailDto:
+      type: object
+      properties: 
+        created:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/StatusDto'
+        information:
+          type: string
+      
+    ProcessStatusDto:
+      type: object
+      properties:
+        identifier:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/StatusDetailDto'
+
+    ProcessStatusListDto:
+      type: object
+      properties: 
+        when:
+          type: string
+          format: date-time
+        processes:
+          type: array
+          items: 
+            $ref: '#/components/schemas/ProcessStatusDto'
+            
+    ThresholdDto:
+      type: object
+      properties:
+        message:
+          type: string
+        currentThreshold:
+          type: string
+          format: date

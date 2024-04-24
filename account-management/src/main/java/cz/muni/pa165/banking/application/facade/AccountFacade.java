@@ -1,9 +1,6 @@
 package cz.muni.pa165.banking.application.facade;
 
-import cz.muni.pa165.banking.account.management.dto.AccountDto;
-import cz.muni.pa165.banking.account.management.dto.NewAccountDto;
-import cz.muni.pa165.banking.account.management.dto.ScheduledPaymentDto;
-import cz.muni.pa165.banking.account.management.dto.ScheduledPaymentsDto;
+import cz.muni.pa165.banking.account.management.dto.*;
 import cz.muni.pa165.banking.application.mapper.DtoMapper;
 import cz.muni.pa165.banking.application.service.AccountService;
 import cz.muni.pa165.banking.domain.account.Account;
@@ -12,7 +9,9 @@ import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import cz.muni.pa165.banking.exception.UnexpectedValueException;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Currency;
+import java.util.List;
 
 
 @Component
@@ -59,5 +58,14 @@ public class AccountFacade {
 
     public AccountDto findByAccountNumber(String accountNumber) {
         return mapper.map(accountService.findByNumber(accountNumber));
+    }
+
+    public ScheduledPaymentsDto scheduledPaymentsOfDay(LocalDate date) {
+        List<ScheduledPayment> payments = accountService.scheduledPaymentsOfDay(date);
+        ScheduledPaymentsDto result = new ScheduledPaymentsDto();
+        result.setScheduledPayments(payments.stream()
+                .map(mapper::map)
+                .toList());
+        return result;
     }
 }

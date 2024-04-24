@@ -1,25 +1,34 @@
 package cz.muni.pa165.banking.application.service;
 
+import cz.muni.pa165.banking.application.proxy.rate.ExchangeRateResponseProcessor;
+import cz.muni.pa165.banking.application.proxy.rate.ExchangeRatesApi;
 import cz.muni.pa165.banking.domain.money.exchange.ExchangeRateService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Currency;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class ExchangeRateServiceImpl implements ExchangeRateService {
     
-    // TODO call external API containing current information about exchange rates -> Milestone2
-    //  either actual API containing real data, or custom 'mock' API containing static data
+    private final ExchangeRatesApi exchangeRatesApi;
+    
+    Map<Currency, Map<Currency, BigDecimal>> exchangeRates = new ConcurrentHashMap<>();
 
-//    private final ExchangeRatesApi proxy;
-
-//    public ExchangeRateServiceImpl(ExchangeRatesApi proxy) {
-//        this.proxy = proxy;
-//    }
+    public ExchangeRateServiceImpl(ExchangeRatesApi exchangeRatesApi) {
+        this.exchangeRatesApi = exchangeRatesApi;
+    }
 
     @Override
     public BigDecimal getRate(Currency base, Currency target) {
-        return BigDecimal.ONE;
+        if (!exchangeRates.containsKey(base)) {
+            Map<String, Object> response = exchangeRatesApi.getRatesOfCurrency(base.getCurrencyCode());
+            exchangeRates.put(base, ExchangeRateResponseProcessor.process(response));
+        }
+        
+        return exchangeRates.get(base).get(target);
     }
+
 }

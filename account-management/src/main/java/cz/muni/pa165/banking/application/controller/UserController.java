@@ -4,7 +4,6 @@ import cz.muni.pa165.banking.account.management.UserApi;
 import cz.muni.pa165.banking.account.management.dto.NewUserDto;
 import cz.muni.pa165.banking.account.management.dto.UserDto;
 import cz.muni.pa165.banking.application.facade.UserFacade;
-import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,13 +24,7 @@ public class UserController implements UserApi{
 
     @Override
     public ResponseEntity<UserDto> findUserById(Long userId) {
-        UserDto user;
-        try{
-            user = userFacade.findById(userId);
-        }
-        catch (EntityNotFoundException e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        UserDto user = userFacade.findById(userId);
         return ResponseEntity.ok(user);
     }    
     

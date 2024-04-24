@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS scheduled_payment
     source_account_id      BIGINT,
     target_account_id      BIGINT,
     amount                 DECIMAL,
+    currency_code          VARCHAR(3),
     recurrence_type        VARCHAR(50),
     recurrence_payment_day INTEGER
 );
