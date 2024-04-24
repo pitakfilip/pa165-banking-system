@@ -1,7 +1,9 @@
-package cz.muni.pa165.banking.domain.scheduled.recurrence;
+package cz.muni.pa165.banking.domain.scheduled.repository;
 
 import cz.muni.pa165.banking.domain.scheduled.ScheduledPayment;
-import cz.muni.pa165.banking.domain.scheduled.repository.ScheduledPaymentRepository;
+import cz.muni.pa165.banking.domain.scheduled.recurrence.Recurrence;
+import cz.muni.pa165.banking.domain.scheduled.recurrence.RecurrenceQuerySpecificationBuilder;
+import cz.muni.pa165.banking.domain.scheduled.recurrence.RecurrenceType;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,29 +18,66 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-class RecurrenceQuerySpecificationBuilderTest {
+class ScheduledPaymentRepositoryTest {
 
     @Autowired
     private ScheduledPaymentRepository repository;
     
     @BeforeAll
     public static void initDb(@Autowired ScheduledPaymentRepository repository) {
-        repository.save(ScheduledPaymentBuilder.create(RecurrenceType.MONTHLY, 1));
-        repository.save(ScheduledPaymentBuilder.create(RecurrenceType.MONTHLY, 2));
-        repository.save(ScheduledPaymentBuilder.create(RecurrenceType.MONTHLY, 3));
-        repository.save(ScheduledPaymentBuilder.create(RecurrenceType.MONTHLY, 3));
-        repository.save(ScheduledPaymentBuilder.create(RecurrenceType.MONTHLY, 3));
-        repository.save(ScheduledPaymentBuilder.create(RecurrenceType.MONTHLY, 31));
-        repository.save(ScheduledPaymentBuilder.create(RecurrenceType.MONTHLY, 30));
-        repository.save(ScheduledPaymentBuilder.create(RecurrenceType.MONTHLY, 29));
-        repository.save(ScheduledPaymentBuilder.create(RecurrenceType.MONTHLY, 28));
-        repository.save(ScheduledPaymentBuilder.create(RecurrenceType.MONTHLY, 27));
+        repository.save(ScheduledPaymentBuilder.create(1L, RecurrenceType.MONTHLY, 1));
+        repository.save(ScheduledPaymentBuilder.create(1L, RecurrenceType.MONTHLY, 2));
+        repository.save(ScheduledPaymentBuilder.create(2L, RecurrenceType.MONTHLY, 3));
+        repository.save(ScheduledPaymentBuilder.create(2L, RecurrenceType.MONTHLY, 3));
+        repository.save(ScheduledPaymentBuilder.create(2L, RecurrenceType.MONTHLY, 3));
+        repository.save(ScheduledPaymentBuilder.create(2L, RecurrenceType.MONTHLY, 31));
+        repository.save(ScheduledPaymentBuilder.create(2L, RecurrenceType.MONTHLY, 30));
+        repository.save(ScheduledPaymentBuilder.create(2L, RecurrenceType.MONTHLY, 29));
+        repository.save(ScheduledPaymentBuilder.create(2L, RecurrenceType.MONTHLY, 28));
+        repository.save(ScheduledPaymentBuilder.create(2L, RecurrenceType.MONTHLY, 27));
 
-        repository.save(ScheduledPaymentBuilder.create(RecurrenceType.WEEKLY, 1));
-        repository.save(ScheduledPaymentBuilder.create(RecurrenceType.WEEKLY, 1));
-        repository.save(ScheduledPaymentBuilder.create(RecurrenceType.WEEKLY, 3));
-        repository.save(ScheduledPaymentBuilder.create(RecurrenceType.WEEKLY, 3));
-        repository.save(ScheduledPaymentBuilder.create(RecurrenceType.WEEKLY, 3));
+        repository.save(ScheduledPaymentBuilder.create(2L, RecurrenceType.WEEKLY, 1));
+        repository.save(ScheduledPaymentBuilder.create(2L, RecurrenceType.WEEKLY, 1));
+        repository.save(ScheduledPaymentBuilder.create(2L, RecurrenceType.WEEKLY, 3));
+        repository.save(ScheduledPaymentBuilder.create(2L, RecurrenceType.WEEKLY, 3));
+        repository.save(ScheduledPaymentBuilder.create(2L, RecurrenceType.WEEKLY, 3));
+    }
+
+    @Test
+    void findAll_ReturnsAllPayments(){
+        // When
+        List<ScheduledPayment> foundPayments = repository.findAll();
+
+        // Then
+        assertEquals(15, foundPayments.size());
+    }
+
+    @Test
+    void findBySourceAccountId_ValidId_ReturnsPayment() {
+        // Given
+        long validAccountId = 1L;
+
+        // When
+        List<ScheduledPayment> foundPayments = repository.findBySourceAccountId(validAccountId);
+
+        // Then
+        assertNotNull(foundPayments);
+        assertEquals(2, foundPayments.size());
+        assertEquals(1L, foundPayments.get(0).getId());
+        assertEquals(2L, foundPayments.get(1).getId());
+    }
+
+    @Test
+    void findBySourceAccountId_InvalidId_ReturnsEmptyList() {
+        // Given
+        long invalidAccountId = 999L;
+
+        // When
+        List<ScheduledPayment> foundPayments = repository.findBySourceAccountId(invalidAccountId);
+
+        // Then
+        assertNotNull(foundPayments);
+        assertTrue(foundPayments.isEmpty());
     }
     
     @Test
@@ -118,9 +157,10 @@ class RecurrenceQuerySpecificationBuilderTest {
         
         private static long id = 1L;
         
-        static ScheduledPayment create(RecurrenceType type, int paymentDay) {
+        static ScheduledPayment create(Long senderAccountId, RecurrenceType type, int paymentDay) {
             ScheduledPayment result = new ScheduledPayment();
             result.setId(id++);
+            result.setSourceAccountId(senderAccountId);
             Recurrence recurrence = new Recurrence();
             recurrence.setType(type);
             recurrence.setPaymentDay(paymentDay);
@@ -128,7 +168,5 @@ class RecurrenceQuerySpecificationBuilderTest {
             
             return result;
         }
-        
     }
-            
 }

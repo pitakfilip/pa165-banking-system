@@ -11,8 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -27,6 +26,7 @@ class UserServiceTest {
     void createUser_ValidUser_ReturnsUser() {
         // Arrange
         User user = new User();
+        user.setId(1L);
         when(userRepository.save(user)).thenReturn(user);
 
         // Act
@@ -35,6 +35,21 @@ class UserServiceTest {
         // Assert
         assertEquals(user, result);
         verify(userRepository).save(user);
+    }
+
+    @Test
+    void createUser_UserIdExists_ThrowsException() {
+        // Arrange
+        User user = new User();
+        user.setId(1L);
+        when(userRepository.existsById(user.getId())).thenReturn(true);
+
+        // Act & Assert
+        assertThrows(Exception.class, () -> {
+            userService.createUser(user);
+        });
+
+        verify(userRepository, never()).save(user);
     }
 
     @Test

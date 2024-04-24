@@ -67,9 +67,16 @@ public class AccountService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public ScheduledPayment createNewScheduledPayment(String sender, String receiver, BigDecimal amount, RecurrenceType recurrenceType, Integer day) {
+    public ScheduledPayment createNewScheduledPayment(String sender, String receiver, BigDecimal amount, RecurrenceType recurrenceType, Integer day) throws EntityNotFoundException {
         Account senderAccount = findByNumber(sender);
         Account receiverAccount = findByNumber(receiver);
+
+        if (senderAccount == null) {
+            throw new EntityNotFoundException("Account with id: " + senderAccount + " was not found.");
+        }
+        if (receiverAccount == null) {
+            throw new EntityNotFoundException("Account with id: " + receiverAccount + " was not found.");
+        }
 
         ScheduledPayment newScheduledPayment = new ScheduledPayment();
         newScheduledPayment.setSourceAccountId(senderAccount.getId());

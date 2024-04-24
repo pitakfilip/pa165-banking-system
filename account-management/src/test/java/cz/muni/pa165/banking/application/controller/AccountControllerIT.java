@@ -76,7 +76,7 @@ class AccountControllerIT {
     }
 
     @Test
-    void createAccount_userExists_returnsCreated() throws Exception {
+    void createAccount_UserExists_ReturnsCreated() throws Exception {
         when(balanceApi.createBalance(anyString())).thenReturn(ResponseEntity.ok().build());
 
         mockMvc.perform(post("/account")
@@ -92,7 +92,7 @@ class AccountControllerIT {
 
 
     @Test
-    void createAccount_userNotExist_returnsNotFound() throws Exception {
+    void createAccount_UserNotExist_ReturnsNotFound() throws Exception {
         mockMvc.perform(post("/account")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"userId\":3,\"type\":\"SAVING\",\"maxSpendingLimit\":1000, \"currency\": \"CZK\"}"))
@@ -103,7 +103,7 @@ class AccountControllerIT {
     }
 
     @Test
-    void findAccountById_accountFound_returnsOk() throws Exception {
+    void findAccountById_AccountFound_ReturnsOk() throws Exception {
         mockMvc.perform(get("/account?accountId=1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -113,7 +113,7 @@ class AccountControllerIT {
     }
 
     @Test
-    void findAccountById_accountNotFound_returnsNotFound() throws Exception {
+    void findAccountById_AccountNotFound_ReturnsNotFound() throws Exception {
         mockMvc.perform(get("/account?accountId=3")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -124,7 +124,7 @@ class AccountControllerIT {
 
 
     @Test
-    void findAccountByAccountNumber_accountFound_returnsOk() throws Exception {
+    void findAccountByAccountNumber_AccountFound_ReturnsOk() throws Exception {
         mockMvc.perform(get("/account/number?accountNumber=abc")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -134,7 +134,7 @@ class AccountControllerIT {
     }
 
     @Test
-    void findAccountByAccountNumber_accountNotFound_returnsNotFound() throws Exception {
+    void findAccountByAccountNumber_AccountNotFound_ReturnsNotFound() throws Exception {
         mockMvc.perform(get("/account/number?accountNumber=abcde")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -144,7 +144,7 @@ class AccountControllerIT {
     }
 
     @Test
-    void getScheduledPayments_accountFound_returnsOk() throws Exception {
+    void getScheduledPayments_AccountFound_ReturnsOk() throws Exception {
         mockMvc.perform(get("/account/scheduled?accountNumber=abc")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -154,7 +154,7 @@ class AccountControllerIT {
     }
 
     @Test
-    void getScheduledPayments_accountNotFound_returnsNotFound() throws Exception {
+    void getScheduledPayments_AccountNotFound_ReturnsNotFound() throws Exception {
         mockMvc.perform(get("/account/scheduled?accountNumber=3")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
@@ -164,7 +164,7 @@ class AccountControllerIT {
     }
 
     @Test
-    void schedulePayment_accountFound_returnsCreated() throws Exception {
+    void schedulePayment_AccountFound_ReturnsCreated() throws Exception {
         mockMvc.perform(post("/account/scheduled")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"senderAccount\":\"abc\", \"receiverAccount\":\"abcd\", \"amount\":1, \"type\":\"WEEKLY\", \"day\":1}"))
@@ -175,7 +175,7 @@ class AccountControllerIT {
     }
 
     @Test
-    void schedulePayment_accountNotFound_returnsNotFound() throws Exception {
+    void schedulePayment_AccountNotFound_ReturnsNotFound() throws Exception {
         mockMvc.perform(post("/account/scheduled")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"senderAccount\":\"abc\", \"receiverAccount\":\"abcde\", \"amount\":1, \"type\":\"WEEKLY\", \"day\":1}"))
