@@ -47,9 +47,13 @@ public class ScheduledPaymentService {
     }
 
     @Scheduled(cron = "${scheduled-payments.cron.expression}")
-    public void executeScheduledPayments() {
+    public void autoExecute() {
         LocalDate now = LocalDate.now();
-        ResponseEntity<ScheduledPaymentsDto> response = accountApi.getScheduledPaymentsOf(now);
+        executeScheduledPayments(now);
+    }
+    
+    public void executeScheduledPayments(LocalDate date) {
+        ResponseEntity<ScheduledPaymentsDto> response = accountApi.getScheduledPaymentsOf(date);
         if (!response.getStatusCode().is2xxSuccessful()) {
             throw new ServerError("Call to Account Management service unsuccessful.");
         }
