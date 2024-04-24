@@ -13,7 +13,6 @@ public interface ScheduledPaymentRepository extends JpaRepository<ScheduledPayme
 
     List<ScheduledPayment> findAll(Specification<ScheduledPayment> spec);
 
-    @Query("select s from ScheduledPayment s where s.sourceAccountId = :accountId")
     List<ScheduledPayment> findBySourceAccountId(Long accountId);
     
 }

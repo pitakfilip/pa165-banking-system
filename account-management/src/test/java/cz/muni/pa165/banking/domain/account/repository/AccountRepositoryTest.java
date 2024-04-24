@@ -1,53 +1,52 @@
 package cz.muni.pa165.banking.domain.account.repository;
 
 import cz.muni.pa165.banking.domain.account.Account;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@DataJpaTest
 class AccountRepositoryTest {
-    @Mock
+    @Autowired
     private AccountRepository accountRepository;
+
+    @BeforeAll
+    public static void initDb(@Autowired AccountRepository repository) {
+        Account account = new Account();
+        account.setId(1L);
+        account.setAccountNumber("1");
+        repository.save(account);
+    }
+
 
     @Test
     void findByAccountNumber_ValidNumber_ReturnsAccount() {
-        // Given
-        String validAccountNumber = "123456";
-        Account account = new Account();
-        account.setId(1L);
-        account.setAccountNumber(validAccountNumber);
+        // Arrange
+        Account expectedAccount = new Account();
+        expectedAccount.setId(1L);
+        expectedAccount.setAccountNumber("1");
 
-        when(accountRepository.findByAccountNumber(validAccountNumber)).thenReturn(Optional.of(account));
+        // Act
+        Optional<Account> result = accountRepository.findByAccountNumber("1");
 
-        // When
-        Optional<Account> foundAccountOptional = accountRepository.findByAccountNumber(validAccountNumber);
-        Account foundAccount = foundAccountOptional.orElse(null);
-
-        // Then
-        assertNotNull(foundAccount);
-        assertEquals(1L, foundAccount.getId());
-        assertEquals(validAccountNumber, foundAccount.getAccountNumber());
+        // Assert
+        assertEquals(expectedAccount, result.orElse(null));
     }
 
     @Test
-    void findByAccountNumber_InvalidNumber_ReturnsNull() {
-        // Given
-        String invalidAccountNumber = "999999";
+    void findByAccountNumber_InvalidNumber_ReturnsEmptyOptional() {
+        // Act
+        Optional<Account> result = accountRepository.findByAccountNumber("2");
 
-        when(accountRepository.findByAccountNumber(invalidAccountNumber)).thenReturn(Optional.empty());
-
-        // When
-        Optional<Account> foundAccountOptional = accountRepository.findByAccountNumber(invalidAccountNumber);
-        Account foundAccount = foundAccountOptional.orElse(null);
-
-        // Then
-        assertNull(foundAccount);
+        // Assert
+        assertFalse(result.isPresent());
     }
 }
