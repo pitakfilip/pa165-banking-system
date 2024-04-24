@@ -1,7 +1,3 @@
-echo "Building JAR artifacts"
-
-./build_artifacts.sh > /dev/null 2>&1
-
 function build() {
   cd "$1" || exit
   docker build -t "$1" .
