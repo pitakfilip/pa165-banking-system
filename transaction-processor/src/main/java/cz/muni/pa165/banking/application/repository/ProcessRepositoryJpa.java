@@ -17,6 +17,4 @@ public interface ProcessRepositoryJpa extends JpaRepository<Process, String> {
     @Query("SELECT p FROM Process p WHERE p.currentStatus.status = :status AND p.currentStatus.when <= :date")
     List<Process> findByStatusAndDateBeforeEqual(@Param("status") Status status, @Param("date") Instant date);
 
-    // TODO update zaseknute procesy starsie nez e.g. tyzden a zmenit na failed + nastavit message nejaky
-    
 }
