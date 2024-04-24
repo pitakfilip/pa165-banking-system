@@ -63,7 +63,7 @@ class DepositHandlerTest {
 
         assertThrows(
                 EntityNotFoundException.class,
-                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, null)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -74,7 +74,7 @@ class DepositHandlerTest {
         
         assertThrows(
                 UnexpectedValueException.class,
-                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, null)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -82,7 +82,7 @@ class DepositHandlerTest {
     @Test
     void depositMoneySuccessful() {
         AccountService accountService = new AccountServiceStub(true, Currency.getInstance("EUR"));
-        depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter);
+        depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, null);
 
         assertEquals(Status.PROCESSED, process.getStatus());
         assertTrue(published);

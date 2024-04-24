@@ -9,7 +9,7 @@
         <cache usage="read-write"/>
 
         <id name="uuid"
-            column="proc_uuid"
+            column="trans_uuid"
             type="java.util.UUID"/>
         
         <component

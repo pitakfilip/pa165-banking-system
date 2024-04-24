@@ -67,7 +67,7 @@ class TransferHandlerTest {
 
         assertThrows(
                 EntityNotFoundException.class,
-                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, null)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -79,7 +79,7 @@ class TransferHandlerTest {
         
         assertThrows(
                 EntityNotFoundException.class,
-                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, null)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -96,7 +96,7 @@ class TransferHandlerTest {
 
         assertThrows(
                 UnexpectedValueException.class,
-                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, null)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -112,7 +112,7 @@ class TransferHandlerTest {
         
         assertThrows(
                 UnexpectedValueException.class,
-                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, null)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -128,7 +128,7 @@ class TransferHandlerTest {
 
         assertThrows(
                 UnexpectedValueException.class,
-                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, null)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -142,7 +142,7 @@ class TransferHandlerTest {
         when(processRepository.findById(process.getUuid())).thenReturn(process);
         when(processTransactionRepository.findTransactionByProcessId(process.getUuid())).thenReturn(processTransaction);
 
-        depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter);
+        depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, null);
         
         assertEquals(Status.PROCESSED, process.getStatus());
         assertTrue(published1);

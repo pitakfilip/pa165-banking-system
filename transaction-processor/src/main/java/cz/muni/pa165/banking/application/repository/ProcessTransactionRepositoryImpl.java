@@ -16,7 +16,7 @@ public class ProcessTransactionRepositoryImpl implements ProcessTransactionRepos
     
     @Override
     public ProcessTransaction findTransactionByProcessId(UUID processUuid) {
-        return repository.findById(processUuid.toString())
+        return repository.findById(processUuid)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Transaction with Process ID %s not found", processUuid)));
     }
 

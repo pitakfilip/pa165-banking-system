@@ -19,5 +19,5 @@ CREATE TABLE IF NOT EXISTS proc_reg
     proc_uuid   UUID PRIMARY KEY,
     status_when TIMESTAMP,
     status      VARCHAR(255),
-    status_info VARCHAR(255)
+    status_info VARCHAR(9999)
 );

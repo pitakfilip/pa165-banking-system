@@ -51,7 +51,7 @@ class ProcessHandlerTest {
         ProcessOperations.changeState(process, new StatusInformation(null, Status.FAILED, "N/A"));
         assertThrows(
                 UnexpectedValueException.class,
-                () -> genericHandler.handle(process.getUuid(), processRepository, null, null, null)
+                () -> genericHandler.handle(process.getUuid(), processRepository, null, null, null, null)
         );
     }
 
@@ -62,7 +62,7 @@ class ProcessHandlerTest {
         ProcessOperations.changeState(process, new StatusInformation(null, Status.PROCESSED, "N/A"));
         assertThrows(
                 UnexpectedValueException.class,
-                () -> genericHandler.handle(process.getUuid(), processRepository, null, null, null)
+                () -> genericHandler.handle(process.getUuid(), processRepository, null, null, null, null)
         );
     }
 
@@ -72,7 +72,7 @@ class ProcessHandlerTest {
         when(processTransactionRepository.findTransactionByProcessId(process.getUuid())).thenReturn(null);
         assertThrows(
                 EntityNotFoundException.class,
-                () -> genericHandler.handle(process.getUuid(), processRepository, processTransactionRepository, null, null)
+                () -> genericHandler.handle(process.getUuid(), processRepository, processTransactionRepository, null, null, null)
         );
     }
     
@@ -90,7 +90,7 @@ class ProcessHandlerTest {
         
         assertThrows(
                 RuntimeException.class,
-                () -> failingHandler.handle(process.getUuid(), processRepository, processTransactionRepository, null, null)
+                () -> failingHandler.handle(process.getUuid(), processRepository, processTransactionRepository, null, null, null)
         );
 
         assertEquals(Status.FAILED, process.getStatus());
@@ -101,7 +101,7 @@ class ProcessHandlerTest {
         Process process = createProcess();
         ofProcess(process);
 
-        genericHandler.handle(process.getUuid(), processRepository, processTransactionRepository, null, null);
+        genericHandler.handle(process.getUuid(), processRepository, processTransactionRepository, null, null, null);
         assertEquals(Status.PROCESSED, process.getStatus());
     }
 

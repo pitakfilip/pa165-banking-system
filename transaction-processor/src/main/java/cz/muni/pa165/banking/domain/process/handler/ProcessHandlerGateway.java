@@ -7,12 +7,13 @@ import cz.muni.pa165.banking.domain.remote.AccountService;
 import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import cz.muni.pa165.banking.exception.UnexpectedValueException;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.UUID;
 
 public class ProcessHandlerGateway {
 
-    public static void handle(UUID processUuid, TransactionType type, ProcessRepository processRepository, ProcessTransactionRepository processTransactionRepository, AccountService accountService, CurrencyConverter currencyConverter) {
+    public static void handle(UUID processUuid, TransactionType type, ProcessRepository processRepository, ProcessTransactionRepository processTransactionRepository, AccountService accountService, CurrencyConverter currencyConverter, TransactionTemplate transactionTemplate) {
         if (!processRepository.idExists(processUuid)) {
             throw new EntityNotFoundException(String.format("Process with uuid {%s} not found", processUuid));
         }
@@ -29,6 +30,6 @@ public class ProcessHandlerGateway {
             case REFUND -> new RefundHandler();
         };
         
-        handler.handle(processUuid, processRepository, processTransactionRepository, accountService, currencyConverter);
+        handler.handle(processUuid, processRepository, processTransactionRepository, accountService, currencyConverter, transactionTemplate);
     }
 }

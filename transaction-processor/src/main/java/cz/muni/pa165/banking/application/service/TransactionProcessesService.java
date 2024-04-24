@@ -36,7 +36,6 @@ public class TransactionProcessesService {
         this.processProducer = processProducer;
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public Process createProcessForTransaction(Transaction newTransaction) {
         ProcessFactory factory = new ProcessFactory(processTransactionRepository, processRepository);
         Process process = factory.create(newTransaction, processProducer);
