@@ -1,11 +1,12 @@
 # Balance Service
 
-<p>The Balance Service, allows to view current balance of an account and 
+<p>The Balance Service allows to view current balance of an account and 
 transaction history of an account from some date range. It also provides bank 
 employees an ability to monitor all customers bank transactions. 
 The service also provides a statistical module (for employees), which can 
 report total and average (per account) transactions (deposits, withdrawals, 
 outgoing and incoming payments) in a selected date range.</p>
+
 <p>This service is composed of classes as can be seen on the diagram, 
 in repository there are balances of accounts stored. Every balance class has
 current balance stored in itself together with a list of transactions which 

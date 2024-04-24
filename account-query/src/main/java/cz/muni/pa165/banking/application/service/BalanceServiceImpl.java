@@ -2,7 +2,7 @@ package cz.muni.pa165.banking.application.service;
 
 import cz.muni.pa165.banking.domain.balance.Balance;
 import cz.muni.pa165.banking.domain.balance.repository.BalancesRepository;
-import cz.muni.pa165.banking.domain.balance.repository.TransactionRepository;
+import cz.muni.pa165.banking.domain.transaction.repository.TransactionRepository;
 import cz.muni.pa165.banking.domain.balance.service.BalanceService;
 import cz.muni.pa165.banking.domain.report.StatisticalReport;
 import cz.muni.pa165.banking.domain.transaction.Transaction;
@@ -41,7 +41,7 @@ public class BalanceServiceImpl implements BalanceService {
     @Override
     @Transactional
     public void addNewBalance(String id) {
-        balanceRepository.addBalance(id);
+        balanceRepository.save(new Balance(id));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class BalanceServiceImpl implements BalanceService {
             throws EntityNotFoundException {
         Balance balance = findById(id);
         Transaction t = balance.addTransaction(amount, type, processID);
-        balanceRepository.save(balance);
+        //balanceRepository.save(balance);
         transactionRepository.save(t);
     }
 

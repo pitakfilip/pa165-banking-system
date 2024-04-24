@@ -28,7 +28,6 @@ public class Balance {
     private BigDecimal amount;
 
     @OneToMany(mappedBy = "balance")
-    //@JoinColumn(name="balance_id")
     private List<Transaction> transactionList = new ArrayList<>();
 
     public Balance(String accountId) {
@@ -107,10 +106,6 @@ public class Balance {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
-    }
-
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
     }
 
     @Override

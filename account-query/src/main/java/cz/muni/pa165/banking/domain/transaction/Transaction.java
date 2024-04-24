@@ -3,7 +3,6 @@ package cz.muni.pa165.banking.domain.transaction;
 import cz.muni.pa165.banking.domain.balance.Balance;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.annotations.Type;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -78,10 +77,6 @@ public class Transaction {
 
     public void setBalance(Balance balance) {
         this.balance = balance;
-    }
-
-    public void setProcessId(UUID processId) {
-        this.processId = processId;
     }
 
     public void setDate(OffsetDateTime date) {
