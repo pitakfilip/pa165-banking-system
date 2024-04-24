@@ -11,7 +11,7 @@ which can report total and average (per account) transactions (deposits, withdra
 </p>
 
 ## Use case diagram
-<img src="./useCaseDiagram.png" width="800">
+<img src="./.documentation/useCaseDiagram.png" width="800">
 
 ## Artifact Structure
 
