@@ -57,7 +57,6 @@ public class ProcessRepositoryJpaTest {
         Process processed5 = Process.createNew();
         ProcessOperations.changeState(processed5, new StatusInformation(yesterday, Status.PROCESSED, "done"));
         repository.save(processed5);
-
     }
     
     @Test

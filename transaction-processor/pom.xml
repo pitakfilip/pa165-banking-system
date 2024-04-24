@@ -249,6 +249,11 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- run integration tests in "mvn verify" phase -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 

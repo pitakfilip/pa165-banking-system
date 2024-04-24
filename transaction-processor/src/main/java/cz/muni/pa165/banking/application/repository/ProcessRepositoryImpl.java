@@ -20,12 +20,12 @@ public class ProcessRepositoryImpl implements ProcessRepository {
 
     @Override
     public boolean idExists(UUID uuid) {
-        return repository.existsById(uuid.toString());
+        return repository.existsById(uuid);
     }
 
     @Override
     public Process findById(UUID uuid) {
-        Optional<Process> process = repository.findById(uuid.toString());
+        Optional<Process> process = repository.findById(uuid);
         if (process.isEmpty()) {
             throw new EntityNotFoundException(String.format("Process with UUID %s not found", uuid));
         }
