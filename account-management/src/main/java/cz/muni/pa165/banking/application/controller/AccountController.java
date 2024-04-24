@@ -3,7 +3,6 @@ package cz.muni.pa165.banking.application.controller;
 import cz.muni.pa165.banking.account.management.AccountApi;
 import cz.muni.pa165.banking.account.management.dto.*;
 import cz.muni.pa165.banking.application.facade.AccountFacade;
-import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;

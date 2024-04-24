@@ -20,7 +20,8 @@ public class Transaction {
         // Hibernate
     }
     
-    public Transaction(Account source, Account target, TransactionType type, Money amount, String detail) {
+    public Transaction(Account source, Account target,
+                       TransactionType type, Money amount, String detail) {
         this.source = source;
         this.target = target;
         this.type = type;

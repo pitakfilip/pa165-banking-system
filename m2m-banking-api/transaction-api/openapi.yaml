@@ -99,6 +99,7 @@ components:
         - DEPOSIT
         - TRANSFER
         - SCHEDULED
+        - REFUND
       description: Enumaration defining a type for a transaction. Each type may have different certain implementations and validations.
       
     AccountDto:

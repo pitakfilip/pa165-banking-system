@@ -10,14 +10,20 @@ import java.util.UUID;
 @Entity
 public class Process {
     
-    private final UUID uuid;
+    private UUID uuid;
     
     private StatusInformation currentStatus;
     
-    Process() {
-        uuid = UUID.randomUUID();
-        currentStatus = new StatusInformation(Instant.now(), Status.CREATED, "Process created, waiting for processing.");
+    public static Process createNew() {
+        Process process = new Process();
+        process.uuid = UUID.randomUUID();
+        process.currentStatus = new StatusInformation(Instant.now(), Status.CREATED, "Process created, waiting for processing.");
+        
+        return process;
     }
+
+    @Deprecated // hibernate
+    public Process() {}
 
     /**
      * Return a copy of Process UUID, ensuring the UUID is not modified or replaced. 

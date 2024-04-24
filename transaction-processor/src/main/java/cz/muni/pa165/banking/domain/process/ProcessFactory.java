@@ -23,7 +23,7 @@ public class ProcessFactory {
 
 
     public Process create(Transaction transaction, MessageProducer messageProducer) {
-        Process newProcess = new Process();
+        Process newProcess = Process.createNew();
         processRepository.save(newProcess);
 
         ProcessTransaction assignedTransaction = new ProcessTransaction(

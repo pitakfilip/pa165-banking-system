@@ -12,7 +12,7 @@ class ProcessOperationsTest {
 
     @Test
     void changeState() {
-        Process process = new Process();
+        Process process = Process.createNew();
 
         StatusInformation newStatus = new StatusInformation(
                 Instant.now(),

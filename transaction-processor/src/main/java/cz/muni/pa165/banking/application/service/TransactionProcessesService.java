@@ -1,6 +1,6 @@
 package cz.muni.pa165.banking.application.service;
 
-import cz.muni.pa165.banking.application.messaging.ProcessProducer;
+import cz.muni.pa165.banking.domain.messaging.MessageProducer;
 import cz.muni.pa165.banking.domain.process.Process;
 import cz.muni.pa165.banking.domain.process.ProcessFactory;
 import cz.muni.pa165.banking.domain.process.ProcessTransaction;
@@ -26,9 +26,11 @@ public class TransactionProcessesService {
 
     private final ProcessRepository processRepository;
     
-    private final ProcessProducer processProducer;
+    private final MessageProducer processProducer;
 
-    public TransactionProcessesService(ProcessTransactionRepository processTransactionRepository, ProcessRepository processRepository, ProcessProducer processProducer) {
+    public TransactionProcessesService(ProcessTransactionRepository processTransactionRepository,
+                                       ProcessRepository processRepository,
+                                       MessageProducer processProducer) {
         this.processTransactionRepository = processTransactionRepository;
         this.processRepository = processRepository;
         this.processProducer = processProducer;
