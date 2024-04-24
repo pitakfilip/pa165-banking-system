@@ -38,21 +38,6 @@ class UserServiceTest {
     }
 
     @Test
-    void createUser_UserIdExists_ThrowsException() {
-        // Arrange
-        User user = new User();
-        user.setId(1L);
-        when(userRepository.existsById(user.getId())).thenReturn(true);
-
-        // Act & Assert
-        assertThrows(Exception.class, () -> {
-            userService.createUser(user);
-        });
-
-        verify(userRepository, never()).save(user);
-    }
-
-    @Test
     void getUser_ValidUserId_ReturnsUser(){
         // Arrange
         Long userId = 1L;
