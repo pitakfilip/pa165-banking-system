@@ -16,6 +16,7 @@ import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import cz.muni.pa165.banking.exception.UnexpectedValueException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -36,7 +37,8 @@ class ScheduledHandlerTest {
     private static ProcessTransactionRepository processTransactionRepository;
     private static ProcessHandler depositHandler;
     private static CurrencyConverter converter;
-
+    private static TransactionTemplate transactionTemplate;
+    
     @BeforeAll
     static void init() {
         account1 = new Account("ACC1");
@@ -44,6 +46,7 @@ class ScheduledHandlerTest {
         depositHandler = new ScheduledHandler();
         processRepository = mock(ProcessRepository.class);
         processTransactionRepository = mock(ProcessTransactionRepository.class);
+        transactionTemplate = mock(TransactionTemplate.class);
         converter = new CurrencyConverterStub(null);
     }
 
@@ -58,7 +61,7 @@ class ScheduledHandlerTest {
         
         assertThrows(
                 EntityNotFoundException.class,
-                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, null)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, transactionTemplate)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -74,7 +77,7 @@ class ScheduledHandlerTest {
 
         assertThrows(
                 UnexpectedValueException.class,
-                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, null)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, transactionTemplate)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -90,7 +93,7 @@ class ScheduledHandlerTest {
         
         assertThrows(
                 EntityNotFoundException.class,
-                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, null)
+                () -> depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, transactionTemplate)
         );
         assertEquals(Status.FAILED, process.getStatus());
     }
@@ -104,7 +107,7 @@ class ScheduledHandlerTest {
         when(processRepository.findById(process.getUuid())).thenReturn(process);
         when(processTransactionRepository.findTransactionByProcessId(process.getUuid())).thenReturn(processTransaction);
 
-        depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, null);
+        depositHandler.handle(process.getUuid(), processRepository, processTransactionRepository, accountService, converter, transactionTemplate);
 
         assertEquals(Status.PROCESSED, process.getStatus());
         assertTrue(published1);

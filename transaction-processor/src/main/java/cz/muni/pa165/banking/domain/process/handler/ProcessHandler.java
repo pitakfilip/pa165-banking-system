@@ -50,10 +50,9 @@ abstract class ProcessHandler {
 
         Status finalNewStatus = newStatus;
         String finalMessage = message;
+        ProcessOperations.changeState(process, new StatusInformation(Instant.now(), finalNewStatus, finalMessage));
         transactionTemplate.execute(status -> {
-            ProcessOperations.changeState(process, new StatusInformation(Instant.now(), finalNewStatus, finalMessage));
             processRepository.save(process);  
-            
             return null;
         });
 

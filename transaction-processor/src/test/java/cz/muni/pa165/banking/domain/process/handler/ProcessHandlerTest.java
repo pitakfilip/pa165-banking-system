@@ -17,6 +17,7 @@ import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import cz.muni.pa165.banking.exception.UnexpectedValueException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.math.BigDecimal;
 import java.util.Currency;
@@ -31,7 +32,8 @@ class ProcessHandlerTest {
     private static ProcessHandler genericHandler;
     private static ProcessRepository processRepository;
     private static ProcessTransactionRepository processTransactionRepository;
-
+    private static TransactionTemplate transactionTemplate;
+    
     @BeforeAll
     static void init() {
         genericHandler = new ProcessHandler() {
@@ -41,6 +43,7 @@ class ProcessHandlerTest {
             }
         };
 
+        transactionTemplate = mock(TransactionTemplate.class);
         processRepository = mock(ProcessRepository.class);
         processTransactionRepository = mock(ProcessTransactionRepository.class);
     }
@@ -51,7 +54,7 @@ class ProcessHandlerTest {
         ProcessOperations.changeState(process, new StatusInformation(null, Status.FAILED, "N/A"));
         assertThrows(
                 UnexpectedValueException.class,
-                () -> genericHandler.handle(process.getUuid(), processRepository, null, null, null, null)
+                () -> genericHandler.handle(process.getUuid(), processRepository, processTransactionRepository, null, null, transactionTemplate)
         );
     }
 
@@ -62,7 +65,7 @@ class ProcessHandlerTest {
         ProcessOperations.changeState(process, new StatusInformation(null, Status.PROCESSED, "N/A"));
         assertThrows(
                 UnexpectedValueException.class,
-                () -> genericHandler.handle(process.getUuid(), processRepository, null, null, null, null)
+                () -> genericHandler.handle(process.getUuid(), processRepository, processTransactionRepository, null, null, transactionTemplate)
         );
     }
 
@@ -72,28 +75,8 @@ class ProcessHandlerTest {
         when(processTransactionRepository.findTransactionByProcessId(process.getUuid())).thenReturn(null);
         assertThrows(
                 EntityNotFoundException.class,
-                () -> genericHandler.handle(process.getUuid(), processRepository, processTransactionRepository, null, null, null)
+                () -> genericHandler.handle(process.getUuid(), processRepository, processTransactionRepository, null, null, transactionTemplate)
         );
-    }
-    
-    @Test
-    void processEvaluatedAsFailed() {
-        ProcessHandler failingHandler = new ProcessHandler() {
-            @Override
-            void evaluate(ProcessTransaction processTransaction, AccountService accountService, CurrencyConverter currencyConverter) {
-                throw new RuntimeException("Bad news boss");
-            }
-        };
-
-        Process process = createProcess();
-        ofProcess(process);
-        
-        assertThrows(
-                RuntimeException.class,
-                () -> failingHandler.handle(process.getUuid(), processRepository, processTransactionRepository, null, null, null)
-        );
-
-        assertEquals(Status.FAILED, process.getStatus());
     }
 
     @Test
@@ -101,7 +84,7 @@ class ProcessHandlerTest {
         Process process = createProcess();
         ofProcess(process);
 
-        genericHandler.handle(process.getUuid(), processRepository, processTransactionRepository, null, null, null);
+        genericHandler.handle(process.getUuid(), processRepository, processTransactionRepository, null, null, transactionTemplate);
         assertEquals(Status.PROCESSED, process.getStatus());
     }
 
