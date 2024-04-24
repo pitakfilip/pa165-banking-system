@@ -32,9 +32,7 @@ class WithdrawHandlerTest {
 
     private boolean published = false;
 
-    private static Account account;
     private static Process process;
-    private static ProcessTransaction processTransaction;
     private static ProcessRepository processRepository;
     private static ProcessTransactionRepository processTransactionRepository;
     private static ProcessHandler depositHandler;
@@ -42,9 +40,9 @@ class WithdrawHandlerTest {
 
     @BeforeAll
     static void init() {
-        account = new Account("ACC");
+        Account account = new Account("ACC");
         process = new ProcessMock();
-        processTransaction = new ProcessTransaction(account, null, TransactionType.WITHDRAWAL, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.getUuid());
+        ProcessTransaction processTransaction = new ProcessTransaction(account, null, TransactionType.WITHDRAWAL, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.getUuid());
         depositHandler = new WithdrawHandler();
         processRepository = mock(ProcessRepository.class);
         processTransactionRepository = mock(ProcessTransactionRepository.class);

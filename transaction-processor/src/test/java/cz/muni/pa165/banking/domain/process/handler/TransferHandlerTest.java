@@ -36,7 +36,6 @@ class TransferHandlerTest {
     private static Account account1;
     private static Account account2;
     private static Process process;
-    private static ProcessTransaction processTransaction;
     private static ProcessRepository processRepository;
     private static ProcessTransactionRepository processTransactionRepository;
     private static ProcessHandler depositHandler;
@@ -47,7 +46,7 @@ class TransferHandlerTest {
         account1 = new Account("ACC1");
         account2 = new Account("ACC2");
         process = new ProcessMock();
-        processTransaction = new ProcessTransaction(account1, account2, TransactionType.TRANSFER, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.getUuid());
+        ProcessTransaction processTransaction = new ProcessTransaction(account1, account2, TransactionType.TRANSFER, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.getUuid());
         depositHandler = new TransferHandler();
         processRepository = mock(ProcessRepository.class);
         processTransactionRepository = mock(ProcessTransactionRepository.class);

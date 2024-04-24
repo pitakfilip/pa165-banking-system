@@ -103,23 +103,20 @@ class ProcessFactoryTest {
     void transactionRequestCreated() {
         ProcessTransactionRepository processTransactionRepository = mock(ProcessTransactionRepository.class);
         ProcessRepository processRepository = mock(ProcessRepository.class);
-        MessageProducer messageProducer = new MessageProducerSpy();
+        MessageProducerSpy messageProducer = new MessageProducerSpy();
 
         ProcessFactory processFactory = new ProcessFactory(processTransactionRepository, processRepository);
         Process createdProcess = processFactory.create(transaction, messageProducer);
 
-        UUID sentUuid = WhiteboxImpl.getInternalState(messageProducer, "receivedUuid");
-        TransactionType sentType = WhiteboxImpl.getInternalState(messageProducer, "receivedType");
-
-        assertEquals(createdProcess.getUuid(), sentUuid);
-        assertEquals(TransactionType.DEPOSIT, sentType);
+        assertEquals(createdProcess.getUuid(), messageProducer.receivedUuid);
+        assertEquals(TransactionType.DEPOSIT, messageProducer.receivedType);
     }
 
-    private class MessageProducerSpy implements MessageProducer {
+    private static class MessageProducerSpy implements MessageProducer {
 
-        private UUID receivedUuid;
+        public UUID receivedUuid;
 
-        private TransactionType receivedType;
+        public TransactionType receivedType;
 
         @Override
         public void send(ProcessRequest data) {

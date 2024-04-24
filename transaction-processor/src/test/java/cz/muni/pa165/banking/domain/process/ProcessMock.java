@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class ProcessMock extends Process {
     
-    private UUID uuid;
+    private final UUID uuid;
     
     public ProcessMock() {
         super();

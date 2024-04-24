@@ -11,7 +11,6 @@ import cz.muni.pa165.banking.domain.scheduled.recurrence.RecurrenceType;
 import cz.muni.pa165.banking.domain.scheduled.repository.ScheduledPaymentRepository;
 import cz.muni.pa165.banking.domain.user.repository.UserRepository;
 import cz.muni.pa165.banking.exception.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -31,20 +31,18 @@ import static org.mockito.Mockito.when;
 class DepositHandlerTest {
 
     private boolean published = false;
-    
-    private static Account account;
+
     private static Process process;
-    private static ProcessTransaction processTransaction;
     private static ProcessRepository processRepository;
     private static ProcessTransactionRepository processTransactionRepository;
     private static ProcessHandler depositHandler;
     private static CurrencyConverter converter;
 
     @BeforeAll
-    static void init() {        
-        account = new Account("ACC");
+    static void init() {
+        Account account = new Account("ACC");
         process = new ProcessMock();
-        processTransaction = new ProcessTransaction(account, null, TransactionType.DEPOSIT, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.getUuid());
+        ProcessTransaction processTransaction = new ProcessTransaction(account, null, TransactionType.DEPOSIT, new Money(BigDecimal.ONE, Currency.getInstance("EUR")), "", process.getUuid());
         depositHandler = new DepositHandler();
         processRepository = mock(ProcessRepository.class);
         processTransactionRepository = mock(ProcessTransactionRepository.class);
