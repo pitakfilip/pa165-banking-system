@@ -26,7 +26,12 @@ which can report total and average (per account) transactions (deposits, withdra
 ## Module Architecture
 Each service is implemented as a separate maven artifact consisting of a Spring-boot application. Within each project
 we used the principles of `Hexagonal architecture`, where the domain itself consists of only pure Java classes,
-with no technological dependencies. By using such separation, we nicely created an extra separated layer on top of the
+with no technological dependencies. 
+
+This architecture is ensured by creating separate packages `application` and `domain`. The application package contains technology specific
+implementations for Spring and other, while the domain package contains the business logic of the given microservice.
+
+By using such separation, we nicely created an extra separated layer on top of the
 traditional `Controller, Facade, Service and Repository` layers. The main benefit of such separation is visible mainly when 
 extending new features, implementation of tests and usage of custom abstractions with ease.
 <br><br>
@@ -37,6 +42,5 @@ where the [implementation](./transaction-processor/src/main/java/cz/muni/pa165/b
 - Maven
 - Java - OpenJDK21
 - PostreSQL
-- RabbitMq
 - Docker
 - OpenShift or Hashicorp Consul (still discussing which of the two to use for service registration and load-balancing)
