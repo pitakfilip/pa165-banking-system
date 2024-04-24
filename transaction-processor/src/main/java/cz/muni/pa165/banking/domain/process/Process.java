@@ -5,6 +5,7 @@ import cz.muni.pa165.banking.domain.process.status.StatusInformation;
 import jakarta.persistence.Entity;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -52,5 +53,25 @@ public class Process {
     void setCurrentStatus(StatusInformation information) {
         currentStatus = information;
     }
-    
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Process process = (Process) o;
+        return Objects.equals(getUuid(), process.getUuid()) && Objects.equals(getCurrentStatus(), process.getCurrentStatus());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUuid(), getCurrentStatus());
+    }
+
+    @Override
+    public String toString() {
+        return "Process{" +
+                "uuid=" + uuid +
+                ", currentStatus=" + currentStatus +
+                '}';
+    }
 }
