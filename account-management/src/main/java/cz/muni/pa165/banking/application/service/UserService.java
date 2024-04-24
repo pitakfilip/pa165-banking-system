@@ -16,9 +16,6 @@ public class UserService {
     }
 
     public User createUser(User user) throws EntityExistsException {
-        if (userRepository.existsById(user.getId())){
-            throw new EntityExistsException("User with id " + user.getId() + " already exists");
-        }
         return userRepository.save(user);
     }
 
