@@ -4,7 +4,7 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="cz.muni.pa165.banking.domain.process.Process" table="proc">
+    <class name="cz.muni.pa165.banking.domain.process.Process" table="proc_reg">
 
         <cache usage="read-write"/>
 

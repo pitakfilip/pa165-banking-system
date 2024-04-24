@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS proc_transaction
     detail_msg VARCHAR(255)
 );
 
-CREATE TABLE proc
+CREATE TABLE proc_reg
 (
     proc_uuid   UUID PRIMARY KEY,
     status_when TIMESTAMP,
