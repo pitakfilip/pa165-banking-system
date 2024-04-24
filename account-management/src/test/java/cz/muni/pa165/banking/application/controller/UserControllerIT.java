@@ -39,7 +39,7 @@ class UserControllerIT {
     }
 
     @Test
-    void createUser_returnsCreated() throws Exception {
+    void createUser_ReturnsCreated() throws Exception {
         mockMvc.perform(post("/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"123@email.cz\",\"password\":\"passwd123\",\"firstName\":\"Joe\", \"lastName\": \"Mama\", \"userType\": \"REGULAR\"}"))
@@ -50,7 +50,7 @@ class UserControllerIT {
     }
 
     @Test
-    void findUserById_userFound_returnsOk() throws Exception {
+    void findUserById_UserFound_ReturnsOk() throws Exception {
         mockMvc.perform(get("/user?userId=1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -60,7 +60,7 @@ class UserControllerIT {
     }
 
     @Test
-    void findUserById_userNotFound_returnsNotFound() throws Exception {
+    void findUserById_UserNotFound_ReturnsNotFound() throws Exception {
         mockMvc.perform(get("/user?userId=3")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())

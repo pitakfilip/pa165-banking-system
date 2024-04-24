@@ -3,6 +3,7 @@ package cz.muni.pa165.banking.application.service;
 import cz.muni.pa165.banking.domain.user.User;
 import cz.muni.pa165.banking.domain.user.repository.UserRepository;
 import cz.muni.pa165.banking.exception.EntityNotFoundException;
+import jakarta.persistence.EntityExistsException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,7 +15,10 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User createUser(User user){
+    public User createUser(User user) throws EntityExistsException {
+        if (userRepository.existsById(user.getId())){
+            throw new EntityExistsException("User with id " + user.getId() + " already exists");
+        }
         return userRepository.save(user);
     }
 

@@ -3,6 +3,7 @@ package cz.muni.pa165.banking.domain.account;
 import jakarta.persistence.*;
 
 import java.util.Currency;
+import java.util.Objects;
 
 @Entity
 @Table(name = "bank_account")
@@ -73,4 +74,28 @@ public class Account {
         return currency;
     }
 
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", accountNumber='" + accountNumber + '\'' +
+                ", userId=" + userId +
+                ", maxSpendingLimit=" + maxSpendingLimit +
+                ", type=" + type +
+                ", currency=" + currency +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return Objects.equals(id, account.id) && Objects.equals(accountNumber, account.accountNumber) && Objects.equals(userId, account.userId) && Objects.equals(maxSpendingLimit, account.maxSpendingLimit) && type == account.type && Objects.equals(currency, account.currency);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, accountNumber, userId, maxSpendingLimit, type, currency);
+    }
 }

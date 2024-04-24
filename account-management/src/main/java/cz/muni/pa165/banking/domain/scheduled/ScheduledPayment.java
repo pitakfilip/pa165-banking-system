@@ -4,6 +4,7 @@ import cz.muni.pa165.banking.domain.scheduled.recurrence.Recurrence;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 @Table(name = "scheduled_payment")
@@ -82,5 +83,30 @@ public class ScheduledPayment {
 
     public void setRecurrence(Recurrence recurrence) {
         this.recurrence = recurrence;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ScheduledPayment that = (ScheduledPayment) o;
+        return Objects.equals(id, that.id) && Objects.equals(sourceAccountId, that.sourceAccountId) && Objects.equals(targetAccountId, that.targetAccountId) && Objects.equals(amount, that.amount) && Objects.equals(currencyCode, that.currencyCode) && Objects.equals(recurrence, that.recurrence);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, sourceAccountId, targetAccountId, amount, currencyCode, recurrence);
+    }
+
+    @Override
+    public String toString() {
+        return "ScheduledPayment{" +
+                "id=" + id +
+                ", sourceAccountId=" + sourceAccountId +
+                ", targetAccountId=" + targetAccountId +
+                ", amount=" + amount +
+                ", currencyCode='" + currencyCode + '\'' +
+                ", recurrence=" + recurrence +
+                '}';
     }
 }
