@@ -12,3 +12,21 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: ACC_ACCOUNT
     password: accountAccPasswd
+
+management:
+  info:
+    env:
+      enabled:
+        true
+  endpoints:
+    web:
+      exposure:
+        include:
+          health,metrics,prometheus
+  endpoint:
+    health:
+      enabled:
+        true
+    metrics:
+      enabled:
+        true
