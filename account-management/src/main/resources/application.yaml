@@ -28,6 +28,7 @@ management:
       enabled:
         true
   endpoints:
+    enabled-by-default: false
     web:
       exposure:
         include:
@@ -37,5 +38,8 @@ management:
       enabled:
         true
     metrics:
+      enabled:
+        true
+    prometheus:
       enabled:
         true
