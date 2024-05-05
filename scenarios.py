@@ -8,7 +8,7 @@ class BankingUser(HttpUser):
 
     @task
     def customer_showcase(self):
-        # create user
+        # create user1
         user_data = {
             "email": "t.anderson@metacortex.org",
             "password": "password123",
@@ -18,56 +18,99 @@ class BankingUser(HttpUser):
         }
         response = self.client.post("/user", json=user_data)
         if response.status_code == 201:
-            self.user_id = response.json()["id"]
+            self.user1_id = response.json()["id"]
         else:
-            raise Exception("Failed to create user")
+            raise Exception("Failed to create user1")
 
-        # create account
+        # create user1
+        user_data = {
+            "email": "zjebo@xd.org",
+            "password": "password123",
+            "firstName": "Joe",
+            "lastName": "Mama",
+            "userType": "REGULAR"
+        }
+        response = self.client.post("/user", json=user_data)
+        if response.status_code == 201:
+            self.user2_id = response.json()["id"]
+        else:
+            raise Exception("Failed to create user2")
+
+        # create account1
         account_data = {
-            "userId": self.user_id,
+            "userId": self.user1_id,
+            "type": "CREDIT",
+            "maxSpendingLimit": 1000,
+            "currency": "USD"
+        }
+        response = self.client.post("/account", json=account_data)
+        if response.status_code == 201:
+            self.account1 = response.json()
+        else:
+            raise Exception("Failed to create account")
+
+        # create account2
+        account_data = {
+            "userId": self.user2_id,
             "type": "SAVING",
             "maxSpendingLimit": 1000,
             "currency": "USD"
         }
         response = self.client.post("/account", json=account_data)
         if response.status_code == 201:
-            self.account = response.json()
+            self.account2 = response.json()
         else:
             raise Exception("Failed to create account")
 
-        # create balance for the account
+        # create balance for the account1
         balance_data = {
-            "id": self.account["id"]
+            "id": self.account1["id"]
         }
         response = self.client.post("http://localhost:8081/balance/new", params=balance_data)
         if response.status_code != 201:
             raise Exception("Failed to create balance")
 
-        # deposit to account balance
+        # create balance for the account2
+        balance_data = {
+            "id": self.account2["id"]
+        }
+        response = self.client.post("http://localhost:8081/balance/new", params=balance_data)
+        if response.status_code != 201:
+            raise Exception("Failed to create balance")
+
+        # deposit to account1 balance
         deposit_process_id = str(uuid.uuid4())
         deposit_data = {
-            "id": self.account["id"],
+            "id": self.account1["id"],
             "amount": 500,
             "processId": deposit_process_id,
             "type": "DEPOSIT"
         }
+
         response = self.client.post("http://localhost:8081/balance/add", params=deposit_data)
         if response.status_code != 200:
             raise Exception("Failed to deposit money")
 
-        """
         # transfer money
         payment_data = {
-            "source": {"accountNumber": self.account["accountNumber"]},
-            "target": {"accountNumber": self.account["accountNumber"]},
+            "source": {
+                "accountNumber": self.account1["number"]
+            },
+            "target": {
+                "accountNumber": self.account2["number"]
+            },
             "type": "TRANSFER",
-            "amount": {"amount": 100, "currency": "USD"},
-            "detail": "Payment for service"
+            "amount": {
+                "amount": 100,
+                "currency": "USD"
+            },
+            "detail": "Transfer to savings account"
         }
         response = self.client.put("http://localhost:8082/transaction/v1/process", json=payment_data)
-        if response.status_code != 201:
-            raise Exception("Failed to send money")
-        """
+        if response.status_code == 200:
+            transaction_id = response.json()["identifier"]
+        else:
+            raise Exception("Failed to send money: "+str(response.content))
 
         # create employee
         employee_data = {
@@ -85,7 +128,7 @@ class BankingUser(HttpUser):
 
         # revert transaction
         revert_data = {
-            "x-process-uuid": deposit_process_id
+            "x-process-uuid": transaction_id
         }
         response = self.client.post("http://localhost:8082/transaction/v1/revert", params=revert_data)
         if response.status_code != 200:
@@ -93,7 +136,7 @@ class BankingUser(HttpUser):
 
         # account report
         report_data = {
-            "id": self.account["id"],
+            "id": self.account1["id"],
             "beginning": "2024-01-01",
             "end": "2024-12-31"
         }
