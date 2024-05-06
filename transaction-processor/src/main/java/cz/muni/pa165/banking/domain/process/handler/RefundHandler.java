@@ -23,10 +23,10 @@ public class RefundHandler extends ProcessHandler {
 
         Money money = processTransaction.getMoney();
         Currency sourceAccountCurrency = accountService.getAccountCurrency(source);
-        BigDecimal sourceAmount = currencyConverter.convertTo(money.getCurrency(), sourceAccountCurrency, money.getAmount());
+        BigDecimal sourceAmount = currencyConverter.convertTo(money.getCurrencyInstance(), sourceAccountCurrency, money.getAmount());
 
         Currency targetAccountCurrency = accountService.getAccountCurrency(target);
-        BigDecimal targetAmount = currencyConverter.convertTo(money.getCurrency(), targetAccountCurrency, money.getAmount());
+        BigDecimal targetAmount = currencyConverter.convertTo(money.getCurrencyInstance(), targetAccountCurrency, money.getAmount());
         targetAmount = targetAmount.multiply(BigDecimal.valueOf(-1L));
 
         accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.REFUND, sourceAmount, source);
