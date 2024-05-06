@@ -8,7 +8,7 @@ class BankingUser(HttpUser):
 
     @task
     def customer_showcase(self):
-        # create user1
+        # create user
         user_data = {
             "email": "t.anderson@metacortex.org",
             "password": "password123",
@@ -18,27 +18,13 @@ class BankingUser(HttpUser):
         }
         response = self.client.post("/user", json=user_data)
         if response.status_code == 201:
-            self.user1_id = response.json()["id"]
+            self.user_id = response.json()["id"]
         else:
-            raise Exception("Failed to create user1")
-
-        # create user1
-        user_data = {
-            "email": "zjebo@xd.org",
-            "password": "password123",
-            "firstName": "Joe",
-            "lastName": "Mama",
-            "userType": "REGULAR"
-        }
-        response = self.client.post("/user", json=user_data)
-        if response.status_code == 201:
-            self.user2_id = response.json()["id"]
-        else:
-            raise Exception("Failed to create user2")
+            raise Exception("Failed to create user")
 
         # create account1
         account_data = {
-            "userId": self.user1_id,
+            "userId": self.user_id,
             "type": "CREDIT",
             "maxSpendingLimit": 1000,
             "currency": "USD"
@@ -47,11 +33,11 @@ class BankingUser(HttpUser):
         if response.status_code == 201:
             self.account1 = response.json()
         else:
-            raise Exception("Failed to create account")
+            raise Exception("Failed to create account1")
 
         # create account2
         account_data = {
-            "userId": self.user2_id,
+            "userId": self.user_id,
             "type": "SAVING",
             "maxSpendingLimit": 1000,
             "currency": "USD"
@@ -60,30 +46,13 @@ class BankingUser(HttpUser):
         if response.status_code == 201:
             self.account2 = response.json()
         else:
-            raise Exception("Failed to create account")
-
-        # create balance for the account1
-        balance_data = {
-            "id": self.account1["id"]
-        }
-        response = self.client.post("http://localhost:8081/balance/new", params=balance_data)
-        if response.status_code != 201:
-            raise Exception("Failed to create balance")
-
-        # create balance for the account2
-        balance_data = {
-            "id": self.account2["id"]
-        }
-        response = self.client.post("http://localhost:8081/balance/new", params=balance_data)
-        if response.status_code != 201:
-            raise Exception("Failed to create balance")
+            raise Exception("Failed to create account2")
 
         # deposit to account1 balance
-        deposit_process_id = str(uuid.uuid4())
         deposit_data = {
-            "id": self.account1["id"],
+            "id": self.account1["number"],
             "amount": 500,
-            "processId": deposit_process_id,
+            "processId": str(uuid.uuid4()),
             "type": "DEPOSIT"
         }
 
@@ -110,7 +79,7 @@ class BankingUser(HttpUser):
         if response.status_code == 200:
             transaction_id = response.json()["identifier"]
         else:
-            raise Exception("Failed to send money: "+str(response.content))
+            raise Exception("Failed to send money from :"+str(self.account1["number"])+str(response.content))
 
         # create employee
         employee_data = {
@@ -130,16 +99,16 @@ class BankingUser(HttpUser):
         revert_data = {
             "x-process-uuid": transaction_id
         }
-        response = self.client.post("http://localhost:8082/transaction/v1/revert", params=revert_data)
+        response = self.client.post("http://localhost:8082/transaction/v1/revert", headers=revert_data)
         if response.status_code != 200:
-            raise Exception("Failed to revert transaction")
+            raise Exception("Failed to revert transaction: "+str(transaction_id))
 
         # account report
         report_data = {
-            "id": self.account1["id"],
+            "id": self.account1["number"],
             "beginning": "2024-01-01",
             "end": "2024-12-31"
         }
-        response = self.client.post("http://localhost:8081/balance/account/report", params=report_data)
+        response = self.client.get("http://localhost:8081/balance/account/report", params=report_data)
         if response.status_code != 200:
-            raise Exception("Failed to get account report")
+            raise Exception("Failed to get account report: "+self.account1["number"]+str(response.content))
