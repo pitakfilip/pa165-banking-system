@@ -37,23 +37,8 @@ spring:
     mapping-resources: hibernate/Transaction.hbm.xml, hibernate/Process.hbm.xml
 
 management:
-  info:
-    env:
-      enabled:
-        true
   endpoints:
-    enabled-by-default: false
     web:
       exposure:
         include:
           health,metrics,prometheus
-  endpoint:
-    health:
-      enabled:
-        true
-    metrics:
-      enabled:
-        true
-    prometheus:
-      enabled:
-        true

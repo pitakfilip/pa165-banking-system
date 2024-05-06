@@ -25,17 +25,16 @@ services:
       - "8081:8081"
 
   transaction-processor:
-    image: "transaction-processor"
+    image: transaction-processor
     ports:
       - "8082:8082"
 
   prometheus:
     image: prom/prometheus:v2.30.3
     ports:
-      - 9000:9090
+      - "9000:9090"
     volumes:
-      - ./prometheus:/etc/prometheus
-      - prometheus-data:/prometheus
+      - ./.docker/prometheus:/etc/prometheus
 
   grafana:
     image: grafana/grafana:9.5.2
@@ -44,7 +43,5 @@ services:
       - "3000:3000"
     restart: unless-stopped
     volumes:
-      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./.docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
 
-volumes:
-  prometheus-data:
