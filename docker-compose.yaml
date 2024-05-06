@@ -44,4 +44,5 @@ services:
     restart: unless-stopped
     volumes:
       - ./.docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./.docker/grafana/config/grafana.ini:/etc/grafana/grafana.ini
 
