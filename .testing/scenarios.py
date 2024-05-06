@@ -1,9 +1,17 @@
 from locust import HttpUser, between, task
 import uuid
 
+# Uncomment in case of running Locust via CLI instead of docker-compose
+# managementHost = "localhost"
+# queryHost = "localhost"
+# processHost = "localhost"
+managementHost = "account-management"
+queryHost = "account-query"
+processHost = "transaction-processor"
 
 class BankingUser(HttpUser):
-    host = "http://account-management:8080"
+    
+    host = f"http://{managementHost}:8080"
     wait_time = between(1, 3)
 
     @task
@@ -56,7 +64,7 @@ class BankingUser(HttpUser):
             "type": "DEPOSIT"
         }
 
-        response = self.client.post("http://account-query:8081/balance/add", params=deposit_data)
+        response = self.client.post(f"http://{queryHost}:8081/balance/add", params=deposit_data)
         if response.status_code != 200:
             raise Exception("Failed to deposit money")
 
@@ -75,7 +83,7 @@ class BankingUser(HttpUser):
             },
             "detail": "Transfer to savings account"
         }
-        response = self.client.put("http://transaction-processor:8082/transaction/v1/process", json=payment_data)
+        response = self.client.put(f"http://{processHost}:8082/transaction/v1/process", json=payment_data)
         if response.status_code == 200:
             transaction_id = response.json()["identifier"]
         else:
@@ -99,7 +107,7 @@ class BankingUser(HttpUser):
         revert_data = {
             "x-process-uuid": transaction_id
         }
-        response = self.client.post("http://transaction-processor:8082/transaction/v1/revert", headers=revert_data)
+        response = self.client.post(f"http://{processHost}:8082/transaction/v1/revert", headers=revert_data)
         if response.status_code != 200:
             raise Exception("Failed to revert transaction: "+str(transaction_id))
 
@@ -109,6 +117,6 @@ class BankingUser(HttpUser):
             "beginning": "2024-01-01",
             "end": "2024-12-31"
         }
-        response = self.client.get("http://account-query:8081/balance/account/report", params=report_data)
+        response = self.client.get(f"http://{queryHost}:8081/balance/account/report", params=report_data)
         if response.status_code != 200:
             raise Exception("Failed to get account report: "+self.account1["number"]+str(response.content))
