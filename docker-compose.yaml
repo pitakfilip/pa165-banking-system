@@ -29,6 +29,14 @@ services:
     ports:
       - "8082:8082"
 
+  locust-io:
+    image: locustio/locust
+    volumes:
+      - ./.testing:/mnt/locust
+    command: -f /mnt/locust/scenarios.py
+    ports:
+      - "8089:8089"
+
   prometheus:
     image: prom/prometheus:v2.30.3
     ports:
@@ -46,4 +54,3 @@ services:
       - ./.docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./.docker/grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/main.yaml
       - ./.docker/grafana/dashboards:/var/lib/grafana/dashboards
-

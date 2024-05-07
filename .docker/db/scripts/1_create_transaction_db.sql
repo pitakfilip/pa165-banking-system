@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS proc_transaction
     acc_target VARCHAR(255),
     type       VARCHAR(255),
     amount     DECIMAL,
-    curr_code  VARCHAR(255),
+    curr_code  VARCHAR(3),
     detail_msg VARCHAR(255)
 );
 

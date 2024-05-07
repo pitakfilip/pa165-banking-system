@@ -22,10 +22,14 @@ public class Money {
         return amount;
     }
 
-    public Currency getCurrency() {
+    public Currency getCurrencyInstance() {
         return currency;
     }
-
+    
+    public String getCurrency() {
+        return currency.getCurrencyCode();
+    }
+    
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
@@ -39,12 +43,12 @@ public class Money {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Money money = (Money) o;
-        return Objects.equals(getAmount(), money.getAmount()) && Objects.equals(getCurrency(), money.getCurrency());
+        return Objects.equals(getAmount(), money.getAmount()) && Objects.equals(getCurrencyInstance(), money.getCurrencyInstance());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getAmount(), getCurrency());
+        return Objects.hash(getAmount(), getCurrencyInstance());
     }
 
     @Override

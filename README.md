@@ -23,15 +23,19 @@ docker-compose file.
 ## Use case diagram
 <img src="./.documentation/useCaseDiagram.png" width="800">
 
-## Artifact Structure
+## Artifacts and Applications
 
-| Service	                    | Specification	                                                                                                        |
-|-----------------------------|-----------------------------------------------------------------------------------------------------------------------|
-| 	 **Infrastructure**        | 	Common implementations including exceptions, exception handling, loadbalancing, service registry, security and other |
-| 	 **Account Management**    | 	  Authentification, user accounts management                                                                         |
-| 	  **Account Query**        | 	 Real-time representation of current balance states of bank accounts                                                 |
-| 	 **Transaction Processor** | 	 Asynchronous processor for transaction requests                                                                     |
-
+| Name                  | Type       | URL                                                                         | Description                                                                                                                                                                                           |
+|-----------------------|------------|-----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| M2M-Banking-API       | library    | N/A                                                                         | Consists of OpenAPI contracts of microservices for a centralized distribution                                                                                                                         |
+| Infrastructure        | library    | N/A                                                                         | Common implementations including exceptions, exception handling, spring security and other                                                                                                            |
+| Account-Management    | app        | [Swagger-UI](http://localhost:8080/swagger-ui/index.html)<br>App port: 8080 | Spring application for management of banking users and accounts                                                                                                                                       |
+| Account-Query         | app        | [Swagger-UI](http://localhost:8081/swagger-ui/index.html)<br>App port: 8081 | Spring application for querying current data on user accounts, containing a history of transactions, current balance and an employee API for reports                                                  |
+| Transaction-Processor | app        | [Swagger-UI](http://localhost:8082/swagger-ui/index.html)<br>App port: 8082 | Spring application for executing transaction requests, automatic execution of scheduled payments and provides employee API process management and manual trigger of scheduled payments                |
+| PostgreSQL            | DB         | JDBC Connection String: `jdbc:postgresql://localhost:5432/banking`          | Singular DB for all microservices. Instead of having separate DB instances per spring application, each application has its own defined user and schema (each user has privileges to a single scheme) |
+| Prometheus            | monitoring | [Prometheus UI](http://localhost:9000)                                      | Monitoring toolkit for metrics collection                                                                                                                                                             |
+| Grafana               | monitoring | [Grafana UI](http://localhost:3000)                                         | Monitoring toolkit for metrics visualization and persistence                                                                                                                                          |
+| Locust                | testing    | [Locust UI](http://localhost:8089)                                          | Load testing tool simulating user interactions for evaluating performance                                                                                                                             |
 
 ## Module Architecture
 Each service is implemented as a separate maven artifact consisting of a Spring-boot application. Within each project

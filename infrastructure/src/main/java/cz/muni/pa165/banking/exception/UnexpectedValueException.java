@@ -24,7 +24,7 @@ public class UnexpectedValueException extends CustomException {
     }
 
     @Override
-    String getExceptionMessage() {
+    public String getExceptionMessage() {
         return "Unexpected value state";
     }
 

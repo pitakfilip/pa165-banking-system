@@ -23,8 +23,8 @@ class DepositHandler extends ProcessHandler {
 
         Currency accountCurrency = accountService.getAccountCurrency(account);
         Money money = processTransaction.getMoney();
-        if (!accountCurrency.equals(money.getCurrency())) {
-            throw new UnexpectedValueException(String.format("Unable to deposit of provided currency (%s) as the account's currency is '%s'", money.getCurrency(), accountCurrency));    
+        if (!accountCurrency.equals(money.getCurrencyInstance())) {
+            throw new UnexpectedValueException(String.format("Unable to deposit of provided currency (%s) as the account's currency is '%s'", money.getCurrencyInstance(), accountCurrency));    
         }
         
         accountService.publishAccountChange(processTransaction.getUuid(), TransactionType.DEPOSIT, money.getAmount(), account);

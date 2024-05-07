@@ -13,6 +13,8 @@ import cz.muni.pa165.banking.domain.remote.AccountService;
 import cz.muni.pa165.banking.exception.CustomException;
 import cz.muni.pa165.banking.exception.EntityNotFoundException;
 import cz.muni.pa165.banking.exception.UnexpectedValueException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.Instant;
@@ -20,6 +22,8 @@ import java.util.UUID;
 
 abstract class ProcessHandler {
 
+    Logger logger = LoggerFactory.getLogger(ProcessHandler.class);
+    
     abstract void evaluate(ProcessTransaction processTransaction, AccountService accountService, CurrencyConverter currencyConverter);
 
 
@@ -39,7 +43,7 @@ abstract class ProcessHandler {
 
         Status newStatus = Status.PROCESSED;
         String message = "Deposit finalized";
-        RuntimeException thrownException = null;
+        CustomException thrownException = null;
         try {
             evaluate(processTransaction, accountService, currencyConverter);
         } catch (CustomException e) {
@@ -56,6 +60,8 @@ abstract class ProcessHandler {
             return null;
         });
 
+        logger.info("Process with id {} handling finished at state {} with message {}", processUuid, finalNewStatus, finalMessage != null? finalMessage : thrownException.getExceptionMessage());
+        
         if (thrownException != null) {
             throw thrownException;
         }

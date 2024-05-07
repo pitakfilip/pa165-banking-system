@@ -24,8 +24,8 @@ public class WithdrawHandler extends ProcessHandler {
 
         Money money = processTransaction.getMoney();
         Currency accountCurrency = accountService.getAccountCurrency(account);
-        if (!accountCurrency.equals(money.getCurrency())) {
-            throw new UnexpectedValueException(String.format("Unable to withdraw of provided currency (%s) as the account's currency is '%s'", money.getCurrency(), accountCurrency));
+        if (!accountCurrency.equals(money.getCurrencyInstance())) {
+            throw new UnexpectedValueException(String.format("Unable to withdraw of provided currency (%s) as the account's currency is '%s'", money.getCurrencyInstance(), accountCurrency));
         }
         if (!accountService.accountHasSufficientFunds(account, money.getAmount())) {
             throw new UnexpectedValueException(
@@ -33,7 +33,7 @@ public class WithdrawHandler extends ProcessHandler {
                             "Account with number {%s} does not have sufficient funds for withdrawal of %s %s",
                             account.getAccountNumber(),
                             money.getAmount(),
-                            money.getCurrency()
+                            money.getCurrencyInstance()
                     )
             );
         }

@@ -28,7 +28,7 @@ public class TransferHandler extends ProcessHandler {
         validateAccount(target, accountService);
 
         Money money = processTransaction.getMoney();
-        Currency currency = money.getCurrency();
+        Currency currency = money.getCurrencyInstance();
         Currency sourceAccountCurrency = accountService.getAccountCurrency(source);
         
         BigDecimal sourceAmount = money.getAmount();

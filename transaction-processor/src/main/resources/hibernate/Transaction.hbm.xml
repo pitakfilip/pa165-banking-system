@@ -55,7 +55,7 @@
             <property 
                     name="currency"
                     column="curr_code"
-                    type="string"
+                    type="java.lang.String"
             />
         </component>
         
