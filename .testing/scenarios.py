@@ -41,8 +41,9 @@ class BankingUser(HttpUser):
         self.employee_token = self.environment.parsed_options.employee_token
         print(f"CUSTOMER TOKEN: {self.customer_token}")
         print(f"EMPLOYEE TOKEN: {self.employee_token}")
+
     @task
-    def customer_showcase(self):
+    def showcase(self):
         # create user
         user_data = {
             "email": "t.anderson@metacortex.org",
@@ -83,6 +84,9 @@ class BankingUser(HttpUser):
         else:
             raise Exception("Failed to create account2")
 
+        # check account balance
+        assert(self.client.get(f"http://{queryHost}:8081/balance/status", params={"id":self.account1["number"]}).json() == 0)
+
         # deposit to account1 balance
         deposit_data = {
             "id": self.account1["number"],
@@ -94,6 +98,9 @@ class BankingUser(HttpUser):
         response = self.client.post(f"http://{queryHost}:8081/balance/add", params=deposit_data)
         if response.status_code != 200:
             raise Exception("Failed to deposit money")
+
+        # check account balance
+        self.assert_balance(self.account1["number"], 500)
 
         # transfer money
         payment_data = {
@@ -115,6 +122,10 @@ class BankingUser(HttpUser):
             transaction_id = response.json()["identifier"]
         else:
             raise Exception("Failed to send money from :"+str(self.account1["number"])+str(response.content))
+
+        # check account balances after transaction
+        self.assert_balance(self.account1["number"], 400)
+        self.assert_balance(self.account2["number"], 100)
 
         # create employee
         employee_data = {
@@ -138,6 +149,10 @@ class BankingUser(HttpUser):
         if response.status_code != 200:
             raise Exception("Failed to revert transaction: "+str(transaction_id))
 
+        # check account balances after transaction revert
+        self.assert_balance(self.account1["number"], 500)
+        self.assert_balance(self.account2["number"], 0)
+
         # account report
         report_data = {
             "id": self.account1["number"],
@@ -147,3 +162,13 @@ class BankingUser(HttpUser):
         response = self.client.get(f"http://{queryHost}:8081/balance/account/report", params=report_data)
         if response.status_code != 200:
             raise Exception("Failed to get account report: "+self.account1["number"]+str(response.content))
+
+    def assert_balance(self, account_id, expected_balance):
+        balance_data = {
+            "id": account_id
+        }
+        response = self.client.get(f"http://{queryHost}:8081/balance/status", params=balance_data)
+        if response.status_code != 200:
+            raise Exception("Failed to get account balance")
+
+        assert(response.json() == expected_balance)
