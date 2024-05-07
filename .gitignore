@@ -35,3 +35,8 @@ infrastructure/!**/src/test/**/target/
 m2m-banking-api/account-management-api/target
 m2m-banking-api/account-query-api/target
 m2m-banking-api/transaction-api/target
+
+### Auth client ###
+client/target/
+client/!**/src/main/**/target/
+client/!**/src/test/**/target/
