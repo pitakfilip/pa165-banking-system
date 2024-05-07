@@ -1,4 +1,4 @@
-from locust import HttpUser, between, task
+from locust import HttpUser, between, task, events
 import uuid
 
 # Uncomment in case of running Locust via CLI instead of docker-compose
@@ -9,11 +9,38 @@ managementHost = "account-management"
 queryHost = "account-query"
 processHost = "transaction-processor"
 
+@events.init_command_line_parser.add_listener
+def _(parser):
+    parser.add_argument(
+        "--customer-token",
+        type=str,
+        default="",
+        help="Customer OAuth2 Token",
+    )
+    parser.add_argument(
+        "--employee-token",
+        type=str,
+        default="",
+        help="Employee OAuth2 Token",
+    )
+
+@events.test_start.add_listener
+def _(environment, **kw):
+    print(f"Custom argument supplied: {environment.parsed_options.customer_token}")
+    print(f"Custom argument supplied: {environment.parsed_options.employee_token}")
+    
 class BankingUser(HttpUser):
     
     host = f"http://{managementHost}:8080"
+    customer_token = ""
+    employee_token = ""
     wait_time = between(1, 3)
 
+    def on_start(self):
+        self.customer_token = self.environment.parsed_options.customer_token
+        self.employee_token = self.environment.parsed_options.employee_token
+        print(f"CUSTOMER TOKEN: {self.customer_token}")
+        print(f"EMPLOYEE TOKEN: {self.employee_token}")
     @task
     def customer_showcase(self):
         # create user
