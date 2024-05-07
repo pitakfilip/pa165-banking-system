@@ -45,4 +45,6 @@ services:
     volumes:
       - ./.docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./.docker/grafana/config/grafana.ini:/etc/grafana/grafana.ini
+      - ./.docker/grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/main.yaml
+      - ./.docker/grafana/dashboards:/var/lib/grafana/dashboards
 
