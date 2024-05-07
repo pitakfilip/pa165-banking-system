@@ -195,7 +195,7 @@ public class BalanceControllerIT {
         when(transactionRepository.findByBalance(mockBalance)).thenReturn(mockBalance.getTransactions());
 
         // Act
-        String responseJson = mockMvc.perform(get("/balance/transactions?id=id&beginning=2020-02-02&end=2025-02-02")
+        String responseJson = mockMvc.perform(get("/balance/transactions?id=id&beginning=2020-02-02&end=2035-02-02")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn()
                 .getResponse()
@@ -211,7 +211,7 @@ public class BalanceControllerIT {
     @Test
     void getTransactions_personNotExists_returnsError_IT() throws Exception {
         // Act
-        String responseJson = mockMvc.perform(get("/balance/transactions?id=d&beginning=2020-02-02&end=2025-02-02")
+        String responseJson = mockMvc.perform(get("/balance/transactions?id=d&beginning=2020-02-02&end=2035-02-02")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is(404))
                 .andReturn()
@@ -252,7 +252,7 @@ public class BalanceControllerIT {
         when(balancesRepository.getAllIds()).thenReturn(List.of(id1, id2));
         // Act
         String id = "id";
-        String responseJson = mockMvc.perform(get("/balance/alltransactions?beginning=2020-02-02&end=2025-02-02")
+        String responseJson = mockMvc.perform(get("/balance/alltransactions?beginning=2020-02-02&end=2035-02-02")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is(200))
                 .andReturn()
@@ -286,7 +286,7 @@ public class BalanceControllerIT {
         when(balancesRepository.findById(id)).thenReturn(Optional.of(mockBalance));
         when(transactionRepository.findByBalance(mockBalance)).thenReturn(mockBalance.getTransactions());
         // Act
-        String responseJson = mockMvc.perform(get("/balance/account/report?id=iddd&beginning=2020-02-02&end=2024-05-05")
+        String responseJson = mockMvc.perform(get("/balance/account/report?id=iddd&beginning=2020-02-02&end=2035-05-05")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is(200))
                 .andReturn()
@@ -303,7 +303,7 @@ public class BalanceControllerIT {
     @Test
     void getReport_personNotExists_returnsError_IT() throws Exception {
         // Act
-        String responseJson = mockMvc.perform(get("/balance/account/report?id=notanaccount&beginning=2020-02-02&end=2024-05-05")
+        String responseJson = mockMvc.perform(get("/balance/account/report?id=notanaccount&beginning=2020-02-02&end=2035-05-05")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is(404))
                 .andReturn()

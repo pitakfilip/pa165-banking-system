@@ -35,3 +35,10 @@ spring:
     password: transactionAccPasswd
   jpa:
     mapping-resources: hibernate/Transaction.hbm.xml, hibernate/Process.hbm.xml
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          health,metrics,prometheus

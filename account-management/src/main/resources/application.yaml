@@ -21,4 +21,10 @@ spring:
     password: userAccPasswd
   jpa:
     show-sql: true
-              
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          health,metrics,prometheus
