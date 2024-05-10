@@ -34,11 +34,19 @@ class BankingUser(HttpUser):
     host = f"http://{managementHost}:8080"
     customer_token = ""
     employee_token = ""
+    customer_header = {}
+    employee_header = {}
     wait_time = between(1, 3)
 
     def on_start(self):
         self.customer_token = self.environment.parsed_options.customer_token
         self.employee_token = self.environment.parsed_options.employee_token
+        self.customer_header = {
+            "Authorization": f"Bearer {self.customer_token}"
+        }
+        self.employee_header = {
+            "Authorization": f"Bearer {self.employee_token}"
+        }
         print(f"CUSTOMER TOKEN: {self.customer_token}")
         print(f"EMPLOYEE TOKEN: {self.employee_token}")
 
@@ -52,7 +60,7 @@ class BankingUser(HttpUser):
             "lastName": "Anderson",
             "userType": "REGULAR"
         }
-        response = self.client.post("/user", json=user_data)
+        response = self.client.post("/user", json=user_data, headers=self.employee_header)
         if response.status_code == 201:
             self.user_id = response.json()["id"]
         else:
@@ -65,7 +73,7 @@ class BankingUser(HttpUser):
             "maxSpendingLimit": 1000,
             "currency": "USD"
         }
-        response = self.client.post("/account", json=account_data)
+        response = self.client.post("/account", json=account_data, headers=self.employee_header)
         if response.status_code == 201:
             self.account1 = response.json()
         else:
@@ -78,14 +86,14 @@ class BankingUser(HttpUser):
             "maxSpendingLimit": 1000,
             "currency": "USD"
         }
-        response = self.client.post("/account", json=account_data)
+        response = self.client.post("/account", json=account_data, headers=self.employee_header)
         if response.status_code == 201:
             self.account2 = response.json()
         else:
             raise Exception("Failed to create account2")
 
         # check account balance
-        assert(self.client.get(f"http://{queryHost}:8081/balance/status", params={"id":self.account1["number"]}).json() == 0)
+        self.assert_balance(self.account1["number"], 0)
 
         # deposit to account1 balance
         deposit_data = {
@@ -95,7 +103,7 @@ class BankingUser(HttpUser):
             "type": "DEPOSIT"
         }
 
-        response = self.client.post(f"http://{queryHost}:8081/balance/add", params=deposit_data)
+        response = self.client.post(f"http://{queryHost}:8081/balance/add", params=deposit_data, headers=self.customer_header)
         if response.status_code != 200:
             raise Exception("Failed to deposit money")
 
@@ -117,7 +125,7 @@ class BankingUser(HttpUser):
             },
             "detail": "Transfer to savings account"
         }
-        response = self.client.put(f"http://{processHost}:8082/transaction/v1/process", json=payment_data)
+        response = self.client.put(f"http://{processHost}:8082/transaction/v1/process", json=payment_data, headers=self.customer_header)
         if response.status_code == 200:
             transaction_id = response.json()["identifier"]
         else:
@@ -135,7 +143,7 @@ class BankingUser(HttpUser):
             "lastName": "Smith",
             "userType": "EMPLOYEE"
         }
-        response = self.client.post("/user", json=employee_data)
+        response = self.client.post("/user", json=employee_data, headers=self.employee_header)
         if response.status_code == 201:
             self.employee_id = response.json()["id"]
         else:
@@ -143,11 +151,12 @@ class BankingUser(HttpUser):
 
         # revert transaction
         revert_data = {
-            "x-process-uuid": transaction_id
+            "x-process-uuid": transaction_id,
+            'Authorization': f"Bearer {self.employee_token}"
         }
         response = self.client.post(f"http://{processHost}:8082/transaction/v1/revert", headers=revert_data)
         if response.status_code != 200:
-            raise Exception("Failed to revert transaction: "+str(transaction_id))
+            raise Exception("Failed to revert transaction")
 
         # check account balances after transaction revert
         self.assert_balance(self.account1["number"], 500)
@@ -159,7 +168,7 @@ class BankingUser(HttpUser):
             "beginning": "2024-01-01",
             "end": "2024-12-31"
         }
-        response = self.client.get(f"http://{queryHost}:8081/balance/account/report", params=report_data)
+        response = self.client.get(f"http://{queryHost}:8081/balance/account/report", params=report_data, headers=self.employee_header)
         if response.status_code != 200:
             raise Exception("Failed to get account report: "+self.account1["number"]+str(response.content))
 
@@ -167,7 +176,7 @@ class BankingUser(HttpUser):
         balance_data = {
             "id": account_id
         }
-        response = self.client.get(f"http://{queryHost}:8081/balance/status", params=balance_data)
+        response = self.client.get(f"http://{queryHost}:8081/balance/status", params=balance_data, headers=self.customer_header)
         if response.status_code != 200:
             raise Exception("Failed to get account balance")
 
