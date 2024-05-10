@@ -19,10 +19,6 @@ In order to start the applications please follow the following instructions:
 This builds all the required maven artifacts in the correct order, creates images on your local machine and then runs the specified
 docker-compose file.
 
-
-## Use case diagram
-<img src="./.documentation/useCaseDiagram.png" width="800">
-
 ## Artifacts and Applications
 
 | Name                  | Type       | URL                                                                         | Description                                                                                                                                                                                           |
@@ -37,6 +33,16 @@ docker-compose file.
 | Prometheus            | monitoring | [Prometheus UI](http://localhost:9000)                                      | Monitoring toolkit for metrics collection                                                                                                                                                             |
 | Grafana               | monitoring | [Grafana UI](http://localhost:3000)                                         | Monitoring toolkit for metrics visualization and persistence                                                                                                                                          |
 | Locust                | testing    | [Locust UI](http://localhost:8089)                                          | Load testing tool simulating user interactions for evaluating performance                                                                                                                             |
+
+## Clearing and Seeding DB
+Within the [DB docker config files](./.docker/db/scripts) there are two scripts that may be executed on your maching (if you have psql installed!)
+or via the docker container of the database itself.
+
+- For clearing the DB data please use [this bash script](./.docker/db/scripts/clear_db.sh), alternatively within the DB container call `./scripts/clear_db.sh`
+- For seeding the DB with valid data please use [this bash script](./.docker/db/scripts/seed_db.sh), alternatively within the DB container call `./scripts/seed_db.sh`
+
+## Use case diagram
+<img src="./.documentation/useCaseDiagram.png" width="800">
 
 ## Module Architecture
 Each service is implemented as a separate maven artifact consisting of a Spring-boot application. Within each project
