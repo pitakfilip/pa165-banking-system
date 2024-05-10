@@ -16,7 +16,7 @@ public class UnsupportedDataTypeException extends CustomException {
     }
 
     @Override
-    String getExceptionMessage() {
+    public String getExceptionMessage() {
         return "Unsupported data type";
     }
 

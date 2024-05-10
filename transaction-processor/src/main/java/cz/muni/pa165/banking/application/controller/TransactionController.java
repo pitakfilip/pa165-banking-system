@@ -7,6 +7,7 @@ import cz.muni.pa165.banking.transaction.processor.dto.ProcessDetailDto;
 import cz.muni.pa165.banking.transaction.processor.dto.ProcessDto;
 import cz.muni.pa165.banking.transaction.processor.dto.TransactionDto;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ public class TransactionController implements TransactionApi {
     private final TransactionFacade facade;
     
     private final ScheduledPaymentService scheduledPaymentService;
-
+    
     public TransactionController(TransactionFacade facade, ScheduledPaymentService scheduledPaymentService) {
         this.facade = facade;
         this.scheduledPaymentService = scheduledPaymentService;
@@ -26,24 +27,28 @@ public class TransactionController implements TransactionApi {
 
 
     @Override
+    @PreAuthorize("hasAnyAuthority('SCOPE_test_1', 'SCOPE_test_2', 'SCOPE_test_3')")
     public ResponseEntity<ProcessDto> createTransactionProcess(TransactionDto transactionDto) {
         ProcessDto result = facade.createTransactionProcess(transactionDto);
         return ResponseEntity.ok(result);
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('SCOPE_test_1', 'SCOPE_test_2', 'SCOPE_test_3')")
     public ResponseEntity<ProcessDetailDto> status(UUID xProcessUuid) {
         ProcessDetailDto result = facade.getStatus(xProcessUuid);
         return ResponseEntity.ok(result);
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('SCOPE_test_2', 'SCOPE_test_3')")
     public ResponseEntity<ProcessDto> revertTransactionProcess(UUID xProcessUuid) {
         ProcessDto revertingProcess = facade.revertProcess(xProcessUuid);
         return ResponseEntity.ok(revertingProcess);
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('SCOPE_test_2', 'SCOPE_test_3')")
     public ResponseEntity<Void> executeSchedulePayments(LocalDate date) {
         if (date == null) {
             date = LocalDate.now();

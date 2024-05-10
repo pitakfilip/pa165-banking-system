@@ -29,13 +29,9 @@ class BalancesRepositoryTest {
     @BeforeAll
     public static void initDb(@Autowired BalancesRepository repository) {
         Balance balance = new Balance("id1");
-
         balance.addTransaction(BigDecimal.TEN, TransactionType.CREDIT, new UUID(2,2));
         repository.save(balance);
-
-        repository.save(balance);
         repository.save(new Balance("id2"));
-
     }
 
     @Test
@@ -50,5 +46,12 @@ class BalancesRepositoryTest {
         List<String> result = repository.getAllIds();
         assertTrue(result.contains("id1"));
         assertTrue(result.contains("id2"));
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    void findById_notexists_returnsEmpty() {
+        Optional<Balance> balance = repository.findById("id3");
+        assertEquals(balance, Optional.empty());
     }
 }

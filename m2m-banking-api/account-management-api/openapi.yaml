@@ -104,6 +104,9 @@ components:
         id:
           type: integer
           format: int64
+        number:
+          type: string
+          description: uuid account number
         userId:
           type: integer
           format: int64

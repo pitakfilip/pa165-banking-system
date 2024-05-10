@@ -23,7 +23,7 @@ public class ServerError extends CustomException {
     }
 
     @Override
-    String getExceptionMessage() {
+    public String getExceptionMessage() {
         return "Internal Server Error";
     }
 

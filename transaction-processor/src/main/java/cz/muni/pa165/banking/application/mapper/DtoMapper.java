@@ -10,6 +10,7 @@ import cz.muni.pa165.banking.domain.transaction.TransactionType;
 import cz.muni.pa165.banking.transaction.processor.dto.*;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
@@ -22,6 +23,7 @@ public interface DtoMapper {
     
     TransactionType map(TransactionTypeDto source);
     
+    @Mapping(source = "amount", target = "money")
     Transaction map(TransactionDto source);
 
     // Output DTOs

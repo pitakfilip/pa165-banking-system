@@ -24,7 +24,7 @@ public class EntityNotFoundException extends CustomException {
     }
 
     @Override
-    String getExceptionMessage() {
+    public String getExceptionMessage() {
         return "Entity not present in repository";
     }
 

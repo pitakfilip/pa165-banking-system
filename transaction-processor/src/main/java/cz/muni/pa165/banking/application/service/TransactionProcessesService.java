@@ -75,8 +75,8 @@ public class TransactionProcessesService {
         }
 
         Transaction revertingTransaction = new Transaction(
-                processTransaction.getTarget(),
                 processTransaction.getSource(),
+                processTransaction.getTarget(),
                 TransactionType.REFUND,
                 processTransaction.getMoney(),
                 String.format("Admin reversal of executed %s transaction {%s}", processTransaction.getType(), uuid)

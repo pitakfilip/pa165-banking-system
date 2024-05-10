@@ -7,6 +7,7 @@ import java.util.Objects;
 
 /**
  * @author Martin Mojzis
+ * represents statistics for 1 type of transaction
  */
 public class TransactionStatistics {
 

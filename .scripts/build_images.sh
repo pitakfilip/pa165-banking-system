@@ -6,6 +6,7 @@ function build() {
 
 echo "Building docker images"
 
+build "client"
 build "account-management"
 build "account-query"
 build "transaction-processor"

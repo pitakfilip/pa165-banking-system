@@ -91,7 +91,7 @@ public interface DtoMapper {
     default Account map(AccountDto accountDto){
         Account account = new Account();
         account.setId(accountDto.getId());
-        account.setAccountNumber(UUID.randomUUID().toString());
+        account.setAccountNumber(accountDto.getNumber());
         account.setUserId(accountDto.getUserId());
         account.setMaxSpendingLimit(accountDto.getMaxSpendingLimit());
         account.setType(map(accountDto.getType()));
@@ -102,6 +102,7 @@ public interface DtoMapper {
     default AccountDto map(Account account){
         AccountDto accountDto = new AccountDto();
         accountDto.setId(account.getId());
+        accountDto.setNumber(account.getAccountNumber());
         accountDto.setUserId(account.getUserId());
         accountDto.setMaxSpendingLimit(account.getMaxSpendingLimit());
         accountDto.setType(map(account.getType()));

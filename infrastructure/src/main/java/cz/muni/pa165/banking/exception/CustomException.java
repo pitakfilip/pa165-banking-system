@@ -24,8 +24,8 @@ public abstract class CustomException extends RuntimeException {
     
     public abstract HttpStatus getStatus();
     
-    abstract String getExceptionMessage();
-    
+    public abstract String getExceptionMessage();
+
     abstract String getExceptionCause();
     
     abstract Object getDetail();

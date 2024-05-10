@@ -27,6 +27,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -41,7 +42,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class BalanceControllerIT {
     @Autowired
     private MockMvc mockMvc;
@@ -96,6 +97,7 @@ public class BalanceControllerIT {
 
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void createBalance_returnsCreated_IT() throws Exception {
         // Arrange
 
@@ -110,6 +112,7 @@ public class BalanceControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void addToBalance_accountExists_returnsOK_IT() throws Exception {
         // Arrange
         String id = "id";
@@ -125,6 +128,7 @@ public class BalanceControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void addToBalance_accountNotExists_returnsNOK_IT() throws Exception {
         // Arrange
         String id = "badid";
@@ -142,6 +146,7 @@ public class BalanceControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void getStatus_personExists_returnsBalanceStatus_IT() throws Exception {
         // Arrange
         String id = "id";
@@ -161,6 +166,7 @@ public class BalanceControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void getStatus_personNotExists_returnsBadRequest_IT() throws Exception {
         // Arrange
         mockMvc.perform(post("/balance/new?id=id"));
@@ -177,6 +183,7 @@ public class BalanceControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void getTransactions_personExists_returnsTransactions_IT() throws Exception {
         // Arrange
         String id = "id";
@@ -195,7 +202,7 @@ public class BalanceControllerIT {
         when(transactionRepository.findByBalance(mockBalance)).thenReturn(mockBalance.getTransactions());
 
         // Act
-        String responseJson = mockMvc.perform(get("/balance/transactions?id=id&beginning=2020-02-02&end=2025-02-02")
+        String responseJson = mockMvc.perform(get("/balance/transactions?id=id&beginning=2020-02-02&end=2035-02-02")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn()
                 .getResponse()
@@ -208,10 +215,12 @@ public class BalanceControllerIT {
         assertThat(response[0].getProcessId()).isEqualTo(transaction.getProcessId());
         assertThat(response[0].getTransactionType()).isEqualTo(transaction.getTransactionType());
     }
+
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void getTransactions_personNotExists_returnsError_IT() throws Exception {
         // Act
-        String responseJson = mockMvc.perform(get("/balance/transactions?id=d&beginning=2020-02-02&end=2025-02-02")
+        String responseJson = mockMvc.perform(get("/balance/transactions?id=d&beginning=2020-02-02&end=2035-02-02")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is(404))
                 .andReturn()
@@ -222,6 +231,7 @@ public class BalanceControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void getAllTransactions_returnsAllTransactions_IT() throws Exception {
         // Arrange
 
@@ -252,7 +262,7 @@ public class BalanceControllerIT {
         when(balancesRepository.getAllIds()).thenReturn(List.of(id1, id2));
         // Act
         String id = "id";
-        String responseJson = mockMvc.perform(get("/balance/alltransactions?beginning=2020-02-02&end=2025-02-02")
+        String responseJson = mockMvc.perform(get("/balance/alltransactions?beginning=2020-02-02&end=2035-02-02")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is(200))
                 .andReturn()
@@ -270,6 +280,7 @@ public class BalanceControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void getReport_personExists_returnsReport_IT() throws Exception {
         // Arrange
         String id = "iddd";
@@ -286,7 +297,7 @@ public class BalanceControllerIT {
         when(balancesRepository.findById(id)).thenReturn(Optional.of(mockBalance));
         when(transactionRepository.findByBalance(mockBalance)).thenReturn(mockBalance.getTransactions());
         // Act
-        String responseJson = mockMvc.perform(get("/balance/account/report?id=iddd&beginning=2020-02-02&end=2024-05-05")
+        String responseJson = mockMvc.perform(get("/balance/account/report?id=iddd&beginning=2020-02-02&end=2035-05-05")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is(200))
                 .andReturn()
@@ -301,9 +312,10 @@ public class BalanceControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void getReport_personNotExists_returnsError_IT() throws Exception {
         // Act
-        String responseJson = mockMvc.perform(get("/balance/account/report?id=notanaccount&beginning=2020-02-02&end=2024-05-05")
+        String responseJson = mockMvc.perform(get("/balance/account/report?id=notanaccount&beginning=2020-02-02&end=2035-05-05")
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is(404))
                 .andReturn()
