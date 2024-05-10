@@ -13,6 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,5 +53,14 @@ class TransactionRepositoryTest {
         assertTrue(result.contains(tr));
         assertTrue(result.size() == 1);
         assertTrue(result2.isEmpty());
+    }
+
+    @Test
+    void findByBalance_calledWithWrongId_returnsEmpty(){
+        //Arrange
+        Optional<Balance> balance = balancesRepository.findById("id3");
+
+        //Assert
+        assertEquals(balance, Optional.empty());
     }
 }
