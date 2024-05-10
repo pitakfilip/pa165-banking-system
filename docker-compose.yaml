@@ -29,6 +29,11 @@ services:
     ports:
       - "8082:8082"
 
+  banking-client:
+    image: client
+    ports:
+      - "8084:8084"
+
   locust-io:
     image: locustio/locust
     volumes:

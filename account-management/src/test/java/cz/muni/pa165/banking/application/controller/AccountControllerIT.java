@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
@@ -76,6 +77,7 @@ class AccountControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void createAccount_UserExists_ReturnsCreated() throws Exception {
         when(balanceApi.createBalance(anyString())).thenReturn(ResponseEntity.ok().build());
 
@@ -92,6 +94,7 @@ class AccountControllerIT {
 
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void createAccount_UserNotExist_ReturnsNotFound() throws Exception {
         mockMvc.perform(post("/account")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -103,6 +106,7 @@ class AccountControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void findAccountById_AccountFound_ReturnsOk() throws Exception {
         mockMvc.perform(get("/account?accountId=1")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -113,6 +117,7 @@ class AccountControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void findAccountById_AccountNotFound_ReturnsNotFound() throws Exception {
         mockMvc.perform(get("/account?accountId=3")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -124,6 +129,7 @@ class AccountControllerIT {
 
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void findAccountByAccountNumber_AccountFound_ReturnsOk() throws Exception {
         mockMvc.perform(get("/account/number?accountNumber=abc")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -134,6 +140,7 @@ class AccountControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void findAccountByAccountNumber_AccountNotFound_ReturnsNotFound() throws Exception {
         mockMvc.perform(get("/account/number?accountNumber=abcde")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -144,6 +151,7 @@ class AccountControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void getScheduledPayments_AccountFound_ReturnsOk() throws Exception {
         mockMvc.perform(get("/account/scheduled?accountNumber=abc")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -154,6 +162,7 @@ class AccountControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void getScheduledPayments_AccountNotFound_ReturnsNotFound() throws Exception {
         mockMvc.perform(get("/account/scheduled?accountNumber=3")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -164,6 +173,7 @@ class AccountControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void schedulePayment_AccountFound_ReturnsCreated() throws Exception {
         mockMvc.perform(post("/account/scheduled")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -175,6 +185,7 @@ class AccountControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void schedulePayment_AccountNotFound_ReturnsNotFound() throws Exception {
         mockMvc.perform(post("/account/scheduled")
                         .contentType(MediaType.APPLICATION_JSON)
