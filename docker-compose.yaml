@@ -12,7 +12,8 @@ services:
       - POSTGRES_PASSWORD=passwd
       - POSTGRES_DB=banking
     volumes:
-      - ./.docker/db/scripts:/docker-entrypoint-initdb.d
+      - ./.docker/db/scripts/init:/docker-entrypoint-initdb.d
+      - ./.docker/db/scripts:/scripts
     
   account-management:
     image: account-management
