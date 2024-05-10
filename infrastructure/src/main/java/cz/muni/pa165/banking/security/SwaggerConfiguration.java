@@ -19,13 +19,14 @@ public class SwaggerConfiguration {
     public OpenApiCustomizer openAPICustomizer() {
         return openApi -> {
             openApi.getComponents()
-                    .addSecuritySchemes("Authorization", new SecurityScheme()
-                            .type(SecurityScheme.Type.APIKEY)
-                            .in(SecurityScheme.In.HEADER)
-                            .name("Bearer Authorization Token")
+                    .addSecuritySchemes(SECURITY_SCHEME_BEARER,
+                            new SecurityScheme()
+                                    .type(SecurityScheme.Type.HTTP)
+                                    .scheme("bearer")
+                                    .description("provide a valid access token")
                     )
             ;
-            openApi.addSecurityItem(new SecurityRequirement().addList("Bearer Authorization Token"));
+            openApi.addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_BEARER));
         };
     }
 
