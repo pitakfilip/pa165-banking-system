@@ -11,6 +11,8 @@ import java.util.UUID;
 
 /**
  * @author Martin Mojzis
+ * represents one transaction - has amount, type, date when it was created and prcess id of process that created it
+ * every transaction belongs to one balance - of 1 account
  */
 @Entity
 @Table(name = "bal_transaction")

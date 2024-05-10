@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Martin Mojzis
+ * class representing balance of 1 account - has all transactions of the account stored in itself
  */
 @Entity
 @Table(name = "balance")

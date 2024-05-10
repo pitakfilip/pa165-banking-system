@@ -9,9 +9,9 @@ import java.util.Objects;
 
 /**
  * @author Martin Mojzis
+ * reports total and average transactions (deposits, withdrawals, outgoing and incoming payments) in a selected date range for 1 account
  */
 public class StatisticalReport {
-    //report total and average (per account) transactions (deposits, withdrawals, outgoing and incoming payments) in a selected date range
 
     private final TransactionStatistics totalAmount = new TransactionStatistics();
 
