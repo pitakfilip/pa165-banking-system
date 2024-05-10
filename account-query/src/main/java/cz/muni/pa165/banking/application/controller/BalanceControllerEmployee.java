@@ -6,6 +6,7 @@ import cz.muni.pa165.banking.account.query.dto.TransactionType;
 import cz.muni.pa165.banking.account.query.dto.TransactionsReport;
 import cz.muni.pa165.banking.application.facade.BalanceFacade;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
@@ -25,12 +26,14 @@ public class BalanceControllerEmployee implements EmployeeServiceApi {
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('SCOPE_test_2', 'SCOPE_test_3')")
     public ResponseEntity<TransactionsReport> createReport(String id, LocalDate beginning, LocalDate end) {
         TransactionsReport result = balanceFacade.getReport(id, beginning, end);
         return ResponseEntity.ok(result);
     }
 
     @Override
+    @PreAuthorize("hasAnyAuthority('SCOPE_test_2', 'SCOPE_test_3')")
     public ResponseEntity<List<Transaction>> getAllTransactions(LocalDate beginning, LocalDate end,
                                                                 BigDecimal minAmount, BigDecimal maxAmount, TransactionType type) {
         List<Transaction> result = balanceFacade.getAllTransactions(beginning, end, minAmount, maxAmount, type);

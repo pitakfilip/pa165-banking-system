@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
@@ -19,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 class UserControllerIT {
 
     @Autowired
@@ -39,6 +40,7 @@ class UserControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void createUser_ReturnsCreated() throws Exception {
         mockMvc.perform(post("/user")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -50,6 +52,7 @@ class UserControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void findUserById_UserFound_ReturnsOk() throws Exception {
         mockMvc.perform(get("/user?userId=1")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -60,6 +63,7 @@ class UserControllerIT {
     }
 
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     void findUserById_UserNotFound_ReturnsNotFound() throws Exception {
         mockMvc.perform(get("/user?userId=3")
                         .contentType(MediaType.APPLICATION_JSON))
