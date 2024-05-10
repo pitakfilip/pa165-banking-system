@@ -40,3 +40,6 @@ m2m-banking-api/transaction-api/target
 client/target/
 client/!**/src/main/**/target/
 client/!**/src/test/**/target/
+
+### OTHER ###
+.testing/__pycache__/
