@@ -41,7 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 public class BalanceControllerIT {
     @Autowired
     private MockMvc mockMvc;

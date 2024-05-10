@@ -1,7 +1,7 @@
 package cz.muni.pa165.banking.application.configuration;
 
 import cz.muni.pa165.banking.exception.CustomExceptionHandler;
-import cz.muni.pa165.banking.security.BaseSecurityFilter;
+import cz.muni.pa165.banking.security.BaseSecurityFilterConfiguration;
 import cz.muni.pa165.banking.security.SwaggerConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -16,8 +16,8 @@ public class BeanRegistry {
     }
     
     @Bean
-    BaseSecurityFilter securityFilter() {
-        return new BaseSecurityFilter();
+    BaseSecurityFilterConfiguration securityFilter() {
+        return new BaseSecurityFilterConfiguration();
     }
     
     @Bean
