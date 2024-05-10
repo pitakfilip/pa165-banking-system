@@ -2,20 +2,147 @@ SET SEARCH_PATH TO bank_account;
 
 -- INSERT starting data
 
-INSERT INTO balance
-VALUES (90.00, 'id1'),
-       (118.00, 'id2'),
-       (243.00, 'id3'),
-       (-243.00, 'id4');
+INSERT INTO bank_account.balance (amount, balance_id) VALUES (5060.00, 'd9e7ff31-03b3-40f7-a676-850bb30d37d5');
+INSERT INTO bank_account.balance (amount, balance_id) VALUES (3659.63, '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.balance (amount, balance_id) VALUES (6226.62, 'c1e6dbc7-0304-427a-a9fb-e17f4dae2e9b');
+INSERT INTO bank_account.balance (amount, balance_id) VALUES (0.00, 'a29914e1-8017-4b1e-894a-d5379a0c9e88');
+INSERT INTO bank_account.balance (amount, balance_id) VALUES (44300.00, '48196474-6958-4f1c-bc31-6c5ce9cf71e0');
+INSERT INTO bank_account.balance (amount, balance_id) VALUES (27700.00, '2212f26f-5432-4b92-9124-6ac9cec56b60');
+INSERT INTO bank_account.balance (amount, balance_id) VALUES (58400.00, 'a462d7e5-3555-46fd-9810-d160b44afa44');
+INSERT INTO bank_account.balance (amount, balance_id) VALUES (2906.00, 'b519f63b-d868-4713-a7c0-9d12c29f4198');
+INSERT INTO bank_account.balance (amount, balance_id) VALUES (1804.00, '0bd3000f-ff8d-4d42-b82a-c95d4ae5217d');
+INSERT INTO bank_account.balance (amount, balance_id) VALUES (103414.76, '4aa2d3ed-ed22-4e3f-986f-44cb7c182517');
+INSERT INTO bank_account.balance (amount, balance_id) VALUES (1225.67, 'f8e26591-862c-4b02-9cdc-9a4505d3b31f');
+INSERT INTO bank_account.balance (amount, balance_id) VALUES (2800.00, '92fdb5db-586c-4fe8-a5bb-31c25881f3eb');
+INSERT INTO bank_account.balance (amount, balance_id) VALUES (2070.00, '1e8feba3-3783-46eb-88fb-aa359f88913d');
+INSERT INTO bank_account.balance (amount, balance_id) VALUES (1700.00, '18693673-3b85-419c-9823-9fa86c96fea9');
+INSERT INTO bank_account.balance (amount, balance_id) VALUES (4150.00, 'dd2be61a-eaf6-4fad-ac79-f51f0e8319ae');
 
-INSERT INTO bal_transaction
-VALUES (90.00, 1, TIMESTAMP WITH TIME ZONE '2024-04-15 14:11:00.288446+02', 991,
-        UUID 'b775b79f-52a9-45c4-8ab3-bdb9f0f3d4ae', 'id1'),
-       (94.00, 2, TIMESTAMP WITH TIME ZONE '2024-04-15 14:11:42.919109+02', 992,
-        UUID 'c91b6ef6-32ac-4160-bf7f-97979ca84606', 'id2'),
-       (24.00, 1, TIMESTAMP WITH TIME ZONE '2024-04-15 14:11:57.480291+02', 993,
-        UUID '6a1fa40e-3ba8-46a8-b005-8bcd63ae44de', 'id2'),
-       (243.00, 3, TIMESTAMP WITH TIME ZONE '2024-04-15 14:12:14.949613+02', 994,
-        UUID 'd9974137-7000-4f34-8c64-1d35b0534e31', 'id3'),
-       (-243.00, 3, TIMESTAMP WITH TIME ZONE '2024-04-15 14:12:23.109443+02', 995,
-        UUID 'd9974137-7000-4f34-8c64-1d35b0534e31', 'id4');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (190.00, 1, '2024-05-10 16:18:06.520645 +00:00', 1, '45c12cf7-0978-49f1-af3c-283605f404a0', 'f8e26591-862c-4b02-9cdc-9a4505d3b31f');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (110.00, 1, '2024-05-10 16:18:18.711136 +00:00', 2, '64719eb4-4559-44b8-81c6-ac15bfe1a9a8', 'f8e26591-862c-4b02-9cdc-9a4505d3b31f');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (420.00, 1, '2024-05-10 16:18:24.790257 +00:00', 3, '6d0b0688-17d8-4dad-8a66-e84e150ea6e5', 'f8e26591-862c-4b02-9cdc-9a4505d3b31f');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (560.00, 1, '2024-05-10 16:18:40.851425 +00:00', 4, '2ee8e741-ab10-4012-90fc-9a436f1786a1', 'f8e26591-862c-4b02-9cdc-9a4505d3b31f');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (12000.00, 1, '2024-05-10 16:30:13.448355 +00:00', 5, 'e2f6eed0-524b-4721-a963-38e8f910426a', '4aa2d3ed-ed22-4e3f-986f-44cb7c182517');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (14000.00, 1, '2024-05-10 16:30:18.355126 +00:00', 6, '346f2cfc-7fb0-475d-9e67-7c550eb6a22a', '4aa2d3ed-ed22-4e3f-986f-44cb7c182517');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (9000.00, 1, '2024-05-10 16:30:21.723956 +00:00', 7, 'bbfb115b-1e64-4ada-ac9f-bf0246f78d5d', '4aa2d3ed-ed22-4e3f-986f-44cb7c182517');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (44000.00, 1, '2024-05-10 16:30:24.529313 +00:00', 8, 'd755b244-ae4c-492e-bb42-1634eecd69af', '4aa2d3ed-ed22-4e3f-986f-44cb7c182517');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (23500.00, 1, '2024-05-10 16:30:43.631867 +00:00', 9, '1ceabeb5-e038-45d6-8ccd-10926a4e646c', '4aa2d3ed-ed22-4e3f-986f-44cb7c182517');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (5500.00, 1, '2024-05-10 16:31:12.002648 +00:00', 10, '31f52ecb-066b-44ee-b9c9-09a0fed8b772', 'a462d7e5-3555-46fd-9810-d160b44afa44');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (15500.00, 1, '2024-05-10 16:31:14.127543 +00:00', 11, 'f24a9aba-b44d-4fc8-b822-b13e83265168', 'a462d7e5-3555-46fd-9810-d160b44afa44');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (17500.00, 1, '2024-05-10 16:31:19.547035 +00:00', 12, 'f2c19a35-1a85-4f7a-8327-03748846766c', 'a462d7e5-3555-46fd-9810-d160b44afa44');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (19900.00, 1, '2024-05-10 16:31:26.049001 +00:00', 13, 'd26f8148-5b89-46ce-9fc4-2554b58afee8', 'a462d7e5-3555-46fd-9810-d160b44afa44');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (19900.00, 1, '2024-05-10 16:32:10.105501 +00:00', 14, '5fb2d162-ba60-41be-9397-4d2802dd9379', '48196474-6958-4f1c-bc31-6c5ce9cf71e0');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (7900.00, 1, '2024-05-10 16:32:31.769800 +00:00', 15, '65dc9590-401b-4d16-bb9e-924fe6f7b9dc', '48196474-6958-4f1c-bc31-6c5ce9cf71e0');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (7900.00, 1, '2024-05-10 16:32:34.440744 +00:00', 16, '793db248-bfef-473d-b774-d51efba055a4', '48196474-6958-4f1c-bc31-6c5ce9cf71e0');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (7900.00, 1, '2024-05-10 16:32:36.890418 +00:00', 17, '495ee8e9-3ca2-4046-b23b-1608d9021eb9', '48196474-6958-4f1c-bc31-6c5ce9cf71e0');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (7900.00, 1, '2024-05-10 16:32:38.540941 +00:00', 18, '85b6516f-5c4e-4e20-86a6-d0b72d2b5326', '48196474-6958-4f1c-bc31-6c5ce9cf71e0');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (1500.00, 1, '2024-05-10 16:32:55.869190 +00:00', 19, '4a690ce1-f4ec-4d17-bd5e-739da9b8e3a1', '2212f26f-5432-4b92-9124-6ac9cec56b60');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (5500.00, 1, '2024-05-10 16:32:59.429655 +00:00', 20, '9665bceb-c55e-4a53-af94-16c13e1e00d2', '2212f26f-5432-4b92-9124-6ac9cec56b60');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (4500.00, 1, '2024-05-10 16:33:02.063625 +00:00', 21, '3f8b0b4e-cb15-44a3-bcdb-c1b63ed6a18b', '2212f26f-5432-4b92-9124-6ac9cec56b60');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (4500.00, 1, '2024-05-10 16:33:03.278344 +00:00', 22, '1559dce5-b56c-4c11-bef4-044ad8aa6ac3', '2212f26f-5432-4b92-9124-6ac9cec56b60');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (4500.00, 1, '2024-05-10 16:33:05.093366 +00:00', 23, '5c1cf1cb-9082-4847-b918-bb827a2d39a8', '2212f26f-5432-4b92-9124-6ac9cec56b60');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (1500.00, 1, '2024-05-10 16:33:19.641761 +00:00', 24, '6575d3ad-0cc2-4020-98dd-9ec2c961d91c', '92fdb5db-586c-4fe8-a5bb-31c25881f3eb');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (500.00, 1, '2024-05-10 16:33:21.618985 +00:00', 25, '1fee66d0-4bef-4d77-b06b-fe46a5893ac5', '92fdb5db-586c-4fe8-a5bb-31c25881f3eb');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (660.00, 1, '2024-05-10 16:33:24.476847 +00:00', 26, '912e24ab-b86b-4478-83a0-62a6e0b3dc64', '92fdb5db-586c-4fe8-a5bb-31c25881f3eb');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (140.00, 1, '2024-05-10 16:33:28.224096 +00:00', 27, '769c0396-6c57-48e2-81d4-5f463ce6cdb2', '92fdb5db-586c-4fe8-a5bb-31c25881f3eb');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (140.00, 1, '2024-05-10 16:33:42.740093 +00:00', 28, 'ddeadf3b-620f-48d6-935a-8a3d88a1f6d6', '1e8feba3-3783-46eb-88fb-aa359f88913d');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (1240.00, 1, '2024-05-10 16:33:46.601586 +00:00', 29, 'd88b39fa-b748-485d-9dcb-03aec8f07a30', '1e8feba3-3783-46eb-88fb-aa359f88913d');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (440.00, 1, '2024-05-10 16:33:49.276299 +00:00', 30, '00d52926-ddc9-4205-af38-277ce8c7856a', '1e8feba3-3783-46eb-88fb-aa359f88913d');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (250.00, 1, '2024-05-10 16:33:53.509038 +00:00', 31, '5f99101e-ac40-48a8-91fd-19dc530e868f', '1e8feba3-3783-46eb-88fb-aa359f88913d');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (1250.00, 1, '2024-05-10 16:34:06.177968 +00:00', 32, 'ac00bb78-2a5f-4dee-916c-5ad79490565b', 'b519f63b-d868-4713-a7c0-9d12c29f4198');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (140.00, 1, '2024-05-10 16:34:07.294257 +00:00', 33, 'd004d7fd-3784-4b8a-adb8-ff8dcec2b647', 'b519f63b-d868-4713-a7c0-9d12c29f4198');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (1220.00, 1, '2024-05-10 16:34:10.306257 +00:00', 34, 'e649e8e6-cf8d-41f8-8c96-e3502237fa59', 'b519f63b-d868-4713-a7c0-9d12c29f4198');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (520.00, 1, '2024-05-10 16:34:17.891416 +00:00', 35, 'de730096-50ae-4da5-b855-d733740b249c', 'b519f63b-d868-4713-a7c0-9d12c29f4198');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (520.00, 1, '2024-05-10 16:34:29.482593 +00:00', 36, '343f751e-415a-4e49-858f-60dbec441c04', 'dd2be61a-eaf6-4fad-ac79-f51f0e8319ae');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (550.00, 1, '2024-05-10 16:34:32.038431 +00:00', 37, '15e64a07-2b28-4082-b1f3-199b2f05a031', 'dd2be61a-eaf6-4fad-ac79-f51f0e8319ae');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (560.00, 1, '2024-05-10 16:34:33.806337 +00:00', 38, 'fb43aba0-6e33-4bb0-855a-ba862c3a77f6', 'dd2be61a-eaf6-4fad-ac79-f51f0e8319ae');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (510.00, 1, '2024-05-10 16:34:36.633071 +00:00', 39, '0fa4c53c-9a09-443e-806c-cd60f16b1f07', 'dd2be61a-eaf6-4fad-ac79-f51f0e8319ae');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (550.00, 1, '2024-05-10 16:34:39.801610 +00:00', 40, '758c37c4-414c-4022-baf5-5c47b9312a7f', 'dd2be61a-eaf6-4fad-ac79-f51f0e8319ae');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (580.00, 1, '2024-05-10 16:34:42.426645 +00:00', 41, '7515ea36-75fb-453f-91f6-1958edf6875d', 'dd2be61a-eaf6-4fad-ac79-f51f0e8319ae');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (410.00, 1, '2024-05-10 16:34:47.337459 +00:00', 42, 'a6f4d128-d117-4faf-b48a-117cb2883dc0', 'dd2be61a-eaf6-4fad-ac79-f51f0e8319ae');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (470.00, 1, '2024-05-10 16:34:51.012595 +00:00', 43, 'e837b096-41f9-47b3-83f9-fc0c0c5ef060', 'dd2be61a-eaf6-4fad-ac79-f51f0e8319ae');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (470.00, 1, '2024-05-10 16:35:05.307134 +00:00', 44, '87abc9a3-8620-4d83-8eac-11640e8705ba', 'd9e7ff31-03b3-40f7-a676-850bb30d37d5');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (370.00, 1, '2024-05-10 16:35:07.722529 +00:00', 45, '13524031-8814-47be-8297-370329de5d64', 'd9e7ff31-03b3-40f7-a676-850bb30d37d5');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (370.00, 1, '2024-05-10 16:35:10.008059 +00:00', 46, 'ab3d0289-b0f8-460d-aeb4-e7fe9bd2a812', 'd9e7ff31-03b3-40f7-a676-850bb30d37d5');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (550.00, 1, '2024-05-10 16:35:12.705024 +00:00', 47, '88e56373-9afc-490f-95e0-f01ac77ea493', 'd9e7ff31-03b3-40f7-a676-850bb30d37d5');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (1220.00, 1, '2024-05-10 16:35:15.717129 +00:00', 48, 'f0db4768-3e64-46d8-b02e-398e1971770d', 'd9e7ff31-03b3-40f7-a676-850bb30d37d5');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (1520.00, 1, '2024-05-10 16:35:18.341536 +00:00', 49, 'bd361394-6eff-4115-b3f1-84f6bd79f41d', 'd9e7ff31-03b3-40f7-a676-850bb30d37d5');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (120.00, 1, '2024-05-10 16:35:20.468949 +00:00', 50, '5e5003b7-23cd-4176-ac30-34acf85fafaa', 'd9e7ff31-03b3-40f7-a676-850bb30d37d5');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (220.00, 1, '2024-05-10 16:35:23.006829 +00:00', 51, 'd51b188d-c57d-4eb8-a695-e27ec9a80bc0', 'd9e7ff31-03b3-40f7-a676-850bb30d37d5');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (220.00, 1, '2024-05-10 16:35:25.096551 +00:00', 52, 'c5a8ceb4-ba10-4301-8c74-de127e843dc6', 'd9e7ff31-03b3-40f7-a676-850bb30d37d5');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (220.00, 1, '2024-05-10 16:35:33.949488 +00:00', 53, 'e90125c2-8129-4071-9e03-48302ada0b87', '18693673-3b85-419c-9823-9fa86c96fea9');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (220.00, 1, '2024-05-10 16:35:34.649723 +00:00', 54, '5a0aae73-f03d-4f68-85f7-6878999f183f', '18693673-3b85-419c-9823-9fa86c96fea9');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (220.00, 1, '2024-05-10 16:35:35.424399 +00:00', 55, '156f3bbc-8de2-466f-ad8a-cfcdc1e08c1a', '18693673-3b85-419c-9823-9fa86c96fea9');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (220.00, 1, '2024-05-10 16:35:36.456747 +00:00', 56, '1adb3a36-5970-404c-8012-dfc9cf220107', '18693673-3b85-419c-9823-9fa86c96fea9');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (220.00, 1, '2024-05-10 16:35:37.176368 +00:00', 57, '2df4b4dc-b18e-4ddf-bae3-38a1eeb34cff', '18693673-3b85-419c-9823-9fa86c96fea9');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (220.00, 1, '2024-05-10 16:35:37.911936 +00:00', 58, '5e7016f8-7551-4299-a786-64d319b59d46', '18693673-3b85-419c-9823-9fa86c96fea9');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (220.00, 1, '2024-05-10 16:35:38.639197 +00:00', 59, '7956e442-b2c5-4c9d-83df-712b8083d117', '18693673-3b85-419c-9823-9fa86c96fea9');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (220.00, 1, '2024-05-10 16:35:39.412518 +00:00', 60, '43d50ed2-d5de-4db1-a285-5e81744e0349', '18693673-3b85-419c-9823-9fa86c96fea9');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (220.00, 1, '2024-05-10 16:35:40.337773 +00:00', 61, 'e4dfefd4-c57f-418e-be98-76063c2d6e25', '18693673-3b85-419c-9823-9fa86c96fea9');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (309.90, 1, '2024-05-10 16:36:02.073047 +00:00', 62, 'eb5eac27-b0ec-41c2-9faa-5e872f387921', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (309.90, 1, '2024-05-10 16:36:13.729844 +00:00', 63, 'f947b7a3-1c07-4c2a-a450-3cca8d9a8aa7', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (309.90, 1, '2024-05-10 16:36:14.495436 +00:00', 64, '94c7475a-2e4a-4545-8117-7bf040ecc63c', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (309.90, 1, '2024-05-10 16:36:15.237517 +00:00', 65, '24f85644-8d7b-4f37-bec0-9d0b30dea9b4', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (309.90, 1, '2024-05-10 16:36:16.020632 +00:00', 66, '4ed82cbb-2d11-41b3-bc78-5773922480b0', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (309.90, 1, '2024-05-10 16:36:16.813672 +00:00', 67, 'cf665a0d-3ed1-45e8-998a-c10f85edecce', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (309.90, 1, '2024-05-10 16:36:17.769982 +00:00', 68, '4b5b225c-28a0-4307-b136-7fce0bb31e47', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (309.90, 1, '2024-05-10 16:36:18.485431 +00:00', 69, '78066dbe-a0bc-43c3-a43d-3a1f167b64e2', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (309.90, 1, '2024-05-10 16:36:19.232348 +00:00', 70, '10930a28-a728-4c60-a108-417d28f6015b', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (309.90, 1, '2024-05-10 16:36:19.984609 +00:00', 71, 'c629a692-cbcb-45f4-a062-c4bc55f8cbfb', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (309.90, 1, '2024-05-10 16:36:20.711113 +00:00', 72, '6492fed0-8510-44f9-bb08-37e51edef828', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (309.90, 1, '2024-05-10 16:36:21.429662 +00:00', 73, '927d4ca7-472f-4614-98dc-faea7fdfd946', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (309.90, 1, '2024-05-10 16:36:22.155830 +00:00', 74, 'f1f1d6d9-ea00-4315-8955-9ca1cdc4f0b9', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (991.51, 1, '2024-05-10 16:36:42.996048 +00:00', 75, 'b154ab84-73be-44f0-ac1a-f53ed22969cb', 'c1e6dbc7-0304-427a-a9fb-e17f4dae2e9b');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (991.51, 1, '2024-05-10 16:36:44.028640 +00:00', 76, '25b02c0d-887c-493d-8e4b-ca73baa9863a', 'c1e6dbc7-0304-427a-a9fb-e17f4dae2e9b');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (1291.51, 1, '2024-05-10 16:36:46.947324 +00:00', 77, '49ab9023-7c86-4562-90da-fe7e44eb7336', 'c1e6dbc7-0304-427a-a9fb-e17f4dae2e9b');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (1291.51, 1, '2024-05-10 16:36:47.785789 +00:00', 78, '87325649-d1e6-4078-aa8e-4053cd77e32f', 'c1e6dbc7-0304-427a-a9fb-e17f4dae2e9b');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (1291.51, 1, '2024-05-10 16:36:48.479434 +00:00', 79, '15c07729-2c75-414b-b44e-9ff24bdba51d', 'c1e6dbc7-0304-427a-a9fb-e17f4dae2e9b');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (1300.00, 1, '2024-05-10 16:37:24.802315 +00:00', 80, '118ebd17-e2c3-42b6-b6d9-35dee5aca488', '0bd3000f-ff8d-4d42-b82a-c95d4ae5217d');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-100.00, 3, '2024-05-10 16:38:57.623698 +00:00', 81, '676a5723-ea20-4fa5-b9eb-da4e998a3cd7', '18693673-3b85-419c-9823-9fa86c96fea9');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (100.00, 3, '2024-05-10 16:38:57.712471 +00:00', 82, '676a5723-ea20-4fa5-b9eb-da4e998a3cd7', '0bd3000f-ff8d-4d42-b82a-c95d4ae5217d');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-130.00, 3, '2024-05-10 16:39:00.963356 +00:00', 83, 'e50f822c-6e21-4006-863d-fa8f20cc19b4', '18693673-3b85-419c-9823-9fa86c96fea9');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (130.00, 3, '2024-05-10 16:39:01.038446 +00:00', 84, 'e50f822c-6e21-4006-863d-fa8f20cc19b4', '0bd3000f-ff8d-4d42-b82a-c95d4ae5217d');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-50.00, 3, '2024-05-10 16:39:05.774210 +00:00', 85, '88430c18-46e4-40ad-b879-a3b11e17c6be', '18693673-3b85-419c-9823-9fa86c96fea9');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (50.00, 3, '2024-05-10 16:39:05.873057 +00:00', 86, '88430c18-46e4-40ad-b879-a3b11e17c6be', '0bd3000f-ff8d-4d42-b82a-c95d4ae5217d');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-150.00, 3, '2024-05-10 16:39:48.662100 +00:00', 87, '5e912191-06d6-4d89-bf91-065030bd0098', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (150.00, 3, '2024-05-10 16:39:48.747589 +00:00', 88, '5e912191-06d6-4d89-bf91-065030bd0098', 'c1e6dbc7-0304-427a-a9fb-e17f4dae2e9b');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-50.00, 3, '2024-05-10 16:39:51.610725 +00:00', 89, 'f3178d83-c4ae-4982-9984-55fb09e9ef39', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (50.00, 3, '2024-05-10 16:39:51.696290 +00:00', 90, 'f3178d83-c4ae-4982-9984-55fb09e9ef39', 'c1e6dbc7-0304-427a-a9fb-e17f4dae2e9b');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-70.00, 3, '2024-05-10 16:39:54.612691 +00:00', 91, '9ac40302-90b9-409b-b652-423f743e4705', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (70.00, 3, '2024-05-10 16:39:54.694467 +00:00', 92, '9ac40302-90b9-409b-b652-423f743e4705', 'c1e6dbc7-0304-427a-a9fb-e17f4dae2e9b');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-99.00, 3, '2024-05-10 16:39:59.198764 +00:00', 93, '00b7d3e1-9be7-4d4c-8002-246ec119baff', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (99.00, 3, '2024-05-10 16:39:59.281398 +00:00', 94, '00b7d3e1-9be7-4d4c-8002-246ec119baff', 'c1e6dbc7-0304-427a-a9fb-e17f4dae2e9b');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-0.01, 3, '2024-05-10 16:40:03.383587 +00:00', 95, 'e0b49387-ae3c-4008-ab31-ed1813efaca0', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (0.01, 3, '2024-05-10 16:40:03.464054 +00:00', 96, 'e0b49387-ae3c-4008-ab31-ed1813efaca0', 'c1e6dbc7-0304-427a-a9fb-e17f4dae2e9b');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-0.01, 3, '2024-05-10 16:40:04.430722 +00:00', 97, '3bef5dfa-31ae-4b72-855b-39664fcbd55d', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (0.01, 3, '2024-05-10 16:40:04.520761 +00:00', 98, '3bef5dfa-31ae-4b72-855b-39664fcbd55d', 'c1e6dbc7-0304-427a-a9fb-e17f4dae2e9b');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-0.01, 3, '2024-05-10 16:40:05.450846 +00:00', 99, '2398f8e1-5f0e-4fae-81af-bc5891e5183e', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (0.01, 3, '2024-05-10 16:40:05.543841 +00:00', 100, '2398f8e1-5f0e-4fae-81af-bc5891e5183e', 'c1e6dbc7-0304-427a-a9fb-e17f4dae2e9b');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-0.01, 3, '2024-05-10 16:40:06.330103 +00:00', 101, '0d87088a-f233-49f4-8a8b-c3206562b511', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (0.01, 3, '2024-05-10 16:40:06.431732 +00:00', 102, '0d87088a-f233-49f4-8a8b-c3206562b511', 'c1e6dbc7-0304-427a-a9fb-e17f4dae2e9b');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-0.01, 3, '2024-05-10 16:40:07.254849 +00:00', 103, 'b88c8199-9437-4ec9-a87f-f5002b04c6a3', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (0.01, 3, '2024-05-10 16:40:07.347482 +00:00', 104, 'b88c8199-9437-4ec9-a87f-f5002b04c6a3', 'c1e6dbc7-0304-427a-a9fb-e17f4dae2e9b');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-0.01, 3, '2024-05-10 16:40:08.275001 +00:00', 105, 'a28c367c-c224-439f-8bb4-0dc27209d4db', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (0.01, 3, '2024-05-10 16:40:08.365951 +00:00', 106, 'a28c367c-c224-439f-8bb4-0dc27209d4db', 'c1e6dbc7-0304-427a-a9fb-e17f4dae2e9b');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-0.01, 3, '2024-05-10 16:40:27.797967 +00:00', 107, '666713c1-bf90-4585-9a0d-780f66a9aeae', '81f69736-1be7-4b8a-9aba-f2f8bdeec816');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (0.01, 3, '2024-05-10 16:40:27.869307 +00:00', 108, '666713c1-bf90-4585-9a0d-780f66a9aeae', 'c1e6dbc7-0304-427a-a9fb-e17f4dae2e9b');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-1400.00, 3, '2024-05-10 16:41:11.109994 +00:00', 109, 'f8adf95b-dbc0-4f40-889a-606153878b6d', '48196474-6958-4f1c-bc31-6c5ce9cf71e0');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (1400.00, 3, '2024-05-10 16:41:11.180881 +00:00', 110, 'f8adf95b-dbc0-4f40-889a-606153878b6d', '2212f26f-5432-4b92-9124-6ac9cec56b60');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-5400.00, 3, '2024-05-10 16:41:17.077911 +00:00', 111, 'd54b93d6-9849-4dad-82e7-a26969d2c684', '48196474-6958-4f1c-bc31-6c5ce9cf71e0');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (5400.00, 3, '2024-05-10 16:41:17.172720 +00:00', 112, 'd54b93d6-9849-4dad-82e7-a26969d2c684', '2212f26f-5432-4b92-9124-6ac9cec56b60');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-400.00, 3, '2024-05-10 16:41:33.108397 +00:00', 113, '658e0617-cb36-49ea-b22a-35bc609e5730', '48196474-6958-4f1c-bc31-6c5ce9cf71e0');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (400.00, 3, '2024-05-10 16:41:33.195817 +00:00', 114, '658e0617-cb36-49ea-b22a-35bc609e5730', '2212f26f-5432-4b92-9124-6ac9cec56b60');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-23.74, 3, '2024-05-10 16:42:57.455876 +00:00', 115, '5693466a-deac-4c1f-baa0-da4b1a566ff2', 'f8e26591-862c-4b02-9cdc-9a4505d3b31f');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (400.00, 3, '2024-05-10 16:42:57.523159 +00:00', 116, '5693466a-deac-4c1f-baa0-da4b1a566ff2', '4aa2d3ed-ed22-4e3f-986f-44cb7c182517');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-83.10, 3, '2024-05-10 16:43:01.191078 +00:00', 117, 'ce8b1dc2-4155-455e-b323-e551005489c3', 'f8e26591-862c-4b02-9cdc-9a4505d3b31f');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (1400.00, 3, '2024-05-10 16:43:01.256213 +00:00', 118, 'ce8b1dc2-4155-455e-b323-e551005489c3', '4aa2d3ed-ed22-4e3f-986f-44cb7c182517');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-11.87, 3, '2024-05-10 16:43:04.274530 +00:00', 119, '63c3f03e-f0be-49c0-905f-afa976aa89c2', 'f8e26591-862c-4b02-9cdc-9a4505d3b31f');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (200.00, 3, '2024-05-10 16:43:04.339933 +00:00', 120, '63c3f03e-f0be-49c0-905f-afa976aa89c2', '4aa2d3ed-ed22-4e3f-986f-44cb7c182517');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-35.62, 3, '2024-05-10 16:43:07.365087 +00:00', 121, 'eec87be5-cc7c-484f-ab72-4d060b61815f', 'f8e26591-862c-4b02-9cdc-9a4505d3b31f');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (600.00, 3, '2024-05-10 16:43:07.434051 +00:00', 122, 'eec87be5-cc7c-484f-ab72-4d060b61815f', '4aa2d3ed-ed22-4e3f-986f-44cb7c182517');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-112.00, 3, '2024-05-10 16:43:43.499567 +00:00', 123, 'bc71ec82-78b4-462c-88a1-859eb48f1730', 'b519f63b-d868-4713-a7c0-9d12c29f4198');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (112.00, 3, '2024-05-10 16:43:43.575456 +00:00', 124, 'bc71ec82-78b4-462c-88a1-859eb48f1730', '0bd3000f-ff8d-4d42-b82a-c95d4ae5217d');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-112.00, 3, '2024-05-10 16:43:44.478458 +00:00', 125, '5d33e3bc-9803-4aee-bdaa-6c9456598bb5', 'b519f63b-d868-4713-a7c0-9d12c29f4198');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (112.00, 3, '2024-05-10 16:43:44.567980 +00:00', 126, '5d33e3bc-9803-4aee-bdaa-6c9456598bb5', '0bd3000f-ff8d-4d42-b82a-c95d4ae5217d');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (-1685.24, 3, '2024-05-10 16:45:43.213154 +00:00', 127, 'ae8fa75d-c828-4c21-8bbe-e8ad1d25733c', '4aa2d3ed-ed22-4e3f-986f-44cb7c182517');
+INSERT INTO bank_account.bal_transaction (amount, type, date, id, process_id, balance_id) VALUES (100.00, 3, '2024-05-10 16:45:43.293407 +00:00', 128, 'ae8fa75d-c828-4c21-8bbe-e8ad1d25733c', 'f8e26591-862c-4b02-9cdc-9a4505d3b31f');
