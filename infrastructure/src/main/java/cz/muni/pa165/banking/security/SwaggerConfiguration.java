@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfiguration {
 
-    private static final String SECURITY_SCHEME_OAUTH2 = "MUNI";
     private static final String SECURITY_SCHEME_BEARER = "Bearer";
 
     /**
@@ -29,6 +28,5 @@ public class SwaggerConfiguration {
             openApi.addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_BEARER));
         };
     }
-
 
 }
