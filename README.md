@@ -41,6 +41,26 @@ or via the docker container of the database itself.
 - For clearing the DB data please use [this bash script](./.docker/db/scripts/clear_db.sh), alternatively within the DB container call `./scripts/clear_db.sh`
 - For seeding the DB with valid data please use [this bash script](./.docker/db/scripts/seed_db.sh), alternatively within the DB container call `./scripts/seed_db.sh`
 
+## Test Scenario
+The following steps represent a test scenario covering the majority of the functionality of the project. Mind that in order
+to make a successful call of either service, a token from the client/OICD provider is required. For this a token needs
+to be obtained via the `client` application, which contains a simple UI showing the token after logging in.
+1. Create a new user named **John Wick**
+2. Create a new spending account for John Wick with a spending limit of 2000 CZK.
+3. Deposit an initial amount of 5000 CZK to John's new spending account.
+4. Verify the current balance for the new account.
+5. Try making a withdrawal of 2001 CZK. Expect a failure as the amount is over the max spending limit set for the account.
+6. Make a withdrawal of 1000 CZK.
+7. Verify the current balance for the spending account. (expected value: 4000 CZK)
+8. Create a new savings account for John Wick
+9. Transfer 1000 CZK from John's spending account to the new savings account. (note the transaction UUID for the 12th step)
+10. Verify the current balance for the spending account. (expected value: 3000 CZK)
+11. Verify the current balance for the savings account. (expected value: 1000 CZK)
+12. Revert the last transaction using the noted UUID.
+13. Verify the current balance for the spending account. (expected value: 4000 CZK)
+14. Verify the current balance for the savings account. (expected value: 0 CZK)
+
+
 ## Use case diagram
 <img src="./.documentation/useCaseDiagram.png" width="800">
 
