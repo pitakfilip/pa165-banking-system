@@ -6,16 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Martin Mojzis
  */
 @Repository
 public interface BalancesRepository extends JpaRepository<Balance, String> {
-
-    @Query("SELECT u FROM Balance u where u.accountId = :id")
-    Optional<Balance> findById(String id);
 
     @Query("SELECT u.accountId FROM Balance u")
     List<String> getAllIds();
