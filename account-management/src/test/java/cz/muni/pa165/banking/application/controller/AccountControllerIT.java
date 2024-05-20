@@ -1,6 +1,5 @@
 package cz.muni.pa165.banking.application.controller;
 
-
 import cz.muni.pa165.banking.account.query.SystemServiceApi;
 import cz.muni.pa165.banking.domain.account.Account;
 import cz.muni.pa165.banking.domain.account.AccountType;
@@ -21,28 +20,25 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.nio.charset.StandardCharsets;
 import java.util.Currency;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 class AccountControllerIT {
-    
+
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
     private SystemServiceApi balanceApi;
 
-
     @BeforeAll
-    public static void initDb(
-            @Autowired UserRepository userRepository,
-            @Autowired AccountRepository accountRepository
-    ) {
+    public static void initDb(@Autowired UserRepository userRepository, @Autowired AccountRepository accountRepository) {
         User user = new User();
         user.setId(1L);
         user.setEmail("email@example.org");
@@ -85,13 +81,12 @@ class AccountControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"userId\":1,\"type\":\"SAVING\",\"maxSpendingLimit\":1000, \"currency\": \"CZK\"}"))
                 .andExpect(status().isCreated())
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8);
+                .andExpect(content().string(containsString("\"userId\":1")))
+                .andExpect(content().string(containsString("\"type\":\"SAVING\"")))
+                .andExpect(content().string(containsString("\"currency\":\"CZK\"")));
 
         verify(balanceApi).createBalance(anyString());
     }
-
 
     @Test
     @WithMockUser(authorities = "SCOPE_test_2")
@@ -100,9 +95,7 @@ class AccountControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"userId\":3,\"type\":\"SAVING\",\"maxSpendingLimit\":1000, \"currency\": \"CZK\"}"))
                 .andExpect(status().isNotFound())
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8);
+                .andExpect(content().string(containsString("not found")));
     }
 
     @Test
@@ -111,9 +104,9 @@ class AccountControllerIT {
         mockMvc.perform(get("/account?accountId=1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8);
+                .andExpect(content().string(containsString("\"number\":\"abc\"")))
+                .andExpect(content().string(containsString("\"type\":\"CREDIT\"")))
+                .andExpect(content().string(containsString("\"currency\":\"CZK\"")));
     }
 
     @Test
@@ -122,11 +115,8 @@ class AccountControllerIT {
         mockMvc.perform(get("/account?accountId=3")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8);
+                .andExpect(content().string(containsString("not found")));
     }
-
 
     @Test
     @WithMockUser(authorities = "SCOPE_test_2")
@@ -134,9 +124,9 @@ class AccountControllerIT {
         mockMvc.perform(get("/account/number?accountNumber=abc")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8);
+                .andExpect(content().string(containsString("\"number\":\"abc\"")))
+                .andExpect(content().string(containsString("\"type\":\"CREDIT\"")))
+                .andExpect(content().string(containsString("\"currency\":\"CZK\"")));
     }
 
     @Test
@@ -145,9 +135,7 @@ class AccountControllerIT {
         mockMvc.perform(get("/account/number?accountNumber=abcde")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8);
+                .andExpect(content().string(containsString("not found")));
     }
 
     @Test
@@ -156,9 +144,7 @@ class AccountControllerIT {
         mockMvc.perform(get("/account/scheduled?accountNumber=abc")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8);
+                .andExpect(content().string(containsString("scheduledPayments")));
     }
 
     @Test
@@ -167,9 +153,7 @@ class AccountControllerIT {
         mockMvc.perform(get("/account/scheduled?accountNumber=3")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8);
+                .andExpect(content().string(containsString("not found")));
     }
 
     @Test
@@ -179,9 +163,10 @@ class AccountControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"senderAccount\":\"abc\", \"receiverAccount\":\"abcd\", \"amount\":1, \"type\":\"WEEKLY\", \"day\":1}"))
                 .andExpect(status().isCreated())
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8);
+                .andExpect(content().string(containsString("\"senderAccount\":\"abc\"")))
+                .andExpect(content().string(containsString("\"receiverAccount\":\"abcd\"")))
+                .andExpect(content().string(containsString("\"amount\":1")))
+                .andExpect(content().string(containsString("\"type\":\"WEEKLY\"")));
     }
 
     @Test
@@ -191,8 +176,6 @@ class AccountControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"senderAccount\":\"abc\", \"receiverAccount\":\"abcde\", \"amount\":1, \"type\":\"WEEKLY\", \"day\":1}"))
                 .andExpect(status().isNotFound())
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8);
+                .andExpect(content().string(containsString("not found")));
     }
 }

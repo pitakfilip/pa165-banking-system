@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.util.Currency;
 
 /**
- * Handler for transaction of type ${@link cz.muni.pa165.banking.domain.transaction.TransactionType#WITHDRAWAL}.
+ * Handler for transaction of type ${@link cz.muni.pa165.banking.domain.transaction.TransactionType#TRANSFER}.
  * Customer may send a specified amount of money to a foreign account, where the currency of both accounts does
  * not have to be the same. The amount of money is calculated via ${@link cz.muni.pa165.banking.domain.money.CurrencyConverter}
  * using the target account's currency.
