@@ -1,6 +1,5 @@
 package cz.muni.pa165.banking.application.controller;
 
-
 import cz.muni.pa165.banking.domain.user.User;
 import cz.muni.pa165.banking.domain.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeAll;
@@ -14,9 +13,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 
 @SpringBootTest
@@ -46,9 +48,9 @@ class UserControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"123@email.cz\",\"password\":\"passwd123\",\"firstName\":\"Joe\", \"lastName\": \"Mama\", \"userType\": \"REGULAR\"}"))
                 .andExpect(status().isCreated())
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8);
+                .andExpect(content().string(containsString("\"email\":\"123@email.cz\"")))
+                .andExpect(content().string(containsString("\"firstName\":\"Joe\"")))
+                .andExpect(content().string(containsString("\"lastName\":\"Mama\"")));
     }
 
     @Test
@@ -57,9 +59,9 @@ class UserControllerIT {
         mockMvc.perform(get("/user?userId=1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8);
+                .andExpect(content().string(containsString("\"email\":\"email@example.org\"")))
+                .andExpect(content().string(containsString("\"firstName\":\"Jozko\"")))
+                .andExpect(content().string(containsString("\"lastName\":\"Mrkvicka\"")));
     }
 
     @Test
@@ -68,8 +70,6 @@ class UserControllerIT {
         mockMvc.perform(get("/user?userId=3")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-                .andReturn()
-                .getResponse()
-                .getContentAsString(StandardCharsets.UTF_8);
+                .andExpect(content().string(containsString("not found")));
     }
 }
