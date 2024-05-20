@@ -9,6 +9,8 @@ import cz.muni.pa165.banking.domain.process.Process;
 import cz.muni.pa165.banking.domain.process.ProcessOperations;
 import cz.muni.pa165.banking.domain.process.status.Status;
 import cz.muni.pa165.banking.domain.process.status.StatusInformation;
+import cz.muni.pa165.banking.transaction.processor.dto.ProcessStatusDto;
+import cz.muni.pa165.banking.transaction.processor.dto.ProcessStatusListDto;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,10 +27,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.*;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,6 +52,9 @@ public class ProcessControllerIT {
 
     @Autowired
     private ObjectMapper objectMapper;
+    
+    @Autowired
+    private ProcessRepositoryJpa repository;
 
     @MockBean
     private ExchangeRatesApi apiMock;
@@ -55,34 +64,45 @@ public class ProcessControllerIT {
     
     private static final Instant instant = LocalDateTime.of(2024, Month.APRIL, 24, 12, 0, 0).toInstant(ZoneOffset.UTC);
 
+    private static Set<Process> storedProcesses;
+    
+    private static Process processedProcess;
+    
+    
     @BeforeAll
     public static void initDb(@Autowired ProcessRepositoryJpa repository) {
         repository.save(Process.createNew());
         repository.save(Process.createNew());
 
-        Process processed1 = Process.createNew();
-        ProcessOperations.changeState(processed1, new StatusInformation(instant, Status.PENDING, "PENDING"));
-        repository.save(processed1);
+        Process process1 = Process.createNew();
+        ProcessOperations.changeState(process1, new StatusInformation(instant, Status.PENDING, "PENDING"));
+        repository.save(process1);
 
-        Process processed2 = Process.createNew();
-        ProcessOperations.changeState(processed2, new StatusInformation(instant, Status.PENDING, "PENDING"));
-        repository.save(processed2);
+        Process process2 = Process.createNew();
+        ProcessOperations.changeState(process2, new StatusInformation(instant, Status.PENDING, "PENDING"));
+        repository.save(process2);
 
         LocalDateTime currentDateTime = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
         LocalDateTime newDateTime = currentDateTime.minusDays(10);
         Instant tenDaysAgo = newDateTime.toInstant(ZoneOffset.UTC);
 
-        Process processed4 = Process.createNew();
-        ProcessOperations.changeState(processed4, new StatusInformation(tenDaysAgo, Status.CREATED, "CREATED"));
-        repository.save(processed4);
+        processedProcess = Process.createNew();
+        ProcessOperations.changeState(processedProcess, new StatusInformation(tenDaysAgo, Status.PROCESSED, "PROCESSED"));
+        repository.save(processedProcess);
 
-        Process processed5 = Process.createNew();
-        ProcessOperations.changeState(processed5, new StatusInformation(tenDaysAgo, Status.PENDING, "PENDING"));
-        repository.save(processed5);
+        Process process4 = Process.createNew();
+        ProcessOperations.changeState(process4, new StatusInformation(tenDaysAgo, Status.CREATED, "CREATED"));
+        repository.save(process4);
+
+        Process process5 = Process.createNew();
+        ProcessOperations.changeState(process5, new StatusInformation(tenDaysAgo, Status.PENDING, "PENDING"));
+        repository.save(process5);
+
+        storedProcesses = Set.of(process1, process2, processedProcess, process4, process5);
     }
 
-    @WithMockUser(authorities = "SCOPE_test_2")
     @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
     public void resolveStaleProcesses() throws Exception {
         LocalDateTime currentDateTime = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
         LocalDateTime newDateTime = currentDateTime.minusDays(1);
@@ -91,6 +111,7 @@ public class ProcessControllerIT {
         List<Process> staleProcesses = service.unresolvedProcessesToDate(yesterday);
         for (Process process : staleProcesses) {
             assertNotEquals(Status.FAILED, process.getStatus());
+            assertNotEquals(Status.PROCESSED, process.getStatus());
         }
         List<UUID> staleProcessIds = staleProcesses.stream()
                 .map(Process::getUuid)
@@ -112,6 +133,62 @@ public class ProcessControllerIT {
             assertEquals(Status.FAILED, process.getStatus());
             assertEquals("Resolved stale process as FAILED by system", process.getInformation());
         }
+    }
+
+    @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
+    public void fetchProcessedProcesses() throws Exception {
+        Set<UUID> expectedProcessIds = storedProcesses.stream()
+                .filter(p -> p.getStatus().equals(Status.PROCESSED))
+                .map(Process::getUuid)
+                .collect(Collectors.toSet());
+
+        MvcResult response = mockMvc.perform(get("/processes/v1/PROCESSED")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String jsonResponse = response.getResponse().getContentAsString();
+        List<ProcessStatusDto> foundProcesses = objectMapper.readValue(jsonResponse, ProcessStatusListDto.class).getProcesses();
+
+        assertEquals(expectedProcessIds.size(), foundProcesses.size());
+
+        for (ProcessStatusDto process : foundProcesses) {
+            assertEquals(process.getStatus().getStatus().getValue(), "PROCESSED");
+            assertTrue(expectedProcessIds.contains(process.getIdentifier()));
+        }
+    }
+
+    @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
+    public void fetchValidProcessStatus() throws Exception {
+        MvcResult response = mockMvc.perform(get("/process/v1/{uuid}/status", processedProcess.getUuid())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String jsonResponse = response.getResponse().getContentAsString();
+        ProcessStatusDto status = objectMapper.readValue(jsonResponse, ProcessStatusDto.class);
+        
+        assertEquals(processedProcess.getUuid(), status.getIdentifier());
+        assertEquals(processedProcess.getStatus().name(), status.getStatus().getStatus().getValue());
+    }
+    
+    @Test
+    @WithMockUser(authorities = "SCOPE_test_2")
+    public void fetchInvalidProcessStatus() throws Exception {
+        MvcResult response = mockMvc.perform(get("/process/v1/{uuid}/status", UUID.randomUUID())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andReturn();
+
+        String jsonResponse = response.getResponse().getContentAsString();
+        LinkedHashMap JSON = objectMapper.readValue(jsonResponse, LinkedHashMap.class);
+        
+        assertTrue(JSON.containsKey("status"));
+        assertEquals("NOT_FOUND", JSON.get("status"));
+        assertTrue(JSON.containsKey("message"));
+        assertEquals("Entity not present in repository", JSON.get("message"));
     }
 
 }
